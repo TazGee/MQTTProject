@@ -7,10 +7,19 @@ namespace MQTTGitProject
     {
         static async Task Main(string[] args)
         {
+            /*
+             * 
+             * Odradjeno do: DAN 5 - Popodne (Refactoring and DI)
+             * 
+             */
+            
             // Promenljive
             string topic = String.Empty;
             int qos = 0;
             MqttQualityOfServiceLevel level = MqttQualityOfServiceLevel.AtMostOnce;
+            
+            //MessageLogger testLoggerConsole = new MessageLogger(LogType.Console);
+            MessageLogger testLoggerFile = new MessageLogger(LogType.File);
             
             // Kreiranje factory-a i clienta
             var factory = new MqttClientFactory();
@@ -19,6 +28,7 @@ namespace MQTTGitProject
             // Event handler za poruke koje pristizu
             mqttClient.ApplicationMessageReceivedAsync += e =>
             {
+                /*
                 Console.WriteLine($"\n======================================");
                 Console.WriteLine($"Topic: {e.ApplicationMessage.Topic}");
                 Console.WriteLine($"Poruka: {e.ApplicationMessage.ConvertPayloadToString()}");
@@ -26,7 +36,15 @@ namespace MQTTGitProject
                 Console.WriteLine($"Retain: {(e.ApplicationMessage.Retain ? "Retain" : "No Retain")}");
                 Console.WriteLine($"Timestamp: {DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}");
                 Console.WriteLine($"======================================\n");
-
+                */
+                
+                //testLoggerConsole.LogMessageAsync(e.ApplicationMessage.Topic, e.ApplicationMessage.ConvertPayloadToString(), e.ApplicationMessage.QualityOfServiceLevel.ToString(), (e.ApplicationMessage.Retain ? "Retain" : "No Retain"));
+                
+                testLoggerFile.LogMessageAsync(e.ApplicationMessage.Topic, 
+                    e.ApplicationMessage.ConvertPayloadToString(), 
+                    e.ApplicationMessage.QualityOfServiceLevel.ToString(), 
+                    (e.ApplicationMessage.Retain ? "Retain" : "No Retain"));
+                
                 return Task.CompletedTask;
             };
             
