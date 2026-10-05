@@ -9,7 +9,7 @@ namespace MQTTGitProject
         {
             /*
              * 
-             * Odradjeno do: DAN 5 - Popodne (Refactoring and DI)
+             * Odradjeno do: CELA PRVA NEDELJA
              * 
              */
             
@@ -19,7 +19,7 @@ namespace MQTTGitProject
             MqttQualityOfServiceLevel level = MqttQualityOfServiceLevel.AtMostOnce;
             
             //MessageLogger testLoggerConsole = new MessageLogger(LogType.Console);
-            MessageLogger testLoggerFile = new MessageLogger(LogType.File);
+            IMessageLogger testLogger = new CompositeLogger();
             
             // Kreiranje factory-a i clienta
             var factory = new MqttClientFactory();
@@ -38,9 +38,7 @@ namespace MQTTGitProject
                 Console.WriteLine($"======================================\n");
                 */
                 
-                //testLoggerConsole.LogMessageAsync(e.ApplicationMessage.Topic, e.ApplicationMessage.ConvertPayloadToString(), e.ApplicationMessage.QualityOfServiceLevel.ToString(), (e.ApplicationMessage.Retain ? "Retain" : "No Retain"));
-                
-                testLoggerFile.LogMessageAsync(e.ApplicationMessage.Topic, 
+                testLogger.LogMessageAsync(e.ApplicationMessage.Topic, 
                     e.ApplicationMessage.ConvertPayloadToString(), 
                     e.ApplicationMessage.QualityOfServiceLevel.ToString(), 
                     (e.ApplicationMessage.Retain ? "Retain" : "No Retain"));
