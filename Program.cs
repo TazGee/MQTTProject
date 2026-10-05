@@ -7,34 +7,10 @@ namespace MQTTGitProject
     {
         static async Task Main(string[] args)
         {
-            // Unosenje topic-a koji se prati i qos-a
-            string topic;
-            int qos;
-            
-            Console.Write("Unesite topic: ");
-            topic = Console.ReadLine();
-
-            Console.WriteLine("1 - At Most Once\n2 - At Least Once\n3 - Exactly Once");
-            Console.Write("Unesite QoS: ");
-            qos =  int.Parse(Console.ReadLine());
-
-            // QoS odredjivanje
-            MqttQualityOfServiceLevel level;
-            switch (qos)
-            {
-                case 1:
-                    level  = MqttQualityOfServiceLevel.AtMostOnce;
-                    break;
-                case 2:
-                    level  = MqttQualityOfServiceLevel.AtLeastOnce;
-                    break;
-                case 3:
-                    level  = MqttQualityOfServiceLevel.ExactlyOnce;
-                    break;
-                default:
-                    Console.WriteLine("Neispravan unos QoS!");
-                    return;
-            }
+            // Promenljive
+            string topic = String.Empty;
+            int qos = 0;
+            MqttQualityOfServiceLevel level = MqttQualityOfServiceLevel.AtMostOnce;
             
             // Kreiranje factory-a i clienta
             var factory = new MqttClientFactory();
@@ -49,7 +25,7 @@ namespace MQTTGitProject
                 Console.WriteLine($"QoS: {e.ApplicationMessage.QualityOfServiceLevel}");
                 Console.WriteLine($"Retain: {(e.ApplicationMessage.Retain ? "Retain" : "No Retain")}");
                 Console.WriteLine($"Timestamp: {DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}");
-                Console.WriteLine($"======================================");
+                Console.WriteLine($"======================================\n");
 
                 return Task.CompletedTask;
             };
@@ -58,6 +34,16 @@ namespace MQTTGitProject
             var options = new MqttClientOptionsBuilder()
                 .WithTcpServer("localhost", 1883)
                 .Build();
+            
+            // Povezivanje sa brokerom
+            try
+            {
+                await mqttClient.ConnectAsync(options);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Doslo je do greske prilikom povezivanja na server: {e.Message}");
+            }
             
             // Event handler za disconnect
             mqttClient.DisconnectedAsync += async e =>
@@ -82,14 +68,6 @@ namespace MQTTGitProject
                         await mqttClient.ConnectAsync(options);
 
                         Console.WriteLine("Reconnect uspesan!");
-
-                        var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
-                            .WithTopicFilter(topic, level)
-                            .Build();
-
-                        await mqttClient.SubscribeAsync(subscribeOptions);
-
-                        Console.WriteLine($"Ponovo pretplacen na topic: {topic}");
                     }
                     catch (Exception ex)
                     {
@@ -98,80 +76,116 @@ namespace MQTTGitProject
                 }
             };
             
-            // Povezivanje sa brokerom
-            try
-            {
-                await mqttClient.ConnectAsync(options);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Doslo je do greske prilikom povezivanja: {e.Message}");
-            }
-            
-            // Subscribe na topic
-            try
-            {
-                var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
-                    .WithTopicFilter(topic, level)
-                    .Build();
-                await mqttClient.SubscribeAsync(subscribeOptions);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Doslo je do greske prilikom subscribe-a: {e.Message}");
-            }
-            
-            Console.WriteLine($"Povezivanje je uspesno!\nUnosite poruke:");
-
+            // MAIN LOOP
             while (true)
             {
-                await Task.Delay(TimeSpan.FromSeconds(3));
+                Console.WriteLine("Izaberite opciju: p - publish | s - subscribe | q - quit | c - clear");
                 
-                string payload;
-                int tmpretain;
-                bool retain;
-                
-                Console.Write("\nUnesite topic poruke: ");
-                topic = Console.ReadLine();
-                Console.Write("Unesite payload poruke: ");
-                payload = Console.ReadLine();
-                
-                Console.WriteLine("1 - At Most Once\n2 - At Least Once\n3 - Exactly Once");
-                Console.Write("Unesite QoS: ");
-                qos =  int.Parse(Console.ReadLine());
-                switch (qos)
-                {
-                    case 1:
-                        level  = MqttQualityOfServiceLevel.AtMostOnce;
-                        break;
-                    case 2:
-                        level  = MqttQualityOfServiceLevel.AtLeastOnce;
-                        break;
-                    case 3:
-                        level  = MqttQualityOfServiceLevel.ExactlyOnce;
-                        break;
-                    default:
-                        Console.WriteLine("Neispravan unos QoS!");
-                        return;
-                }
-                
-                Console.WriteLine("1 - Retain\n2 - No Retain");
-                Console.Write("Unesite retain: ");
-                tmpretain =  int.Parse(Console.ReadLine());
-                switch (tmpretain)
-                {
-                    case 1:
-                        retain = true;
-                        break;
-                    case 2:
-                        retain = false;
-                        break;
-                    default:
-                        Console.WriteLine("Neispravan unos retain-a!");
-                        return;
-                }
+                string opcija = Console.ReadLine();
 
-                await SendMessage(mqttClient, topic, payload, level, retain);
+                if (opcija == "p")
+                {
+                    string payload;
+                    int tmpretain;
+                    bool retain;
+                
+                    Console.Write("\nUnesite topic poruke: ");
+                    topic = Console.ReadLine();
+                    Console.Write("Unesite payload poruke: ");
+                    payload = Console.ReadLine();
+                
+                    Console.WriteLine("1 - At Most Once\n2 - At Least Once\n3 - Exactly Once");
+                    Console.Write("Unesite QoS: ");
+                    qos =  int.Parse(Console.ReadLine());
+                    switch (qos)
+                    {
+                        case 1:
+                            level  = MqttQualityOfServiceLevel.AtMostOnce;
+                            break;
+                        case 2:
+                            level  = MqttQualityOfServiceLevel.AtLeastOnce;
+                            break;
+                        case 3:
+                            level  = MqttQualityOfServiceLevel.ExactlyOnce;
+                            break;
+                        default:
+                            Console.WriteLine("Neispravan unos QoS!");
+                            return;
+                    }
+                
+                    Console.WriteLine("1 - Retain\n2 - No Retain");
+                    Console.Write("Unesite retain: ");
+                    tmpretain =  int.Parse(Console.ReadLine());
+                    switch (tmpretain)
+                    {
+                        case 1:
+                            retain = true;
+                            break;
+                        case 2:
+                            retain = false;
+                            break;
+                        default:
+                            Console.WriteLine("Neispravan unos retain-a!");
+                            return;
+                    }
+
+                    await SendMessage(mqttClient, topic, payload, level, retain);
+                }
+                else if (opcija == "s")
+                {
+                    Console.Write("Unesite topic: ");
+                    topic = Console.ReadLine();
+
+                    Console.WriteLine("1 - At Most Once\n2 - At Least Once\n3 - Exactly Once");
+                    Console.Write("Unesite QoS: ");
+                    qos =  int.Parse(Console.ReadLine());
+
+                    // QoS odredjivanje
+                    switch (qos)
+                    {
+                        case 1:
+                            level  = MqttQualityOfServiceLevel.AtMostOnce;
+                            break;
+                        case 2:
+                            level  = MqttQualityOfServiceLevel.AtLeastOnce;
+                            break;
+                        case 3:
+                            level  = MqttQualityOfServiceLevel.ExactlyOnce;
+                            break;
+                        default:
+                            Console.WriteLine("Neispravan unos QoS!");
+                            return;
+                    }
+                    
+                    // Subscribe na topic
+                    try
+                    {
+                        var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
+                            .WithTopicFilter(topic, level)
+                            .Build();
+                        await mqttClient.SubscribeAsync(subscribeOptions);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Doslo je do greske prilikom subscribe-a: {e.Message}");
+                    }
+                    
+                    Console.WriteLine($"Subscribe uspesno obavljen.");
+                }
+                else if (opcija == "q")
+                {
+                    Console.WriteLine("Izabrali ste opciju da napustite aplikaciju.");
+                    break;
+                }
+                else if (opcija == "c")
+                {
+                    Console.Clear();
+                }
+                else
+                {
+                    Console.WriteLine("Uneli ste nepostojecu opciju!");
+                }
+                await Task.Delay(TimeSpan.FromSeconds(1));
             }
         }
 
