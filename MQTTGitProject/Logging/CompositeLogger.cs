@@ -2,18 +2,21 @@ namespace MQTTGitProject;
 
 public class CompositeLogger : IMessageLogger
 {
-    private const string fileName = "mqtt_messages.log";
+    private FileLogger fileLogger;
+    private ConsoleLogger consoleLogger;
     
-    public CompositeLogger()
+    public CompositeLogger(FileLogger fileLogger, ConsoleLogger consoleLogger)
     {
-        if (!File.Exists(fileName)) File.Create(fileName);
+        this.fileLogger = fileLogger;
+        this.consoleLogger = consoleLogger;
     }
     
-    public async void LogMessageAsync(string topic, string payload, string qos, string retain)
+    public async Task LogMessageAsync(string topic, string payload, string qos, string retain)
     {
-        string line = $"\n[{DateTime.Now:HH:mm:sss}] " +
+        string line = $"\n[{DateTime.Now:HH:mm:ss}] " +
                       $"| {topic} | {payload} | {qos} | {retain}";
-        await File.AppendAllTextAsync(fileName, line);
-        Console.WriteLine(line);
+        
+        await fileLogger.LogMessageAsync(topic, payload, qos, retain);
+        await consoleLogger.LogMessageAsync(topic, payload, qos, retain);
     }
 }

@@ -2,17 +2,24 @@ namespace MQTTGitProject;
 
 public class FileLogger : IMessageLogger
 {
-    private const string fileName = "mqtt_messages.log";
+    private string fileName;
     
-    public FileLogger()
+    public FileLogger(Config.Config config)
     {
-        if (!File.Exists(fileName)) File.Create(fileName);
+        fileName = config.LogFilePath;
     }
     
-    public async void LogMessageAsync(string topic, string payload, string qos, string retain)
+    public async Task LogMessageAsync(string topic, string payload, string qos, string retain)
     {
-        string line = $"\n[{DateTime.Now:HH:mm:sss}] " +
-                      $"| {topic} | {payload} | {qos} | {retain}";
-        await File.AppendAllTextAsync(fileName, line);
+        try
+        {
+            string line = $"\n[{DateTime.Now:HH:mm:ss}] " +
+                          $"| {topic} | {payload} | {qos} | {retain}";
+            await File.AppendAllTextAsync(fileName, line);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Greska prilikom logovanja:  {e.Message}");
+        }
     }
 }

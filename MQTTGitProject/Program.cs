@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using MQTTGitProject.Models;
 using MQTTnet;
 using MQTTnet.Protocol;
 
@@ -8,84 +9,34 @@ namespace MQTTGitProject
     {
         static async Task Main(string[] args)
         {
-            // REGEX za unose
-            var subscriberTopicRegex  =  @"^[^/#+\s]+(?:/(?:[^/#+\s]+|\+))*?(?:/#)?$";
-            var publisherTopicRegex   =  @"^[^/#+\s]+(?:/[^/#+\s]+)*$";
+            Config.Config config = Config.Config.Load();
+            IMessageLogger testLogger = new CompositeLogger(new FileLogger(config), new ConsoleLogger());
             
-            // Promenljive
+            var factory = new MqttClientFactory();
+            using var mqttClient = factory.CreateMqttClient();
+
+            List<Subscription> subscriptions = new List<Subscription>();
+            
+            var options = new MqttClientOptionsBuilder()
+                .WithTcpServer(config.ServerIP, config.ServerPort)
+                .Build();
+
+            InitializeHandlers(testLogger, mqttClient, options, subscriptions);
+            
+            await TryToConnect(mqttClient, options);
+
+            await MainLoop(config, mqttClient, subscriptions);
+        }
+
+        static async Task MainLoop(Config.Config config, IMqttClient mqttClient, List<Subscription> subscriptions)
+        {
             string topic = String.Empty;
             int qos = 0;
             MqttQualityOfServiceLevel level = MqttQualityOfServiceLevel.AtMostOnce;
             
-            //MessageLogger testLoggerConsole = new MessageLogger(LogType.Console);
-            IMessageLogger testLogger = new CompositeLogger();
-            
-            // Kreiranje factory-a i clienta
-            var factory = new MqttClientFactory();
-            using var mqttClient = factory.CreateMqttClient();
-            
-            // Event handler za poruke koje pristizu
-            mqttClient.ApplicationMessageReceivedAsync += e =>
-            {
-                testLogger.LogMessageAsync(e.ApplicationMessage.Topic, 
-                    e.ApplicationMessage.ConvertPayloadToString(), 
-                    e.ApplicationMessage.QualityOfServiceLevel.ToString(), 
-                    (e.ApplicationMessage.Retain ? "Retain" : "No Retain"));
-                
-                return Task.CompletedTask;
-            };
-            
-            // Opcije za povezivanje
-            var options = new MqttClientOptionsBuilder()
-                .WithTcpServer("localhost", 1883)
-                .Build();
-            
-            // Povezivanje sa brokerom
-            try
-            {
-                await mqttClient.ConnectAsync(options);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Doslo je do greske prilikom povezivanja na server: {e.Message}");
-            }
-            
-            // Event handler za disconnect
-            mqttClient.DisconnectedAsync += async e =>
-            {
-                Console.WriteLine();
-                Console.WriteLine("MQTT konekcija je prekinuta");
-
-                if (e.Exception != null)
-                {
-                    Console.WriteLine($"Razlog: {e.Exception.Message}");
-                }
-
-                while (!mqttClient.IsConnected)
-                {
-                    try
-                    {
-                        Console.WriteLine("Pokusaj ponovnog povezivanja za 5 sekundi...");
-                        await Task.Delay(TimeSpan.FromSeconds(5));
-
-                        Console.WriteLine("Pokusavam reconnect...");
-
-                        await mqttClient.ConnectAsync(options);
-
-                        Console.WriteLine("Reconnect uspesan!");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Reconnect nije uspeo: {ex.Message}");
-                    }
-                }
-            };
-            
-            // MAIN LOOP
             while (true)
             {
                 Console.WriteLine("Izaberite opciju: p - publish | s - subscribe | q - quit | c - clear");
-                
                 string opcija = Console.ReadLine();
 
                 if (opcija == "p")
@@ -96,7 +47,7 @@ namespace MQTTGitProject
                 
                     Console.Write("\nUnesite topic poruke: ");
                     topic = Console.ReadLine();
-                    if (!Regex.IsMatch(topic, publisherTopicRegex))
+                    if (!Regex.IsMatch(topic, config.PublishRegex))
                     {
                         Console.WriteLine("Neispravan format topic-a! Mora biti u formatu rec(/rec...)");
                         Console.WriteLine("Primer: kuca/soba/temperatura");
@@ -135,7 +86,7 @@ namespace MQTTGitProject
                             break;
                         default:
                             Console.WriteLine("Neispravan unos QoS!");
-                            return;
+                            continue;
                     }
                     
                     switch (tmpretain)
@@ -148,16 +99,24 @@ namespace MQTTGitProject
                             break;
                         default:
                             Console.WriteLine("Neispravan unos retain-a!");
-                            return;
+                            continue;
                     }
 
-                    await SendMessage(mqttClient, topic, payload, level, retain);
+                    try
+                    {
+                        await SendMessage(mqttClient, topic, payload, level, retain);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Greska pri slanju poruke: {e.Message}");
+                        continue;
+                    }
                 }
                 else if (opcija == "s")
                 {
                     Console.Write("Unesite topic: ");
                     topic = Console.ReadLine();
-                    if (!Regex.IsMatch(topic, subscriberTopicRegex))
+                    if (!Regex.IsMatch(topic, config.SubscribeRegex))
                     {
                         Console.WriteLine("Neispravan format topic-a! Mora biti u formatu rec(/(rec/+/#)...)");
                         Console.WriteLine("Primer: kuca/soba/# ili kuca/+/# ili kuca/soba/temperatura...");
@@ -189,7 +148,7 @@ namespace MQTTGitProject
                             break;
                         default:
                             Console.WriteLine("Neispravan unos QoS!");
-                            return;
+                            continue;
                     }
                     
                     try
@@ -198,13 +157,14 @@ namespace MQTTGitProject
                             .WithTopicFilter(topic, level)
                             .Build();
                         await mqttClient.SubscribeAsync(subscribeOptions);
+                        
+                        subscriptions.Add(new Subscription(topic, level));
+                        Console.WriteLine($"Subscribe uspesno obavljen.");
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine($"Doslo je do greske prilikom subscribe-a: {e.Message}");
                     }
-                    
-                    Console.WriteLine($"Subscribe uspesno obavljen.");
                 }
                 else if (opcija == "q")
                 {
@@ -222,17 +182,119 @@ namespace MQTTGitProject
                 await Task.Delay(TimeSpan.FromSeconds(1));
             }
         }
+        
+        static async Task TryToConnect(IMqttClient client, MqttClientOptions options)
+        {
+            do
+            {
+                try
+                {
+                    await client.ConnectAsync(options);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"\nDoslo je do greske prilikom povezivanja na server: {e.Message}");
+                    Console.WriteLine("Ponovni pokusaj za 5 sekundi...");
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                }
+            } while (!client.IsConnected);
+            
+            Console.WriteLine("\nPovezivanje uspesno!");
+        }
+        
+        static void InitializeHandlers(IMessageLogger logger, IMqttClient client, MqttClientOptions options, List<Subscription> subscriptions)
+        {
+            try
+            {
+                client.ApplicationMessageReceivedAsync += async e => 
+                {
+                    await logger.LogMessageAsync(e.ApplicationMessage.Topic, 
+                        e.ApplicationMessage.ConvertPayloadToString(), 
+                        e.ApplicationMessage.QualityOfServiceLevel.ToString(), 
+                        (e.ApplicationMessage.Retain ? "Retain" : "No Retain"));
+                };
+            
+                client.DisconnectedAsync += async e =>
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("MQTT konekcija je prekinuta");
 
+                    if (e.Exception != null)
+                    {
+                        Console.WriteLine($"Razlog: {e.Exception.Message}");
+                    }
+
+                    while (!client.IsConnected)
+                    {
+                        try
+                        {
+                            Console.WriteLine("Pokusaj ponovnog povezivanja za 5 sekundi...");
+                            await Task.Delay(TimeSpan.FromSeconds(5));
+                            
+                            Console.WriteLine("Pokusavam reconnect...");
+
+                            await client.ConnectAsync(options);
+
+                            Console.WriteLine("Reconnect uspesan!");
+
+                            await ResubscribeToAll(subscriptions, client);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Reconnect nije uspeo: {ex.Message}");
+                        }
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Greska pri inicijalizaciji handlera: {e.Message}");
+            }
+            
+        }
+
+        public static async Task ResubscribeToAll(List<Subscription> subscriptions, IMqttClient client)
+        {
+            for (int i = subscriptions.Count - 1; i >= 0; i--)
+            {
+                try
+                {
+                    var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
+                        .WithTopicFilter(subscriptions[i].Topic, subscriptions[i].QoS)
+                        .Build();
+                    await client.SubscribeAsync(subscribeOptions);
+                    
+                    Console.WriteLine($"Uspesno re-subscribovan na {subscriptions[i].Topic}");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Nije moguce ponovo povezati se na {subscriptions[i].Topic}");
+                    Console.WriteLine($"Razlog: {e.Message}");
+                    
+                    subscriptions.RemoveAt(i);
+                }
+            }
+        }
+        
         static async Task SendMessage(IMqttClient client, string topic, string payload, MqttQualityOfServiceLevel level, bool retain)
         {
-            var message = new MqttApplicationMessageBuilder()
-                .WithTopic(topic)
-                .WithPayload(payload)
-                .WithQualityOfServiceLevel(level)
-                .WithRetainFlag(retain)
-                .Build();
+            try
+            {
+                var message = new MqttApplicationMessageBuilder()
+                    .WithTopic(topic)
+                    .WithPayload(payload)
+                    .WithQualityOfServiceLevel(level)
+                    .WithRetainFlag(retain)
+                    .Build();
 
-            await client.PublishAsync(message);
+                await client.PublishAsync(message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Greska pri slanju poruke: {e.Message}");
+                throw;
+            }
+            
         }
     }
 }
