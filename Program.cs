@@ -1,17 +1,16 @@
-﻿using MQTTnet;
+﻿using System.Text.RegularExpressions;
+using MQTTnet;
 using MQTTnet.Protocol;
 
 namespace MQTTGitProject
 {
-    internal class Program
+    internal class Program 
     {
         static async Task Main(string[] args)
         {
-            /*
-             * 
-             * Odradjeno do: CELA PRVA NEDELJA
-             * 
-             */
+            // REGEX za unose
+            var subscriberTopicRegex  =  @"^[^/#+\s]+(?:/(?:[^/#+\s]+|\+))*?(?:/#)?$";
+            var publisherTopicRegex   =  @"^[^/#+\s]+(?:/[^/#+\s]+)*$";
             
             // Promenljive
             string topic = String.Empty;
@@ -28,16 +27,6 @@ namespace MQTTGitProject
             // Event handler za poruke koje pristizu
             mqttClient.ApplicationMessageReceivedAsync += e =>
             {
-                /*
-                Console.WriteLine($"\n======================================");
-                Console.WriteLine($"Topic: {e.ApplicationMessage.Topic}");
-                Console.WriteLine($"Poruka: {e.ApplicationMessage.ConvertPayloadToString()}");
-                Console.WriteLine($"QoS: {e.ApplicationMessage.QualityOfServiceLevel}");
-                Console.WriteLine($"Retain: {(e.ApplicationMessage.Retain ? "Retain" : "No Retain")}");
-                Console.WriteLine($"Timestamp: {DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}");
-                Console.WriteLine($"======================================\n");
-                */
-                
                 testLogger.LogMessageAsync(e.ApplicationMessage.Topic, 
                     e.ApplicationMessage.ConvertPayloadToString(), 
                     e.ApplicationMessage.QualityOfServiceLevel.ToString(), 
@@ -107,12 +96,32 @@ namespace MQTTGitProject
                 
                     Console.Write("\nUnesite topic poruke: ");
                     topic = Console.ReadLine();
+                    if (!Regex.IsMatch(topic, publisherTopicRegex))
+                    {
+                        Console.WriteLine("Neispravan format topic-a! Mora biti u formatu rec(/rec...)");
+                        Console.WriteLine("Primer: kuca/soba/temperatura");
+                        continue;
+                    }
+                        
                     Console.Write("Unesite payload poruke: ");
                     payload = Console.ReadLine();
                 
-                    Console.WriteLine("1 - At Most Once\n2 - At Least Once\n3 - Exactly Once");
-                    Console.Write("Unesite QoS: ");
-                    qos =  int.Parse(Console.ReadLine());
+                    try
+                    {
+                        Console.WriteLine("1 - At Most Once\n2 - At Least Once\n3 - Exactly Once");
+                        Console.Write("Unesite QoS: ");
+                        qos =  int.Parse(Console.ReadLine());
+                        
+                        Console.WriteLine("1 - Retain\n2 - No Retain");
+                        Console.Write("Unesite retain: ");
+                        tmpretain =  int.Parse(Console.ReadLine());
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Greska! Poruka greske: {e.Message}");
+                        continue;
+                    }
+                    
                     switch (qos)
                     {
                         case 1:
@@ -128,10 +137,7 @@ namespace MQTTGitProject
                             Console.WriteLine("Neispravan unos QoS!");
                             return;
                     }
-                
-                    Console.WriteLine("1 - Retain\n2 - No Retain");
-                    Console.Write("Unesite retain: ");
-                    tmpretain =  int.Parse(Console.ReadLine());
+                    
                     switch (tmpretain)
                     {
                         case 1:
@@ -151,12 +157,25 @@ namespace MQTTGitProject
                 {
                     Console.Write("Unesite topic: ");
                     topic = Console.ReadLine();
-
+                    if (!Regex.IsMatch(topic, subscriberTopicRegex))
+                    {
+                        Console.WriteLine("Neispravan format topic-a! Mora biti u formatu rec(/(rec/+/#)...)");
+                        Console.WriteLine("Primer: kuca/soba/# ili kuca/+/# ili kuca/soba/temperatura...");
+                        continue;
+                    }
+                    
                     Console.WriteLine("1 - At Most Once\n2 - At Least Once\n3 - Exactly Once");
                     Console.Write("Unesite QoS: ");
-                    qos =  int.Parse(Console.ReadLine());
+                    try
+                    {
+                        qos =  int.Parse(Console.ReadLine());
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Greska! Poruka greske: {e.Message}");
+                        continue;
+                    }
 
-                    // QoS odredjivanje
                     switch (qos)
                     {
                         case 1:
@@ -173,7 +192,6 @@ namespace MQTTGitProject
                             return;
                     }
                     
-                    // Subscribe na topic
                     try
                     {
                         var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
