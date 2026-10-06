@@ -1,0 +1,6 @@
+@MQTTRestApi_HostAddress = http://localhost:5084
+
+GET {{MQTTRestApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
