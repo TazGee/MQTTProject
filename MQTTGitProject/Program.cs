@@ -23,9 +23,9 @@ namespace MQTTGitProject
                 .WithTcpServer(config.ServerIP, config.ServerPort)
                 .Build();
 
-            InitializeHandlers(testLogger, mqttClient, options, subscriptions);
+            InitializeHandlers(testLogger, mqttClient, options, subscriptions, config);
             
-            await TryToConnect(mqttClient, options, subscriptions);
+            await TryToConnect(mqttClient, options, subscriptions, config);
 
             await MainLoop(config, mqttClient, subscriptions);
         }
@@ -185,7 +185,10 @@ namespace MQTTGitProject
             }
         }
         
-        static async Task TryToConnect(IMqttClient client, MqttClientOptions options, List<Subscription> subscriptions)
+        static async Task TryToConnect(IMqttClient client, 
+                                        MqttClientOptions options, 
+                                        List<Subscription> subscriptions,
+                                        Config.Config config)
         {
             reconnecting = true;
             do
@@ -207,14 +210,18 @@ namespace MQTTGitProject
                 {
                     Console.WriteLine($"Povezivanje nije uspelo: {ex.Message}");
                     Console.WriteLine("Pokusaj ponovnog povezivanja za 3 sekunde...");
-                    await Task.Delay(TimeSpan.FromSeconds(3));
+                    await Task.Delay(TimeSpan.FromSeconds(config.ReconnectTimer));
                 }
             } while (!client.IsConnected);
             
             Console.WriteLine("\nPovezivanje uspesno!");
         }
         
-        static void InitializeHandlers(IMessageLogger logger, IMqttClient client, MqttClientOptions options, List<Subscription> subscriptions)
+        static void InitializeHandlers(IMessageLogger logger, 
+                                        IMqttClient client, 
+                                        MqttClientOptions options, 
+                                        List<Subscription> subscriptions,
+                                        Config.Config config)
         {
             try
             {
@@ -236,7 +243,7 @@ namespace MQTTGitProject
                         Console.WriteLine($"Razlog: {e.Exception.Message}");
                     }
 
-                    if(!reconnecting) await TryToConnect(client, options, subscriptions);
+                    if(!reconnecting) await TryToConnect(client, options, subscriptions, config);
                 };
             }
             catch (Exception e)

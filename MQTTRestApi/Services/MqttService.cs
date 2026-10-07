@@ -9,11 +9,15 @@ public class MqttService
     
     private MqttClientFactory factory = new MqttClientFactory();
     private IMqttClient mqttClient;
+
+    private readonly IConfiguration config;
     
     private bool connected = false;
 
-    public MqttService()
+    public MqttService(IConfiguration config)
     {
+        this.config = config;
+        
         InitializeMqttClient();
     }
     
@@ -51,7 +55,8 @@ public class MqttService
                 Console.WriteLine("Pokusavam povezivanje sa serverom...");
 
                 var options = new MqttClientOptionsBuilder()
-                    .WithTcpServer("localhost", 1883)
+                    .WithTcpServer(config["MqttBroker:Host"] ?? "localhost", 
+                        int.Parse(config["MqttBroker:Port"] ?? "1883"))
                     .Build();
                 
                 await mqttClient.ConnectAsync(options);
@@ -61,7 +66,7 @@ public class MqttService
             {
                 Console.WriteLine($"Povezivanje nije uspelo: {ex.Message}");
                 Console.WriteLine("Pokusaj ponovnog povezivanja za 3 sekunde...");
-                await Task.Delay(TimeSpan.FromSeconds(3));
+                await Task.Delay(TimeSpan.FromSeconds(int.Parse(config["Settings:ReconnectTimer"] ?? "3")));
             }
         } while (!mqttClient.IsConnected);
             
