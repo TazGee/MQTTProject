@@ -1,0 +1,139 @@
+{
+  "info": {
+    "_postman_id": "853375f1-3707-4552-9608-64bc38549970",
+    "name": "PostmanCollection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58754944",
+    "_collection_link": "https://go.postman.co/collection/58754944-853375f1-3707-4552-9608-64bc38549970?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Subscribe",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/mqtt/subscribe?Topic=kuca/soba/temperatura",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "mqtt",
+            "subscribe"
+          ],
+          "query": [
+            {
+              "key": "Topic",
+              "value": "kuca/soba/temperatura"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Publish",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/mqtt/publish?Topic=kuca/soba/temperatura&Payload=23&QoS=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "mqtt",
+            "publish"
+          ],
+          "query": [
+            {
+              "key": "Topic",
+              "value": "kuca/soba/temperatura"
+            },
+            {
+              "key": "Payload",
+              "value": "23"
+            },
+            {
+              "key": "QoS",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Messages",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/mqtt/messages",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "mqtt",
+            "messages"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Stats",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/mqtt/stats",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "mqtt",
+            "stats"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Stats/{topic}",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/mqtt/stats/kuca/soba/temperatura",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "mqtt",
+            "stats",
+            "kuca",
+            "soba",
+            "temperatura"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

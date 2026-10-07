@@ -1,0 +1,81 @@
+services:
+  emqx:
+    image: emqx/emqx:latest
+    container_name: emqx
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "8083:8083"
+      - "18083:18083"
+    networks:
+      - mqtt-network
+    healthcheck:
+      test: ["CMD", "emqx", "ctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: MQTTDatabase
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - mqtt-network
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    networks:
+      - mqtt-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  mqtt-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mqtt-api
+    restart: unless-stopped
+    depends_on:
+      emqx:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "http://+:80"
+      ConnectionStrings__DefaultConnection: "Server=mariadb;Port=3306;Database=MQTTDatabase;User=root;Password=rootpassword;"
+      Redis__ConnectionString: "redis:6379"
+      MqttBroker__Host: "emqx"
+      MqttBroker__Port: "1883"
+    ports:
+      - "5000:80"
+    networks:
+      - mqtt-network
+
+networks:
+  mqtt-network:
+    driver: bridge
+
+volumes:
+  mariadb-data:

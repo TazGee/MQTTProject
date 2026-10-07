@@ -2,6 +2,9 @@ using MQTTnet.Protocol;
 
 namespace MQTTGitProject.Models;
 
+/// <summary>
+/// Klasa koja predstavlja pojedinacnu pretplatu
+/// </summary>
 public class Subscription
 {
     public string Topic { get; set; }
