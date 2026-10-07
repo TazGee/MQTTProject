@@ -9,11 +9,15 @@ public class MqttService
     
     private MqttClientFactory factory = new MqttClientFactory();
     private IMqttClient mqttClient;
+
+    private readonly IConfiguration config;
     
     private bool connected = false;
 
-    public MqttService()
+    public MqttService(IConfiguration config)
     {
+        this.config = config;
+        
         InitializeMqttClient();
     }
     
@@ -41,25 +45,32 @@ public class MqttService
             Console.WriteLine($"Greska prilikom inicijalizacije klijenta: {e.Message}");
         }
     }
-
-    public async Task<bool> ConnectAsync()
+    
+    public async Task ConnectAsync()
     {
-        try
+        do
         {
-            var options = new MqttClientOptionsBuilder()
-                .WithTcpServer("localhost", 1883)
-                .Build();
+            try
+            {
+                Console.WriteLine("Pokusavam povezivanje sa serverom...");
+
+                var options = new MqttClientOptionsBuilder()
+                    .WithTcpServer(config["MqttBroker:Host"] ?? "localhost", 
+                        int.Parse(config["MqttBroker:Port"] ?? "1883"))
+                    .Build();
+                
+                await mqttClient.ConnectAsync(options);
+                Console.WriteLine("Konekcija uspesno uspostavljena!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Povezivanje nije uspelo: {ex.Message}");
+                Console.WriteLine("Pokusaj ponovnog povezivanja za 3 sekunde...");
+                await Task.Delay(TimeSpan.FromSeconds(int.Parse(config["Settings:ReconnectTimer"] ?? "3")));
+            }
+        } while (!mqttClient.IsConnected);
             
-            await mqttClient.ConnectAsync(options);
-
-            connected = true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Greska pri povezivanju: {e.Message}");
-        }
-
-        return connected;
+        Console.WriteLine("\nPovezivanje uspesno!");
     }
     
     public async Task<bool> SubscribeAsync(string topic)

@@ -7,6 +7,8 @@ namespace MQTTGitProject
 {
     internal class Program 
     {
+        static bool reconnecting = false;
+        
         static async Task Main(string[] args)
         {
             Config.Config config = Config.Config.Load();
@@ -21,9 +23,9 @@ namespace MQTTGitProject
                 .WithTcpServer(config.ServerIP, config.ServerPort)
                 .Build();
 
-            InitializeHandlers(testLogger, mqttClient, options, subscriptions);
+            InitializeHandlers(testLogger, mqttClient, options, subscriptions, config);
             
-            await TryToConnect(mqttClient, options);
+            await TryToConnect(mqttClient, options, subscriptions, config);
 
             await MainLoop(config, mqttClient, subscriptions);
         }
@@ -183,26 +185,43 @@ namespace MQTTGitProject
             }
         }
         
-        static async Task TryToConnect(IMqttClient client, MqttClientOptions options)
+        static async Task TryToConnect(IMqttClient client, 
+                                        MqttClientOptions options, 
+                                        List<Subscription> subscriptions,
+                                        Config.Config config)
         {
+            reconnecting = true;
             do
             {
                 try
                 {
+                    Console.WriteLine("Pokusavam povezivanje sa serverom...");
+
                     await client.ConnectAsync(options);
+                    Console.Clear();
+                    Console.WriteLine("Konekcija uspesno uspostavljena!");
+
+                    reconnecting = false;
+                    
+                    await ResubscribeToAll(subscriptions, client);
+                    Console.WriteLine("Uspesan resubscribe na sve topic-e!");
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    Console.WriteLine($"\nDoslo je do greske prilikom povezivanja na server: {e.Message}");
-                    Console.WriteLine("Ponovni pokusaj za 5 sekundi...");
-                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    Console.WriteLine($"Povezivanje nije uspelo: {ex.Message}");
+                    Console.WriteLine("Pokusaj ponovnog povezivanja za 3 sekunde...");
+                    await Task.Delay(TimeSpan.FromSeconds(config.ReconnectTimer));
                 }
             } while (!client.IsConnected);
             
             Console.WriteLine("\nPovezivanje uspesno!");
         }
         
-        static void InitializeHandlers(IMessageLogger logger, IMqttClient client, MqttClientOptions options, List<Subscription> subscriptions)
+        static void InitializeHandlers(IMessageLogger logger, 
+                                        IMqttClient client, 
+                                        MqttClientOptions options, 
+                                        List<Subscription> subscriptions,
+                                        Config.Config config)
         {
             try
             {
@@ -224,26 +243,7 @@ namespace MQTTGitProject
                         Console.WriteLine($"Razlog: {e.Exception.Message}");
                     }
 
-                    while (!client.IsConnected)
-                    {
-                        try
-                        {
-                            Console.WriteLine("Pokusaj ponovnog povezivanja za 5 sekundi...");
-                            await Task.Delay(TimeSpan.FromSeconds(5));
-                            
-                            Console.WriteLine("Pokusavam reconnect...");
-
-                            await client.ConnectAsync(options);
-
-                            Console.WriteLine("Reconnect uspesan!");
-
-                            await ResubscribeToAll(subscriptions, client);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Reconnect nije uspeo: {ex.Message}");
-                        }
-                    }
+                    if(!reconnecting) await TryToConnect(client, options, subscriptions, config);
                 };
             }
             catch (Exception e)
@@ -253,25 +253,23 @@ namespace MQTTGitProject
             
         }
 
-        public static async Task ResubscribeToAll(List<Subscription> subscriptions, IMqttClient client)
+        static async Task ResubscribeToAll(List<Subscription> subscriptions, IMqttClient client)
         {
-            for (int i = subscriptions.Count - 1; i >= 0; i--)
+            foreach (Subscription s in subscriptions)
             {
                 try
                 {
                     var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
-                        .WithTopicFilter(subscriptions[i].Topic, subscriptions[i].QoS)
+                        .WithTopicFilter(s.Topic, s.QoS)
                         .Build();
                     await client.SubscribeAsync(subscribeOptions);
                     
-                    Console.WriteLine($"Uspesno re-subscribovan na {subscriptions[i].Topic}");
+                    Console.WriteLine($"Uspesno re-subscribovan na {s.Topic}");
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Nije moguce ponovo povezati se na {subscriptions[i].Topic}");
+                    Console.WriteLine($"Nije moguce ponovo povezati se na {s.Topic}");
                     Console.WriteLine($"Razlog: {e.Message}");
-                    
-                    subscriptions.RemoveAt(i);
                 }
             }
         }

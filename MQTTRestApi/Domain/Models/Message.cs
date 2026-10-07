@@ -5,10 +5,10 @@ namespace MQTTRestApi.Domain.Models;
 
 public class Message
 {
-    string Topic  { get; set; } = string.Empty;
-    string Payload  { get; set; } = string.Empty;
-    MqttQualityOfServiceLevel QoS { get; set; } =  MqttQualityOfServiceLevel.AtMostOnce;
-    bool Retain  { get; set; } = false;
+    public string Topic  { get; set; } = string.Empty;
+    public string Payload  { get; set; } = string.Empty;
+    public MqttQualityOfServiceLevel QoS { get; set; } =  MqttQualityOfServiceLevel.AtMostOnce;
+    public bool Retain  { get; set; } = false;
 
     public Message() {}
     public Message(string topic, string payload, MqttQualityOfServiceLevel qoS, bool retain)

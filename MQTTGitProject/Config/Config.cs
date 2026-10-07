@@ -11,6 +11,7 @@ public class Config
     
     public string ServerIP { get; set; }
     public int ServerPort { get; set; }
+    public int ReconnectTimer { get; set; }
 
     public static Config Load()
     {
@@ -32,6 +33,8 @@ public class Config
             
             ServerIP =  config.ServerIP;
             ServerPort =  config.ServerPort;
+            
+            ReconnectTimer = config.ReconnectTimer;
             
             return true;
         }
