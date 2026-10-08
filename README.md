@@ -22,8 +22,9 @@
 \
 ##🧑‍💻 **Setup Instrukcije** 🧑‍💻
  - Neophodno je prethodno kloniranje git repozitorijuma
+ - U folderu 'MQTTRestApi' neophodno je popuniti .env fajl (primer u .env.example)
  - Unutar foldera MQTTRestApi pritisnuti desni klik > Open in Terminal
- - Ukucati docker-compose up -d
+ - Ukucati docker-compose up -d --build
  - Ukoliko nema gresaka, API je spreman za upotrebu
 \
 \
