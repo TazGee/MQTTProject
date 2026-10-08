@@ -58,6 +58,8 @@ public class MqttService : IMqttService
                 Console.WriteLine();
                 Console.WriteLine("MQTT konekcija je prekinuta");
 
+                connected = false;
+
                 if (e.Exception != null)
                 {
                     Console.WriteLine($"Razlog: {e.Exception.Message}");
