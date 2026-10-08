@@ -5,7 +5,7 @@ namespace MQTTRestApi.Domain.Models;
 /// </summary>
 public class Subscription
 {
-    public long Id { get; set; } = 0;
+    public long Id { get; set; }
     public string Topic { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.MinValue;
 
@@ -13,7 +13,6 @@ public class Subscription
     
     public Subscription(string Topic, DateTime CreatedAt)
     {
-        Id = DateTime.Now.Millisecond;
         this.Topic = Topic;
         this.CreatedAt = CreatedAt;
     }

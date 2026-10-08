@@ -24,7 +24,7 @@ public class MqttController : ControllerBase
     }
     
     [HttpPost("subscribe")]
-    public async Task<IActionResult> Subscribe([FromQuery] SubscribeRequestDto request)
+    public async Task<IActionResult> Subscribe(SubscribeRequestDto request)
     {
         var result = await mqttService.SubscribeAsync(request.Topic);
 
@@ -34,7 +34,7 @@ public class MqttController : ControllerBase
     }
     
     [HttpPost("publish")]
-    public async Task<IActionResult> Publish([FromQuery] PublishRequestDto request)
+    public async Task<IActionResult> Publish(PublishRequestDto request)
     {
         var result = await mqttService.PublishAsync(request.Topic, request.Payload, request.QoS);
 

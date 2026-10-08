@@ -1,25 +1,22 @@
 using Microsoft.EntityFrameworkCore;
 using MQTTRestApi.Services;
 using MQTTRestApi.Data;
+using MQTTRestApi.Domain.Services;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<MqttService>();
-builder.Services.AddSingleton<RedisService>();
+builder.Services.AddSingleton<IMqttService, MqttService>();
+builder.Services.AddSingleton<IRedisService, RedisService>();
 
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        ServerVersion.AutoDetect(
-            builder.Configuration.GetConnectionString("DefaultConnection")
-        )
-    )
-);
+var cs = builder.Configuration.GetConnectionString("DefaultConnection");
+var serverVersion = ServerVersion.AutoDetect(cs);
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(cs, serverVersion));
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(
     ConnectionMultiplexer.Connect(
@@ -35,7 +32,7 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-var mqttService = app.Services.GetRequiredService<MqttService>();
+var mqttService = app.Services.GetRequiredService<IMqttService>();
 await mqttService.ConnectAsync();
 
 if (app.Environment.IsDevelopment())
