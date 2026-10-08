@@ -225,33 +225,6 @@ public class MqttService : IMqttService
         }
     }
     
-    public async Task<bool> PublishAsync(string topic, string payload, MQTTnet.Protocol.MqttQualityOfServiceLevel qos)
-    {
-        try
-        {
-            if (!Regex.IsMatch(topic, config["PublishRegex"]))
-            {
-                Console.WriteLine($"Vrednost topica nije validna!");
-                return false;
-            }
-            
-            var message = new MqttApplicationMessageBuilder()
-                .WithTopic(topic)
-                .WithPayload(payload)
-                .WithQualityOfServiceLevel(qos)
-                .Build();
-
-            await mqttClient.PublishAsync(message);
-
-            await LogAsync($"Admin je poslao poruku na topic {topic}, payload: {payload}!", LogTypes.MESSAGE);
-            return true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Greska pri publishu: {e.Message}");
-            return false;
-        }
-    }
     
     public List<MqttMessage> GetMessages()
     {

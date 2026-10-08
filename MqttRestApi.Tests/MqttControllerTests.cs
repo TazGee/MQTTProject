@@ -44,35 +44,6 @@ public class MqttControllerTests
     }
 
     [Fact]
-    public async Task Publish_ReturnsOk_WhenServiceSucceeds()
-    {
-        var (controller, mqtt, _) = CreateController();
-        mqtt.Setup(m => m.PublishAsync("test/topic", "x", MqttQualityOfServiceLevel.AtLeastOnce))
-            .ReturnsAsync(true);
-
-        var result = await controller.Publish(new PublishRequestDto
-        {
-            Topic = "test/topic",
-            Payload = "x",
-            QoS = MqttQualityOfServiceLevel.AtLeastOnce
-        });
-
-        Assert.IsType<OkResult>(result);
-    }
-
-    [Fact]
-    public async Task Publish_ReturnsBadRequest_WhenServiceFails()
-    {
-        var (controller, mqtt, _) = CreateController();
-        mqtt.Setup(m => m.PublishAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MqttQualityOfServiceLevel>()))
-            .ReturnsAsync(false);
-
-        var result = await controller.Publish(new PublishRequestDto { Topic = "bad", Payload = "x" });
-
-        Assert.IsType<BadRequestObjectResult>(result);
-    }
-
-    [Fact]
     public void GetMessages_ReturnsOk_WithMessagesFromService()
     {
         var (controller, mqtt, _) = CreateController();
