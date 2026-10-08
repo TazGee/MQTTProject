@@ -3,6 +3,9 @@ using MQTTnet.Protocol;
 using MQTTRestApi.Domain.DTO;
 using MQTTRestApi.Services;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
 
 namespace MQTTRestApi.Controllers;
@@ -33,16 +36,18 @@ public class MqttController : ControllerBase
         return Ok();
     }
     
+    [Authorize(Roles = "Admin")]
     [HttpPost("publish")]
     public async Task<IActionResult> Publish(PublishRequestDto request)
     {
         var result = await mqttService.PublishAsync(request.Topic, request.Payload, request.QoS);
 
-        if (!result) return BadRequest("Neuspesan pokusaj subscribe-a.");
+        if (!result) return BadRequest("Neuspesan pokusaj publish-a.");
 
         return Ok();
     }
     
+    [Authorize(Roles = "Admin")]
     [HttpGet("messages")]
     public IActionResult GetMessages()
     {

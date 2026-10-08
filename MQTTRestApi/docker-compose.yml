@@ -20,8 +20,8 @@ services:
     container_name: mariadb
     restart: unless-stopped
     environment:
-      MARIADB_ROOT_PASSWORD: rootpassword
-      MARIADB_DATABASE: MQTTDatabase
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
     ports:
       - "3306:3306"
     volumes:
@@ -64,10 +64,14 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       ASPNETCORE_URLS: "http://+:80"
-      ConnectionStrings__DefaultConnection: "Server=mariadb;Port=3306;Database=MQTTDatabase;User=root;Password=rootpassword;"
+      ConnectionStrings__DefaultConnection: "Server=mariadb;Port=3306;Database=${MARIADB_DATABASE};User=root;Password=${MARIADB_ROOT_PASSWORD};"
       Redis__ConnectionString: "redis:6379"
       MqttBroker__Host: "emqx"
       MqttBroker__Port: "1883"
+      Jwt__Key: ${JWT_KEY}
+      Jwt__Issuer: ${JWT_ISSUER}
+      Jwt__Audience: ${JWT_AUDIENCE}
+      Jwt__ExpiryMinutes: ${JWT_EXPIRY_MINUTES}
     ports:
       - "5000:80"
     networks:

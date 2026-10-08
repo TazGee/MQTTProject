@@ -1,9 +1,10 @@
+using System.Net;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using MQTTnet;
-using MQTTnet.Protocol;
 using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Data;
+using MQTTRestApi.Domain.Enums;
 using MQTTRestApi.Domain.Services;
 
 namespace MQTTRestApi.Services;
@@ -41,10 +42,32 @@ public class MqttService : IMqttService
         InitializeMqttClient();
     }
     
+    private async Task LogAsync(string message,  LogTypes logType)
+    {
+        using var scope = scopeFactory.CreateScope();
+        var logger = scope.ServiceProvider.GetRequiredService<ILoggerService>();
+        await logger.LogMessage(message, logType);
+    }
+    
     void InitializeMqttClient()
     {
         try
         {
+            mqttClient.DisconnectedAsync += async e =>
+            {
+                Console.WriteLine();
+                Console.WriteLine("MQTT konekcija je prekinuta");
+
+                connected = false;
+
+                if (e.Exception != null)
+                {
+                    Console.WriteLine($"Razlog: {e.Exception.Message}");
+                }
+
+                if(!reconnecting) await ConnectAsync();
+            };
+            
             mqttClient.ApplicationMessageReceivedAsync += async e =>
             {
                 MqttMessage poruka = new MqttMessage(e.ApplicationMessage.Topic,
@@ -80,21 +103,6 @@ public class MqttService : IMqttService
                     throw;
                 }
             };
-            
-            mqttClient.DisconnectedAsync += async e =>
-            {
-                Console.WriteLine();
-                Console.WriteLine("MQTT konekcija je prekinuta");
-
-                if (e.Exception != null)
-                {
-                    Console.WriteLine($"Razlog: {e.Exception.Message}");
-                }
-                
-                connected = false;
-
-                if(!reconnecting) await ConnectAsync();
-            };
         }
         catch (Exception e)
         {
@@ -110,7 +118,7 @@ public class MqttService : IMqttService
             try
             {
                 Console.WriteLine("Pokusavam povezivanje sa serverom...");
-                
+
                 var options = new MqttClientOptionsBuilder()
                     .WithTcpServer(config["MqttBroker:Host"] ?? "localhost", 
                         int.Parse(config["MqttBroker:Port"] ?? "1883"))
@@ -122,15 +130,17 @@ public class MqttService : IMqttService
 
                 reconnecting = false;
                 connected = true;
+                
+                await LogAsync($"Backend API se uspesno povezao na server.", LogTypes.INFO);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Povezivanje nije uspelo: {ex.Message}");
-                Console.WriteLine($"Pokusaj ponovnog povezivanja za {config["ReconnectTimer"] ?? "3"} sekundi...");
-                await Task.Delay(TimeSpan.FromSeconds(int.Parse(config["ReconnectTimer"] ?? "3")));
+                Console.WriteLine($"Pokusaj ponovnog povezivanja za {config["Settings:ReconnectTimer"]} sekundi...");
+                await Task.Delay(TimeSpan.FromSeconds(int.Parse(config["Settings:ReconnectTimer"] ?? "3")));
+                await LogAsync($"Backend API je imao neuspesan pokusaj povezivanja!", LogTypes.ERROR);
             }
         } while (!mqttClient.IsConnected);
-
         try
         {
             await ResubscribeToAll();
@@ -139,10 +149,10 @@ public class MqttService : IMqttService
         catch (Exception e)
         {
             Console.WriteLine($"Neuspesan pokusaj resubscribe-a: {e.Message}");
+            await LogAsync($"Neuspesan pokusaj resubscribe-a na topic-e!", LogTypes.ERROR);
             throw;
         }
-            
-        Console.WriteLine("\nPovezivanje uspesno i svi su resubscribed!");
+        Console.WriteLine("\nPovezivanje uspesno!");
     }
 
     public async Task ResubscribeToAll()
@@ -173,6 +183,7 @@ public class MqttService : IMqttService
                 .Build();
             
             MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
+            
             foreach (var item in result.Items)
             {
                 var success = item.ResultCode is
@@ -232,11 +243,12 @@ public class MqttService : IMqttService
 
             await mqttClient.PublishAsync(message);
 
+            await LogAsync($"Admin je poslao poruku na topic {topic}, payload: {payload}!", LogTypes.MESSAGE);
             return true;
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Greska pri subscribovanju: {e.Message}");
+            Console.WriteLine($"Greska pri publishu: {e.Message}");
             return false;
         }
     }

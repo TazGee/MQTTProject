@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MQTTRestApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261006113619_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20261008093220_DodajNovuTabelu")]
+    partial class DodajNovuTabelu
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,29 @@ namespace MQTTRestApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("MQTTRestApi.Domain.Models.Log", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Logs");
+                });
 
             modelBuilder.Entity("MQTTRestApi.Domain.Models.MqttMessage", b =>
                 {
@@ -73,6 +96,33 @@ namespace MQTTRestApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Subscriptions");
+                });
+
+            modelBuilder.Entity("MQTTRestApi.Domain.Models.User", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 #pragma warning restore 612, 618
         }
