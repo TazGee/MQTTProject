@@ -1,4 +1,5 @@
 using MQTTRestApi.Data;
+using MQTTRestApi.Domain.DTO;
 using MQTTRestApi.Domain.Enums;
 using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
@@ -16,29 +17,30 @@ public class AuthService : IAuthService
         this.logger = logger;
     }
     
-    public (User, bool) Login(string username, string password)
+    public (UserInfoDto, bool) Login(string username, string password)
     {
         foreach (var user in dbContext.Users)
         {
             if (String.Equals(user.Username, username) && String.Equals(user.Password, password))
             {
                 logger.LogMessage($"Korisnik {username} se uspesno ulogovao na nalog.", LogTypes.AUTH);
-                return (user, true);
+                UserInfoDto u = new UserInfoDto() { Id = user.Id, Username = username, Role = user.Role, CreatedAt = user.CreatedAt };
+                return (u, true);
             }
         }
 
         logger.LogMessage($"Neuspesan pokusaj logovanja ({username})!", LogTypes.AUTH);
-        return (new User(), false);
+        return (new UserInfoDto(), false);
     }
 
-    public (User, bool) Register(string username, string password, UserTypes TipKorisnika)
+    public (UserInfoDto, bool) Register(string username, string password, UserTypes TipKorisnika)
     {
         foreach (var user in dbContext.Users)
         {
-            if (String.Equals(user.Username, username) && String.Equals(user.Password, password))
+            if (String.Equals(user.Username, username))
             {
                 logger.LogMessage($"Neuspesan pokusaj registracije ({username} vec postoji)!", LogTypes.AUTH);
-                return (new User(), false);
+                return (new UserInfoDto(), false);
             }
         }
         
@@ -49,13 +51,14 @@ public class AuthService : IAuthService
             dbContext.Users.Add(novi);
             dbContext.SaveChanges();
             logger.LogMessage($"Korisnik {username} se uspesno registrova.", LogTypes.AUTH);
-            return (novi, true);
+            UserInfoDto u = new UserInfoDto() { Id = novi.Id, Username = username, Role = novi.Role, CreatedAt = novi.CreatedAt };
+            return (u, true);
         }
         catch (Exception e)
         {
             Console.WriteLine("Greska pri dodavanju korisnika u bazu: " + e.Message);
             logger.LogMessage($"Neuspesan pokusaj registracije ({username} - EXCEPTION)!", LogTypes.ERROR);
-            return (new User(), false);
+            return (new UserInfoDto(), false);
         }
     }
 }

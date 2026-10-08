@@ -1,4 +1,5 @@
 using MQTTRestApi.Data;
+using MQTTRestApi.Domain.DTO;
 using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
 
@@ -13,8 +14,18 @@ public class UsersService : IUsersService
         this.dbContext = dbContext;
     }
     
-    public List<User> GetUsers()
+    public List<UserInfoDto> GetUsers()
     {
-        return dbContext.Users.ToList();
+        var users = dbContext.Users.ToList();
+
+        var userDtos = users.Select(u => new UserInfoDto
+        {
+            Id = u.Id,
+            Username = u.Username,
+            Role = u.Role,
+            CreatedAt = u.CreatedAt
+        }).ToList();
+        
+        return userDtos;
     }
 }

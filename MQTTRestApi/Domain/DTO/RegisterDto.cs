@@ -8,10 +8,9 @@ public class RegisterDto
     public string Password { get; set; }
     public UserTypes UserType { get; set; }
 
-    public RegisterDto(string username, string password, UserTypes userType)
+    public RegisterDto(string username, string password)
     {
         Username = username;
         Password = password;
-        UserType = userType;
     }
 }

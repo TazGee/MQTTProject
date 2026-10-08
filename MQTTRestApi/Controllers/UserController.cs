@@ -26,13 +26,10 @@ public class UserController : ControllerBase
     [HttpPost("login")]
     public IActionResult Login(LoginDto dto, [FromServices] ITokenService tokens)
     {
-        (User user, bool success) = authService.Login(dto.Username, dto.Password);
-        
-        Console.WriteLine(user.Username + user.Password + " " + success);
+        (UserInfoDto user, bool success) = authService.Login(dto.Username, dto.Password);
         
         if (success)
         {
-            Console.WriteLine("Uspesan login");
             var token = tokens.CreateToken(userId: user.Id.ToString(), username: dto.Username, role: user.Role.ToString());
             return Ok(new { token });
         }
@@ -43,15 +40,12 @@ public class UserController : ControllerBase
     }
     
     [HttpPost("register")]
-    public IActionResult Login(RegisterDto dto, [FromServices] ITokenService tokens)
+    public IActionResult Register(RegisterDto dto, [FromServices] ITokenService tokens)
     {
-        (User user, bool success) = authService.Register(dto.Username, dto.Password, dto.UserType);
-        
-        Console.WriteLine(user.Username + user.Password + " " + success);
+        (UserInfoDto user, bool success) = authService.Register(dto.Username, dto.Password, dto.UserType);
         
         if (success)
         {
-            Console.WriteLine("Uspesna registracija");
             var token = tokens.CreateToken(userId: user.Id.ToString(), username: dto.Username, role: user.Role.ToString());
             return Ok(new { token });
         }
@@ -65,7 +59,7 @@ public class UserController : ControllerBase
     [HttpPost("list")]
     public IActionResult ListUsers()
     {
-        List<User> listaKorisnika = usersService.GetUsers();
+        List<UserInfoDto> listaKorisnika = usersService.GetUsers();
         
         return Ok(listaKorisnika);
     }
