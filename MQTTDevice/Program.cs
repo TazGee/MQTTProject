@@ -51,7 +51,7 @@ class Program
                 refreshTime = int.Parse(Console.ReadLine());
             }
             catch { }
-        } while (refreshTime == -1 || refreshTime < 2 || refreshTime > 10);
+        } while (refreshTime < 2 || refreshTime > 10);
         Console.Clear();
         
         bool uspeo = false;
