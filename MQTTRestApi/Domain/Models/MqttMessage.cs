@@ -18,7 +18,7 @@ public class MqttMessage
     
     public MqttMessage(string Topic, string Payload, MqttQualityOfServiceLevel QoS, bool Retain, DateTime RecievedAt)
     {
-        Id = DateTime.Now.Millisecond;
+        Id = DateTime.Now.Ticks;
         this.Topic = Topic;
         this.Payload = Payload;
         this.QoS = QoS;

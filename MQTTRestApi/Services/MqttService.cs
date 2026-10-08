@@ -19,15 +19,15 @@ public class MqttService : IMqttService
     
     private bool connected = false;
     
-    private readonly RedisService redis;
+    private readonly IRedisService redis;
     
-    public MqttService(IServiceScopeFactory scopeFactory, RedisService redis, IConfiguration config)
+    public MqttService(IServiceScopeFactory scopeFactory, IRedisService redis, IConfiguration config)
         : this(scopeFactory, redis, config, new MqttClientFactory().CreateMqttClient())
     {
         
     }
 
-    public MqttService(IServiceScopeFactory scopeFactory, RedisService redis, IConfiguration config, IMqttClient mqttClient)
+    public MqttService(IServiceScopeFactory scopeFactory, IRedisService redis, IConfiguration config, IMqttClient mqttClient)
     {
         this.scopeFactory = scopeFactory;
         this.redis = redis;
@@ -195,7 +195,7 @@ public class MqttService : IMqttService
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Greska pri subscribovanju: {e.Message}");
+            Console.WriteLine($"Greska pri publishu: {e.Message}");
             return false;
         }
     }

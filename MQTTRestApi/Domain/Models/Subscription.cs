@@ -13,7 +13,7 @@ public class Subscription
     
     public Subscription(string Topic, DateTime CreatedAt)
     {
-        Id = DateTime.Now.Millisecond;
+        Id = DateTime.Now.Ticks;
         this.Topic = Topic;
         this.CreatedAt = CreatedAt;
     }
