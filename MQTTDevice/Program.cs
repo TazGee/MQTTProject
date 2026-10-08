@@ -1,5 +1,8 @@
 ﻿using MQTTDevice.Domain.Models;
 using System;
+using MQTTDevice.Domain.Services;
+using MQTTDevice.Services;
+using MQTTGitProject.Config;
 
 namespace MQTTDevice;
 
@@ -8,18 +11,21 @@ class Program
     static Random random = new Random();
     
     private static int refreshTime = -1;
-    private static string deviceName;
+    private static string topic;
     private static int minValue, maxValue;
-    
-    private static List<Uredjaj> uredjaji = new List<Uredjaj>();
+
+    private static IMqttService service = new MqttService();
     
     static async Task Main(string[] args)
     {
-        Console.Clear();
+        Config config = Config.Load();
+        Console.WriteLine(config.ServerIP +  ":" + config.ServerPort);
+        
         Console.WriteLine($"00========--------------=======00");
         Console.WriteLine("- = == MQTT DEVICE SELECTOR == = -\n");
 
         ProcessInput();
+        await service.InitializeService(config);
         
         await RunLoop();
     }
@@ -31,21 +37,21 @@ class Program
             try
             {
                 Console.Write("Unesite topic uredjaja: ");
-                deviceName = Console.ReadLine();
+                topic = Console.ReadLine();
             }
             catch { }
-        } while (String.IsNullOrEmpty(deviceName));
+        } while (String.IsNullOrEmpty(topic));
         Console.Clear();
         
         do
         {
             try
             {
-                Console.Write("Unesite (u sekundama) vreme osvezavanja (min 1, max 10): ");
+                Console.Write("Unesite (u sekundama) vreme osvezavanja (min 2, max 10): ");
                 refreshTime = int.Parse(Console.ReadLine());
             }
             catch { }
-        } while (refreshTime == -1 || refreshTime < 1 || refreshTime > 10);
+        } while (refreshTime == -1 || refreshTime < 2 || refreshTime > 10);
         Console.Clear();
         
         bool uspeo = false;
@@ -82,7 +88,9 @@ class Program
             Console.WriteLine($"Refresh - Nova vrednost - {DateTime.Now:HH:mm:ss}");
 
             float value = (float)minValue + (float)(random.NextDouble() * (maxValue - minValue));
-            Console.WriteLine($"{deviceName}: {value}");
+            Console.WriteLine($"{topic}: {value}");
+
+            await service.PublishMessageAsync(topic, value.ToString());
             
             await Task.Delay(TimeSpan.FromSeconds(refreshTime));
         }
