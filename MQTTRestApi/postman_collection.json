@@ -1,67 +1,20 @@
 {
   "info": {
-    "_postman_id": "7ff8761d-aef9-443e-875e-7c4bccdecfe2",
-    "name": "My Collection",
-    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "_postman_id": "853375f1-3707-4552-9608-64bc38549970",
+    "name": "PostmanCollection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "58754944",
-    "_collection_link": "https://go.postman.co/collection/58754944-7ff8761d-aef9-443e-875e-7c4bccdecfe2?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/58754944-853375f1-3707-4552-9608-64bc38549970?source=collection_link"
   },
   "item": [
     {
-      "name": "Get data",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 200\", function () {",
-              "    pm.response.to.have.status(200);",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "postman-echo.com/get",
-          "host": [
-            "postman-echo",
-            "com"
-          ],
-          "path": [
-            "get"
-          ]
-        },
-        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
-      },
-      "response": []
-    },
-    {
-      "name": "Post data",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Successful POST request\", function () {",
-              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-              "});",
-              ""
-            ]
-          }
-        }
-      ],
+      "name": "Subscribe",
       "request": {
         "method": "POST",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+          "raw": "{\n  \"topic\": \"kuca/kupatilo/temperatura\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -69,16 +22,134 @@
           }
         },
         "url": {
-          "raw": "postman-echo.com/post",
+          "raw": "http://localhost:5000/api/mqtt/subscribe?Topic=kuca/soba/temperatura",
+          "protocol": "http",
           "host": [
-            "postman-echo",
-            "com"
+            "localhost"
           ],
+          "port": "5000",
           "path": [
-            "post"
+            "api",
+            "mqtt",
+            "subscribe"
+          ],
+          "query": [
+            {
+              "key": "Topic",
+              "value": "kuca/soba/temperatura"
+            }
           ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Publish",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"topic\": \"kuca/kupatilo/temperatura\",\n  \"payload\": \"22\",\n  \"qoS\": 0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
-        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+        "url": {
+          "raw": "http://localhost:5000/api/mqtt/publish?Topic=kuca/soba/temperatura&Payload=23&QoS=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "mqtt",
+            "publish"
+          ],
+          "query": [
+            {
+              "key": "Topic",
+              "value": "kuca/soba/temperatura"
+            },
+            {
+              "key": "Payload",
+              "value": "23"
+            },
+            {
+              "key": "QoS",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Messages",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/mqtt/messages",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "mqtt",
+            "messages"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Stats",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/mqtt/stats",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "mqtt",
+            "stats"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Stats/{topic}",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/mqtt/stats/kuca/soba/temperatura",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "mqtt",
+            "stats",
+            "kuca",
+            "soba",
+            "temperatura"
+          ]
+        }
       },
       "response": []
     }
