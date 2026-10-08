@@ -4,6 +4,8 @@ using MQTTRestApi.Domain.DTO;
 using MQTTRestApi.Services;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
 
 namespace MQTTRestApi.Controllers;
@@ -25,7 +27,7 @@ public class MqttController : ControllerBase
     }
     
     [HttpPost("subscribe")]
-    public async Task<IActionResult> Subscribe([FromQuery] SubscribeRequestDto request)
+    public async Task<IActionResult> Subscribe(SubscribeRequestDto request)
     {
         var result = await mqttService.SubscribeAsync(request.Topic);
 
@@ -36,7 +38,7 @@ public class MqttController : ControllerBase
     
     [Authorize(Roles = "Admin")]
     [HttpPost("publish")]
-    public async Task<IActionResult> Publish([FromQuery] PublishRequestDto request)
+    public async Task<IActionResult> Publish(PublishRequestDto request)
     {
         var result = await mqttService.PublishAsync(request.Topic, request.Payload, request.QoS);
 
@@ -45,6 +47,7 @@ public class MqttController : ControllerBase
         return Ok();
     }
     
+    [Authorize(Roles = "Admin")]
     [HttpGet("messages")]
     public IActionResult GetMessages()
     {

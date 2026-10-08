@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MQTTRestApi.Data;
 using MQTTRestApi.Domain.DTO;
@@ -14,10 +15,12 @@ namespace MQTTRestApi.Controllers;
 public class UserController : ControllerBase
 {
     IAuthService authService;
+    IUsersService usersService;
     
-    public UserController(IAuthService authService)
+    public UserController(IAuthService authService, IUsersService usersService)
     {
         this.authService = authService;
+        this.usersService = usersService;
     }
     
     [HttpPost("login")]
@@ -56,5 +59,14 @@ public class UserController : ControllerBase
         {
             return BadRequest();
         }
+    }
+    
+    [Authorize(Roles = "Admin")]
+    [HttpPost("list")]
+    public IActionResult ListUsers()
+    {
+        List<User> listaKorisnika = usersService.GetUsers();
+        
+        return Ok(listaKorisnika);
     }
 }

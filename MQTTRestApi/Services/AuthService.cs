@@ -8,10 +8,12 @@ namespace MQTTRestApi.Services;
 public class AuthService : IAuthService
 {
     private readonly AppDbContext dbContext;
+    private readonly ILoggerService logger;
     
-    public AuthService(AppDbContext dbContext)
+    public AuthService(AppDbContext dbContext, ILoggerService logger)
     {
         this.dbContext = dbContext;
+        this.logger = logger;
     }
     
     public (User, bool) Login(string username, string password)
@@ -20,9 +22,12 @@ public class AuthService : IAuthService
         {
             if (String.Equals(user.Username, username) && String.Equals(user.Password, password))
             {
+                logger.LogMessage($"Korisnik {username} se uspesno ulogovao na nalog.", LogTypes.AUTH);
                 return (user, true);
             }
         }
+
+        logger.LogMessage($"Neuspesan pokusaj logovanja ({username})!", LogTypes.AUTH);
         return (new User(), false);
     }
 
@@ -32,6 +37,7 @@ public class AuthService : IAuthService
         {
             if (String.Equals(user.Username, username) && String.Equals(user.Password, password))
             {
+                logger.LogMessage($"Neuspesan pokusaj registracije ({username} vec postoji)!", LogTypes.AUTH);
                 return (new User(), false);
             }
         }
@@ -42,11 +48,13 @@ public class AuthService : IAuthService
         {
             dbContext.Users.Add(novi);
             dbContext.SaveChanges();
+            logger.LogMessage($"Korisnik {username} se uspesno registrova.", LogTypes.AUTH);
             return (novi, true);
         }
         catch (Exception e)
         {
             Console.WriteLine("Greska pri dodavanju korisnika u bazu: " + e.Message);
+            logger.LogMessage($"Neuspesan pokusaj registracije ({username} - EXCEPTION)!", LogTypes.ERROR);
             return (new User(), false);
         }
     }

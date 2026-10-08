@@ -7,7 +7,7 @@ namespace MQTTRestApi.Domain.Models;
 /// </summary>
 public class MqttMessage
 {
-    public long Id { get; set; } = 0;
+    public long Id { get; set; }
     public string Topic { get; set; } = string.Empty;
     public string Payload { get; set; } = string.Empty;
     public MqttQualityOfServiceLevel QoS { get; set; } = MqttQualityOfServiceLevel.AtMostOnce;
@@ -18,7 +18,6 @@ public class MqttMessage
     
     public MqttMessage(string Topic, string Payload, MqttQualityOfServiceLevel QoS, bool Retain, DateTime RecievedAt)
     {
-        Id = DateTime.Now.Ticks;
         this.Topic = Topic;
         this.Payload = Payload;
         this.QoS = QoS;

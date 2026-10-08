@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using MQTTnet;
+using MQTTRestApi.Domain.Services;
 using MQTTRestApi.Services;
 
 namespace MqttRestApi.Tests;
