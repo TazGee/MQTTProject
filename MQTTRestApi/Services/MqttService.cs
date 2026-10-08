@@ -1,23 +1,43 @@
+using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using MQTTnet;
+using MQTTnet.Protocol;
 using MQTTRestApi.Domain.Models;
+using MQTTRestApi.Data;
+using MQTTRestApi.Domain.Services;
 
 namespace MQTTRestApi.Services;
 
-public class MqttService
+/// <summary>
+/// Servis koji vrsi sve radnje backend-a
+/// </summary>
+public class MqttService : IMqttService
 {
-    private List<Message> messages = new List<Message>();
+    private bool reconnecting = false;
+    
+    private readonly IServiceScopeFactory scopeFactory;
+    private readonly IConfiguration config;
     
     private MqttClientFactory factory = new MqttClientFactory();
     private IMqttClient mqttClient;
-
-    private readonly IConfiguration config;
     
     private bool connected = false;
-
-    public MqttService(IConfiguration config)
+    
+    private readonly IRedisService redis;
+    
+    public MqttService(IServiceScopeFactory scopeFactory, IRedisService redis, IConfiguration config)
+        : this(scopeFactory, redis, config, new MqttClientFactory().CreateMqttClient())
     {
-        this.config = config;
         
+    }
+
+    public MqttService(IServiceScopeFactory scopeFactory, IRedisService redis, IConfiguration config, IMqttClient mqttClient)
+    {
+        this.scopeFactory = scopeFactory;
+        this.redis = redis;
+        this.config = config;
+        this.mqttClient = mqttClient;
+
         InitializeMqttClient();
     }
     
@@ -25,19 +45,55 @@ public class MqttService
     {
         try
         {
-            mqttClient = factory.CreateMqttClient();
-            
-            mqttClient.ApplicationMessageReceivedAsync += e =>
+            mqttClient.ApplicationMessageReceivedAsync += async e =>
             {
-                Message poruka = new Message(e.ApplicationMessage.Topic,
+                MqttMessage poruka = new MqttMessage(e.ApplicationMessage.Topic,
                                              e.ApplicationMessage.ConvertPayloadToString(),
                                              e.ApplicationMessage.QualityOfServiceLevel,
-                                             e.ApplicationMessage.Retain);
+                                             e.ApplicationMessage.Retain,
+                                             DateTime.Now);
                 
-                messages.Add(poruka);
                 Console.WriteLine(poruka.ToString());
+                try
+                {
+                    using (var scope = scopeFactory.CreateScope())
+                    {
+                        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                        dbContext.Messages.Add(poruka);
+                    
+                        var dbTask = Task.Run(async () =>
+                        {
+                            await dbContext.SaveChangesAsync();
+                        });
+
+                        var redisTask = Task.Run(async () =>
+                        {
+                            await redis.SaveMessageAsync(poruka);
+                        });
+
+                        await Task.WhenAll(dbTask, redisTask);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Greska pri cuvanju u bazu i/ili redis: {ex.Message}");
+                    throw;
+                }
+            };
+            
+            mqttClient.DisconnectedAsync += async e =>
+            {
+                Console.WriteLine();
+                Console.WriteLine("MQTT konekcija je prekinuta");
+
+                if (e.Exception != null)
+                {
+                    Console.WriteLine($"Razlog: {e.Exception.Message}");
+                }
                 
-                return Task.CompletedTask;
+                connected = false;
+
+                if(!reconnecting) await ConnectAsync();
             };
         }
         catch (Exception e)
@@ -45,44 +101,110 @@ public class MqttService
             Console.WriteLine($"Greska prilikom inicijalizacije klijenta: {e.Message}");
         }
     }
-    
+
     public async Task ConnectAsync()
     {
+        reconnecting = true;
         do
         {
             try
             {
                 Console.WriteLine("Pokusavam povezivanje sa serverom...");
-
+                
                 var options = new MqttClientOptionsBuilder()
                     .WithTcpServer(config["MqttBroker:Host"] ?? "localhost", 
                         int.Parse(config["MqttBroker:Port"] ?? "1883"))
                     .Build();
                 
                 await mqttClient.ConnectAsync(options);
+                Console.Clear();
                 Console.WriteLine("Konekcija uspesno uspostavljena!");
+
+                reconnecting = false;
+                connected = true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Povezivanje nije uspelo: {ex.Message}");
-                Console.WriteLine("Pokusaj ponovnog povezivanja za 3 sekunde...");
-                await Task.Delay(TimeSpan.FromSeconds(int.Parse(config["Settings:ReconnectTimer"] ?? "3")));
+                Console.WriteLine($"Pokusaj ponovnog povezivanja za {config["ReconnectTimer"] ?? "3"} sekundi...");
+                await Task.Delay(TimeSpan.FromSeconds(int.Parse(config["ReconnectTimer"] ?? "3")));
             }
         } while (!mqttClient.IsConnected);
+
+        try
+        {
+            await ResubscribeToAll();
+            Console.WriteLine("Uspesan resubscribe na sve topic-e!");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Neuspesan pokusaj resubscribe-a: {e.Message}");
+            throw;
+        }
             
-        Console.WriteLine("\nPovezivanje uspesno!");
+        Console.WriteLine("\nPovezivanje uspesno i svi su resubscribed!");
+    }
+
+    public async Task ResubscribeToAll()
+    {
+        using (var scope = scopeFactory.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            foreach (Subscription s in dbContext.Subscriptions)
+            {
+                if(await SubscribeAsync(s.Topic)) Console.WriteLine($"{s.Topic} ponovo subscribed");
+            }
+        }
     }
     
     public async Task<bool> SubscribeAsync(string topic)
     {
         try
         {
+            if (!Regex.IsMatch(topic, config["SubscribeRegex"]))
+            {
+                Console.WriteLine($"Vrednost topica nije validna!");
+                return false;
+            }
+            
             var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
                 .WithTopicFilter(topic)
                 .Build();
             
-            await mqttClient.SubscribeAsync(subscribeOptions);
+            MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
+            foreach (var item in result.Items)
+            {
+                var success = item.ResultCode is
+                    MqttClientSubscribeResultCode.GrantedQoS0 or
+                    MqttClientSubscribeResultCode.GrantedQoS1 or
+                    MqttClientSubscribeResultCode.GrantedQoS2;
 
+                if (!success)
+                {
+                    Console.WriteLine($"Subscribe nije uspeo!");
+                    return false;
+                }
+            }
+
+            if (!connected) return true;
+            
+            using (var scope = scopeFactory.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                if (await dbContext.Subscriptions.AnyAsync(s => s.Topic == topic))
+                {
+                    Console.WriteLine($"Vec postoji subscribe na topic {topic}");
+                    return false; 
+                }
+                
+                Subscription sub = new Subscription(topic, DateTime.Now);
+                
+                dbContext.Subscriptions.Add(sub);
+                await dbContext.SaveChangesAsync();
+            }
+            
             return true;
         }
         catch (Exception e)
@@ -96,6 +218,12 @@ public class MqttService
     {
         try
         {
+            if (!Regex.IsMatch(topic, config["PublishRegex"]))
+            {
+                Console.WriteLine($"Vrednost topica nije validna!");
+                return false;
+            }
+            
             var message = new MqttApplicationMessageBuilder()
                 .WithTopic(topic)
                 .WithPayload(payload)
@@ -113,8 +241,11 @@ public class MqttService
         }
     }
     
-    public List<Message> GetMessages()
+    public List<MqttMessage> GetMessages()
     {
-        return messages;
+        using var scope = scopeFactory.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        
+        return dbContext.Messages.ToList();
     }
 }

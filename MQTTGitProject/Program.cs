@@ -5,6 +5,9 @@ using MQTTnet.Protocol;
 
 namespace MQTTGitProject
 {
+    /// <summary>
+    /// Glavna klasa aplikacije
+    /// </summary>
     internal class Program 
     {
         static bool reconnecting = false;

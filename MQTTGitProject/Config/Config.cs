@@ -2,6 +2,9 @@ using System.Text.Json;
 
 namespace MQTTGitProject.Config;
 
+/// <summary>
+/// Klasa u koju se deserijalizuju podaci iz JSON-a
+/// </summary>
 public class Config
 {
     public string SubscribeRegex { get; set; }

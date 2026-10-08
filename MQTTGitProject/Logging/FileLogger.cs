@@ -1,5 +1,8 @@
 namespace MQTTGitProject;
 
+/// <summary>
+/// Logger koji ispisuje poruke u fajlu
+/// </summary>
 public class FileLogger : IMessageLogger
 {
     private string fileName;
@@ -8,7 +11,13 @@ public class FileLogger : IMessageLogger
     {
         fileName = config.LogFilePath;
     }
-    
+    /// <summary>
+    /// Ispisuje poruku u fajlu
+    /// </summary>
+    /// <param name="topic">Topic poruke</param>
+    /// <param name="payload">Sadrzaj poruke</param>
+    /// <param name="qos">Quality of Service poruke</param>
+    /// <param name="retain">Retain poruke</param>
     public async Task LogMessageAsync(string topic, string payload, string qos, string retain)
     {
         try
