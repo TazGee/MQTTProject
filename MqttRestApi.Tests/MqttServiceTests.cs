@@ -2,6 +2,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using MQTTnet;
+using MQTTnet.Packets;
+using MQTTRestApi.Domain.Services;
 using MQTTRestApi.Services;
 
 namespace MqttRestApi.Tests;
@@ -16,7 +18,7 @@ public class MqttServiceTests
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["PublishRegex"] = @"^[^/#+\s]+(?:/[^/#+\s]+)*$",
-                ["SubscribeRegex"] = @"^[^/#+\s]+(?:/(?:[^/#+\s]+|\+))*?(?:/#)?$"
+                ["SubscribeRegex"] = @"^(?:#|(?:[^/#+\s]+|\+)(?:/(?:[^/#+\s]+|\+))*(?:/#)?)$"
             })
             .Build();
     
@@ -24,7 +26,22 @@ public class MqttServiceTests
     {
         var client = new Mock<IMqttClient>();
         var scopeFactory = new Mock<IServiceScopeFactory>();
-        var redis = new Mock<RedisService>();
+        var redis = new Mock<IRedisService>();
+
+        client
+            .Setup(c => c.SubscribeAsync(
+                It.IsAny<MqttClientSubscribeOptions>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new MqttClientSubscribeResult(
+                0,
+                new List<MqttClientSubscribeResultItem>
+                {
+                    new MqttClientSubscribeResultItem(
+                        new MqttTopicFilter { Topic = "x" },
+                        MqttClientSubscribeResultCode.GrantedQoS0)
+                },
+                string.Empty,
+                new List<MqttUserProperty>()));
 
         var service = new MqttService(scopeFactory.Object, redis.Object, BuildConfig(), client.Object);
         return (service, client);
@@ -64,6 +81,8 @@ public class MqttServiceTests
     [InlineData("test/test")]
     [InlineData("test/+/test")]
     [InlineData("test/+/#")]
+    [InlineData("+/+")]
+    [InlineData("+/temperatura")]
     public async Task SubscribeAsync_ReturnsTrue_OnGoodInput(string topic)
     {
         var (service, client) = CreateService();

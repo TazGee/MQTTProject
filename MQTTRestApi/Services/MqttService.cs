@@ -90,6 +90,8 @@ public class MqttService : IMqttService
                 {
                     Console.WriteLine($"Razlog: {e.Exception.Message}");
                 }
+                
+                connected = false;
 
                 if(!reconnecting) await ConnectAsync();
             };
@@ -124,7 +126,7 @@ public class MqttService : IMqttService
             catch (Exception ex)
             {
                 Console.WriteLine($"Povezivanje nije uspelo: {ex.Message}");
-                Console.WriteLine("Pokusaj ponovnog povezivanja za 3 sekunde...");
+                Console.WriteLine($"Pokusaj ponovnog povezivanja za {config["ReconnectTimer"] ?? "3"} sekundi...");
                 await Task.Delay(TimeSpan.FromSeconds(int.Parse(config["ReconnectTimer"] ?? "3")));
             }
         } while (!mqttClient.IsConnected);

@@ -13,11 +13,7 @@ public class RedisService : IRedisService
 {
     private readonly IConnectionMultiplexer redis;
     private readonly IConfiguration config;
-
-    public RedisService()
-    {
-        
-    }
+    
     public RedisService(IConnectionMultiplexer redis, IConfiguration config)
     {
         this.redis = redis;
