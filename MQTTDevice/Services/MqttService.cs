@@ -7,6 +7,7 @@ namespace MQTTDevice.Services;
 
 public class MqttService : IMqttService
 {
+    private bool connected = false;
     private bool reconnecting = false;
     private IMqttClient client;
 
@@ -28,6 +29,8 @@ public class MqttService : IMqttService
                 Console.WriteLine();
                 Console.WriteLine("MQTT konekcija je prekinuta");
 
+                connected = false;
+                
                 if (e.Exception != null)
                 {
                     Console.WriteLine($"Razlog: {e.Exception.Message}");
@@ -53,10 +56,10 @@ public class MqttService : IMqttService
                 Console.WriteLine("Pokusavam povezivanje sa serverom...");
 
                 await client.ConnectAsync(options);
-                Console.Clear();
                 Console.WriteLine("Konekcija uspesno uspostavljena!");
 
                 reconnecting = false;
+                connected = true;
             }
             catch (Exception ex)
             {
@@ -71,6 +74,8 @@ public class MqttService : IMqttService
     
     public async Task PublishMessageAsync(string topic, string payload)
     {
+        if(!connected) return;
+        
         try
         {
             var message = new MqttApplicationMessageBuilder()
@@ -83,7 +88,6 @@ public class MqttService : IMqttService
         catch (Exception e)
         {
             Console.WriteLine($"Greska pri slanju poruke: {e.Message}");
-            throw;
         }
             
     }
