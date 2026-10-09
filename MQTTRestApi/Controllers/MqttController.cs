@@ -69,12 +69,6 @@ public class MqttController : ControllerBase
         return Ok(await mqttService.MyTopics(UserId()));
     }
     
-    [HttpGet("messages")]
-    public async Task<IActionResult> GetMessages()
-    {
-        var messages = await mqttService.GetMessages(UserId());
-        return Ok(messages);
-    }
     
     [HttpGet("stats")]
     public async Task<IActionResult> GetStats()
