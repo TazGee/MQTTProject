@@ -24,10 +24,14 @@ public class MqttService : IMqttService
     private MqttClientFactory factory = new MqttClientFactory();
     private IMqttClient mqttClient;
 
+    private int[] reconnectIntervali = [];
+    int reconnectCounter = 0;
     
     private bool connected = false;
     
     private readonly IRedisService redis;
+    
+    List<Topic> failedTopics = new List<Topic>();
     
     public MqttService(IServiceScopeFactory scopeFactory, IRedisService redis, IConfiguration config)
         : this(scopeFactory, redis, config, new MqttClientFactory().CreateMqttClient())
@@ -118,9 +122,18 @@ public class MqttService : IMqttService
 
     public async Task ConnectAsync()
     {
+        reconnectIntervali = config.GetSection("ReconnectTimerValues").Get<int[]>() ?? [];
+        reconnectCounter = 0;
+        
         reconnecting = true;
         do
         {
+            if(connected)
+            {
+                reconnecting = false;
+                break;
+            }
+            
             try
             {
                 Console.WriteLine("Pokusavam povezivanje sa serverom...");
@@ -141,9 +154,10 @@ public class MqttService : IMqttService
             catch (Exception ex)
             {
                 Console.WriteLine($"Povezivanje nije uspelo: {ex.Message}");
-                Console.WriteLine($"Pokusaj ponovnog povezivanja za {config["Settings:ReconnectTimer"]} sekundi...");
-                await Task.Delay(TimeSpan.FromSeconds(int.Parse(config["Settings:ReconnectTimer"] ?? "3")));
+                Console.WriteLine($"Pokusaj ponovnog povezivanja za {reconnectIntervali[reconnectCounter]} sekundi...");
                 await LogAsync($"Backend API je imao neuspesan pokusaj povezivanja!", LogTypes.ERROR);
+                await Task.Delay(TimeSpan.FromSeconds(reconnectIntervali[reconnectCounter]));
+                if(reconnectCounter < reconnectIntervali.Length - 1) reconnectCounter++;
             }
         } while (!mqttClient.IsConnected);
         try
@@ -168,6 +182,7 @@ public class MqttService : IMqttService
             foreach (Topic t in dbContext.Topics)
             {
                 if(await SubscribeAsync(t.Name)) Console.WriteLine($"{t.Name} ponovo subscribed");
+                else failedTopics.Add(t);
             }
         }
     }
@@ -201,6 +216,8 @@ public class MqttService : IMqttService
                     return false;
                 }
             }
+
+            if (connected) return true;
             
             using (var scope = scopeFactory.CreateScope())
             {
@@ -276,6 +293,22 @@ public class MqttService : IMqttService
         }
     }
     
+    public async Task<List<MqttMessageDto>> GetMessages(int userId)
+    {
+        using var scope = scopeFactory.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    
+        var topics = dbContext.UserSubscriptions
+            .Where(s => s.UserId == userId)
+            .Select(s => s.Topic.Name);
+    
+        return await dbContext.Messages
+            .Where(m => topics.Contains(m.Topic))
+            .OrderByDescending(m => m.Id)
+            .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt))
+            .ToListAsync();
+    }
+    
     public async Task<List<TopicListDto>> MyTopics(int userId)
     {
         using var scope = scopeFactory.CreateScope();
@@ -285,4 +318,50 @@ public class MqttService : IMqttService
             .Select(s => new TopicListDto(s.TopicId, s.Topic.Name)).ToListAsync();
     }
     
+    public List<Topic> GetFailedTopics()
+    {
+        return failedTopics;
+    }
+
+    public async Task<List<string>> ResubscribeToFailed()
+    {
+        List<string> results = new List<string>();
+        
+        foreach (Topic t in failedTopics)
+        {
+            if (await SubscribeAsync(t.Name))results.Add($"Uspesan resubscribe na {t.Name}!");
+            else results.Add($"Neuspesan pokusaj resubscribe na {t.Name}");
+        }
+        
+        return results;
+    }
+
+    public async Task<bool> ForceReconnect()
+    {
+        if (connected) return false;
+        
+        try
+        {
+            Console.WriteLine("Pokusavam povezivanje sa serverom...");
+
+            var options = new MqttClientOptionsBuilder()
+                .WithTcpServer(config["MqttBroker:Host"] ?? "localhost", 
+                    int.Parse(config["MqttBroker:Port"] ?? "1883"))
+                .Build();
+                
+            await mqttClient.ConnectAsync(options);
+            Console.WriteLine("Konekcija uspesno uspostavljena!");
+
+            reconnecting = false;
+            connected = true;
+
+            await LogAsync($"Backend API se uspesno povezao na server.", LogTypes.INFO);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Povezivanje nije uspelo: {ex.Message}");
+            return false;
+        }
+    }
 }

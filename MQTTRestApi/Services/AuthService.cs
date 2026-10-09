@@ -23,13 +23,11 @@ public class AuthService : IAuthService
         {
             if (String.Equals(user.Username, username) && String.Equals(user.Password, password))
             {
-                logger.LogMessage($"Korisnik {username} se uspesno ulogovao na nalog.", LogTypes.AUTH);
                 UserInfoDto u = new UserInfoDto() { Id = user.Id, Username = username, Role = user.Role, CreatedAt = user.CreatedAt };
                 return (u, true);
             }
         }
 
-        logger.LogMessage($"Neuspesan pokusaj logovanja ({username})!", LogTypes.AUTH);
         return (new UserInfoDto(), false);
     }
 
@@ -39,7 +37,6 @@ public class AuthService : IAuthService
         {
             if (String.Equals(user.Username, username))
             {
-                logger.LogMessage($"Neuspesan pokusaj registracije ({username} vec postoji)!", LogTypes.AUTH);
                 return (new UserInfoDto(), false);
             }
         }
@@ -50,14 +47,12 @@ public class AuthService : IAuthService
         {
             dbContext.Users.Add(novi);
             dbContext.SaveChanges();
-            logger.LogMessage($"Korisnik {username} se uspesno registrova.", LogTypes.AUTH);
             UserInfoDto u = new UserInfoDto() { Id = novi.Id, Username = username, Role = novi.Role, CreatedAt = novi.CreatedAt };
             return (u, true);
         }
         catch (Exception e)
         {
             Console.WriteLine("Greska pri dodavanju korisnika u bazu: " + e.Message);
-            logger.LogMessage($"Neuspesan pokusaj registracije ({username} - EXCEPTION)!", LogTypes.ERROR);
             return (new UserInfoDto(), false);
         }
     }
