@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using MQTTRestApi.Domain.Exceptions;
 using MQTTRestApi.Domain.Services;
 
 namespace MQTTRestApi.Services;
@@ -29,7 +30,7 @@ public class TokenService : ITokenService
             audience: config["Jwt:Audience"],
             claims: claims,
             expires: DateTime.UtcNow.AddMinutes(int.Parse(config["Jwt:ExpiryMinutes"] ?? "15")),
-            signingCredentials: creds);
+            signingCredentials: creds) ?? throw new BadRequestException($"Neuspesno dobavljanje JWT tokena!");
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }

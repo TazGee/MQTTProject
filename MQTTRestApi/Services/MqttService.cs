@@ -7,6 +7,7 @@ using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Data;
 using MQTTRestApi.Domain.DTO;
 using MQTTRestApi.Domain.Enums;
+using MQTTRestApi.Domain.Exceptions;
 using MQTTRestApi.Domain.Services;
 
 namespace MQTTRestApi.Services;
@@ -169,7 +170,6 @@ public class MqttService : IMqttService
         {
             Console.WriteLine($"Neuspesan pokusaj resubscribe-a: {e.Message}");
             await LogAsync($"Neuspesan pokusaj resubscribe-a na topic-e!", LogTypes.ERROR);
-            throw;
         }
     }
 
@@ -244,53 +244,33 @@ public class MqttService : IMqttService
         }
     }
     
-    public async Task<bool> SubscribeUserAsync(SubscribeRequestDto request, int userId)
+    public async Task SubscribeUserAsync(SubscribeRequestDto request, int userId)
     {
-        try
-        {
-            using var scope = scopeFactory.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            
-            var topic = await dbContext.Topics.FindAsync(request.TopicId);
-            if (topic is null) return false;
-            
-            if (await dbContext.UserSubscriptions.AnyAsync(s => s.UserId == userId && s.TopicId == request.TopicId))
-                return false;
-            
-            dbContext.UserSubscriptions.Add(new UserSubscription { UserId = userId, TopicId = request.TopicId });
-            await dbContext.SaveChangesAsync();
-            await redis.AddAsync(topic.Name, userId);
-            
-            return true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Greska pri subscribovanju: {e.Message}");
-            return false;
-        }
+        using var scope = scopeFactory.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        
+        var topic = await dbContext.Topics.FindAsync(request.TopicId)
+            ?? throw new NotFoundException($"Topic {request.TopicId} ne postoji.");
+        
+        if (await dbContext.UserSubscriptions.AnyAsync(s => s.UserId == userId && s.TopicId == request.TopicId))
+            throw new ConflictException($"Vec si prijavljen na topic {request.TopicId}!");
+        
+        dbContext.UserSubscriptions.Add(new UserSubscription { UserId = userId, TopicId = request.TopicId });
+        await dbContext.SaveChangesAsync();
+        await redis.AddAsync(topic.Name, userId);
     }
 
-    public async Task<bool> UnsubscribeUserAsync(int topicId, int userId)
+    public async Task UnsubscribeUserAsync(int topicId, int userId)
     {
-        try
-        {
-            using var scope = scopeFactory.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        
-            var sub = await dbContext.UserSubscriptions.Include(s => s.Topic).FirstOrDefaultAsync(s => s.UserId == userId && s.TopicId == topicId);
-            if (sub is null) return false;
-        
-            dbContext.UserSubscriptions.Remove(sub);
-            await dbContext.SaveChangesAsync();
-            await redis.RemoveAsync(sub.Topic.Name, userId);
-        
-            return true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Greska pri subscribovanju: {e.Message}");
-            return false;
-        }
+        using var scope = scopeFactory.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    
+        var sub = await dbContext.UserSubscriptions.Include(s => s.Topic).FirstOrDefaultAsync(s => s.UserId == userId && s.TopicId == topicId);
+        if (sub == null) throw new NotFoundException($"Topic {topicId} ne postoji.");
+    
+        dbContext.UserSubscriptions.Remove(sub);
+        await dbContext.SaveChangesAsync();
+        await redis.RemoveAsync(sub.Topic.Name, userId);
     }
     
     public async Task<List<MqttMessageDto>> GetMessages(int userId)
@@ -336,9 +316,9 @@ public class MqttService : IMqttService
         return results;
     }
 
-    public async Task<bool> ForceReconnect()
+    public async Task ForceReconnect()
     {
-        if (connected) return false;
+        if (connected) throw new BadRequestException($"Server je vec povezan!");
         
         try
         {
@@ -356,12 +336,11 @@ public class MqttService : IMqttService
             connected = true;
 
             await LogAsync($"Backend API se uspesno povezao na server.", LogTypes.INFO);
-            return true;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Povezivanje nije uspelo: {ex.Message}");
-            return false;
+            throw new BadRequestException($"Server je vec povezan!");
         }
     }
 }

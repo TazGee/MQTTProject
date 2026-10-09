@@ -45,21 +45,17 @@ public class MqttController : ControllerBase
     [HttpPost("user-subscribe")]
     public async Task<IActionResult> UserSubscribe(SubscribeRequestDto request)
     {
-        var result = await mqttService.SubscribeUserAsync(request, UserId());
+        await mqttService.SubscribeUserAsync(request, UserId());
 
-        if (!result) return Forbid("Neuspesan pokusaj subscribe-a.");
-
-        return Ok();
+        return NoContent();
     }
     
     [HttpDelete("user-unsubscribe/{*topicId}")]
     public async Task<IActionResult> UserUnsubscribe(int topicId)
     {
-        var result = await mqttService.UnsubscribeUserAsync(topicId, UserId());
+        await mqttService.UnsubscribeUserAsync(topicId, UserId());
 
-        if (!result) return BadRequest("Neuspesan pokusaj unsubscribe-a.");
-
-        return Ok();
+        return NoContent();
     }
 
     [HttpGet("my-subscriptions")]
@@ -127,7 +123,8 @@ public class MqttController : ControllerBase
     [HttpGet("force-reconnect-to-server"), Authorize(Roles = "Admin")]
     public async Task<IActionResult> ReconnectToServer()
     {
-        if(await mqttService.ForceReconnect()) return Ok();
-        else return BadRequest();
+        await mqttService.ForceReconnect();
+        
+        return NoContent();
     }
 }

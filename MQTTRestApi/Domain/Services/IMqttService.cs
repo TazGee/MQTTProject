@@ -25,10 +25,10 @@ public interface IMqttService
     /// <returns>Vraca listu poruka iz baze podataka.</returns>
     Task<List<MqttMessageDto>> GetMessages(int userId);
     
-    Task<bool> SubscribeUserAsync(SubscribeRequestDto request, int userId);
-    Task<bool> UnsubscribeUserAsync(int topicId, int userId);
+    Task SubscribeUserAsync(SubscribeRequestDto request, int userId);
+    Task UnsubscribeUserAsync(int topicId, int userId);
     Task<List<TopicListDto>> MyTopics(int userId);
     List<Topic> GetFailedTopics();
     Task<List<string>> ResubscribeToFailed();
-    Task<bool> ForceReconnect();
+    Task ForceReconnect();
 }
