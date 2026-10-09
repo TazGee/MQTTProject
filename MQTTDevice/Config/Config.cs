@@ -10,34 +10,12 @@ public class Config
     public string PublishRegex { get; set; }
     public string ServerIP { get; set; }
     public int ServerPort { get; set; }
-    public int ReconnectTimer { get; set; }
+    public uint ReconnectTimer { get; set; }
 
     public static Config Load()
     {
         string json = File.ReadAllText("config.json");
 
         return JsonSerializer.Deserialize<Config>(json);
-    }
-    
-    bool DeserializeConfig()
-    {
-        try
-        {
-            var config = JsonSerializer.Deserialize<Config>(File.ReadAllText("config.json"));
-            
-            PublishRegex =  config.PublishRegex;
-            
-            ServerIP =  config.ServerIP;
-            ServerPort =  config.ServerPort;
-            
-            ReconnectTimer = config.ReconnectTimer;
-            
-            return true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return false;
-        }
     }
 }
