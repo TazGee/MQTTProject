@@ -32,12 +32,23 @@ public class MqttController : ControllerBase
         return int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
     }
 
-    [HttpPost("subscribe")]
-    public async Task<IActionResult> Subscribe(SubscribeRequestDto request)
+    [Authorize(Roles = "Admin")]
+    [HttpGet("subscribe")]
+    public async Task<IActionResult> Subscribe(string topic)
+    {
+        var result = await mqttService.SubscribeAsync(topic);
+        
+        if (!result) return Forbid("Neuspesan pokusaj subscribe-a.");
+        
+        return Ok();
+    }
+    
+    [HttpPost("usersubscribe")]
+    public async Task<IActionResult> UserSubscribe(SubscribeRequestDto request)
     {
         var result = await mqttService.SubscribeUserAsync(request, UserId());
 
-        if (!result) return BadRequest("Neuspesan pokusaj subscribe-a.");
+        if (!result) return Forbid("Neuspesan pokusaj subscribe-a.");
 
         return Ok();
     }
@@ -58,11 +69,10 @@ public class MqttController : ControllerBase
         return Ok(await mqttService.MyTopics(UserId()));
     }
     
-    [Authorize(Roles = "Admin")]
     [HttpGet("messages")]
-    public IActionResult GetMessages()
+    public async Task<IActionResult> GetMessages()
     {
-        var messages = mqttService.GetMessages();
+        var messages = await mqttService.GetMessages(UserId());
         return Ok(messages);
     }
     

@@ -137,9 +137,6 @@ public class MqttService : IMqttService
                 connected = true;
                 
                 await LogAsync($"Backend API se uspesno povezao na server.", LogTypes.INFO);
-        
-                await SubscribeAsync();
-                Console.WriteLine("Uspesan subscribe na main topic!");
             }
             catch (Exception ex)
             {
@@ -149,14 +146,44 @@ public class MqttService : IMqttService
                 await LogAsync($"Backend API je imao neuspesan pokusaj povezivanja!", LogTypes.ERROR);
             }
         } while (!mqttClient.IsConnected);
+        try
+        {
+            await ResubscribeToAll();
+            Console.WriteLine("Uspesan resubscribe na sve topic-e!");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Neuspesan pokusaj resubscribe-a: {e.Message}");
+            await LogAsync($"Neuspesan pokusaj resubscribe-a na topic-e!", LogTypes.ERROR);
+            throw;
+        }
+    }
+
+    public async Task ResubscribeToAll()
+    {
+        using (var scope = scopeFactory.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            foreach (Topic t in dbContext.Topics)
+            {
+                if(await SubscribeAsync(t.Name)) Console.WriteLine($"{t.Name} ponovo subscribed");
+            }
+        }
     }
     
-    public async Task<bool> SubscribeAsync()
+    public async Task<bool> SubscribeAsync(string topic)
     {
         try
         {
+            if (!Regex.IsMatch(topic, config["SubscribeRegex"]))
+            {
+                Console.WriteLine($"Vrednost topica nije validna!");
+                return false;
+            }
+            
             var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
-                .WithTopicFilter("kuca/#")
+                .WithTopicFilter(topic)
                 .Build();
             
             MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
@@ -174,6 +201,23 @@ public class MqttService : IMqttService
                     return false;
                 }
             }
+            
+            using (var scope = scopeFactory.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                if (await dbContext.Topics.AnyAsync(s => s.Name == topic))
+                {
+                    Console.WriteLine($"Vec postoji subscribe na topic {topic}");
+                    return false; 
+                }
+                
+                Topic top = new Topic(topic, String.Empty);
+                
+                dbContext.Topics.Add(top);
+                await dbContext.SaveChangesAsync();
+            }
+            
             return true;
         }
         catch (Exception e)
@@ -240,11 +284,19 @@ public class MqttService : IMqttService
             .Select(s => new TopicListDto(s.TopicId, s.Topic.Name)).ToListAsync();
     }
     
-    public List<MqttMessage> GetMessages()
+    public async Task<List<MqttMessageDto>> GetMessages(int userId)
     {
         using var scope = scopeFactory.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         
-        return dbContext.Messages.ToList();
+        var topics = dbContext.UserSubscriptions
+            .Where(s => s.UserId == userId)
+            .Select(s => s.Topic.Name);
+        
+        return await dbContext.Messages
+            .Where(m => topics.Contains(m.Topic))
+            .OrderByDescending(m => m.Id)
+            .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt))
+            .ToListAsync();
     }
 }

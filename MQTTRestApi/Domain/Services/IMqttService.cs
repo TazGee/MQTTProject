@@ -18,13 +18,13 @@ public interface IMqttService
     /// </summary>
     /// <param name="topic">Topic</param>
     /// <returns>True ako je uspesno ili false ako nije.</returns>
-    Task<bool> SubscribeAsync();
+    Task<bool> SubscribeAsync(string topic);
     
     /// <summary>
     /// Lista poruka iz baze
     /// </summary>
     /// <returns>Vraca listu poruka iz baze podataka.</returns>
-    List<MqttMessage> GetMessages();
+    Task<List<MqttMessageDto>> GetMessages(int userId);
 
     Task<bool> SubscribeUserAsync(SubscribeRequestDto request, int userId);
     Task<bool> UnsubscribeUserAsync(int topicId, int userId);

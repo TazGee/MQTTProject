@@ -54,7 +54,7 @@ public class MqttServiceTests
     {
         var (service, client) = CreateService();
 
-        var result = await service.SubscribeAsync();
+        var result = await service.SubscribeAsync("./././");
 
         Assert.False(result);
     }
@@ -64,7 +64,7 @@ public class MqttServiceTests
     {
         var (service, client) = CreateService();
 
-        var result = await service.SubscribeAsync();
+        var result = await service.SubscribeAsync("+/test/#/");
 
         Assert.True(result);
     }
@@ -74,7 +74,7 @@ public class MqttServiceTests
     {
         var (service, client) = CreateService();
 
-        var result = await service.SubscribeAsync();
+        var result = await service.SubscribeAsync("#/test/#/");
 
         Assert.False(result);
     }
