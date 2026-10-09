@@ -252,28 +252,6 @@ public class MqttService : IMqttService
             return false;
         }
     }
-    public async Task<bool> UnsubscribeUserAsync(int topicId, int userId)
-    {
-        try
-        {
-            using var scope = scopeFactory.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            
-            var sub = await dbContext.UserSubscriptions.Include(s => s.Topic).FirstOrDefaultAsync(s => s.UserId == userId && s.TopicId == topicId);
-            if (sub is null) return false;
-            
-            dbContext.UserSubscriptions.Remove(sub);
-            await dbContext.SaveChangesAsync();
-            await redis.RemoveAsync(sub.Topic.Name, userId);
-            
-            return true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Greska pri subscribovanju: {e.Message}");
-            return false;
-        }
-    }
 
     public async Task<List<TopicListDto>> MyTopics(int userId)
     {

@@ -53,22 +53,12 @@ public class MqttController : ControllerBase
         return Ok();
     }
     
-    [HttpDelete("unsubscribe/{*topicId}")]
-    public async Task<IActionResult> Unsubscribe(int topicId)
-    {
-        var result = await mqttService.UnsubscribeUserAsync(topicId, UserId());
-
-        if (!result) return BadRequest("Neuspesan pokusaj unsubscribe-a.");
-
-        return Ok();
-    }
 
     [HttpGet("mysubscriptions")]
     public async Task<IActionResult> MyTopics()
     {
         return Ok(await mqttService.MyTopics(UserId()));
     }
-    
     
     [HttpGet("stats")]
     public async Task<IActionResult> GetStats()

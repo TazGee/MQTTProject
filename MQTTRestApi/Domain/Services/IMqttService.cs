@@ -23,6 +23,5 @@ public interface IMqttService
     
 
     Task<bool> SubscribeUserAsync(SubscribeRequestDto request, int userId);
-    Task<bool> UnsubscribeUserAsync(int topicId, int userId);
     Task<List<TopicListDto>> MyTopics(int userId);
 }
