@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
+using System.Security.Claims;
 
 namespace MQTTRestApi.Controllers;
 
 /// <summary>
 /// Controller sa endpointima
 /// </summary>
-[ApiController]
-[Route("api/mqtt")]
+[Authorize, ApiController, Route("api/mqtt")]
 public class MqttController : ControllerBase
 {
     private IMqttService mqttService;
@@ -24,16 +24,38 @@ public class MqttController : ControllerBase
     {
         this.mqttService = mqttService;
         this.redisService = redisService;
+        
     }
-    
+
+    private int UserId()
+    {
+        return int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+    }
+
     [HttpPost("subscribe")]
     public async Task<IActionResult> Subscribe(SubscribeRequestDto request)
     {
-        var result = await mqttService.SubscribeAsync(request.Topic);
+        var result = await mqttService.SubscribeUserAsync(request, UserId());
 
         if (!result) return BadRequest("Neuspesan pokusaj subscribe-a.");
 
         return Ok();
+    }
+    
+    [HttpDelete("unsubscribe/{*topicId}")]
+    public async Task<IActionResult> Unsubscribe(int topicId)
+    {
+        var result = await mqttService.UnsubscribeUserAsync(topicId, UserId());
+
+        if (!result) return BadRequest("Neuspesan pokusaj unsubscribe-a.");
+
+        return Ok();
+    }
+
+    [HttpGet("mysubscriptions")]
+    public async Task<IActionResult> MyTopics()
+    {
+        return Ok(await mqttService.MyTopics(UserId()));
     }
     
     [Authorize(Roles = "Admin")]

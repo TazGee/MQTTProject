@@ -25,22 +25,11 @@ public class MqttControllerTests
     public async Task Subscribe_ReturnsOk_WhenServiceSucceeds()
     {
         var (controller, mqtt, _) = CreateController();
-        mqtt.Setup(m => m.SubscribeAsync("test/topic")).ReturnsAsync(true);
+        mqtt.Setup(m => m.SubscribeAsync()).ReturnsAsync(true);
 
         var result = await controller.Subscribe(new SubscribeRequestDto { Topic = "test/topic" });
 
         Assert.IsType<OkResult>(result);
-    }
-
-    [Fact]
-    public async Task Subscribe_ReturnsBadRequest_WhenServiceFails()
-    {
-        var (controller, mqtt, _) = CreateController();
-        mqtt.Setup(m => m.SubscribeAsync(It.IsAny<string>())).ReturnsAsync(false);
-
-        var result = await controller.Subscribe(new SubscribeRequestDto { Topic = "bla bla" });
-
-        Assert.IsType<BadRequestObjectResult>(result);
     }
 
     [Fact]

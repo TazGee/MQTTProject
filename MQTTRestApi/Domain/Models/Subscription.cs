@@ -5,7 +5,7 @@ namespace MQTTRestApi.Domain.Models;
 /// </summary>
 public class Subscription
 {
-    public long Id { get; set; }
+    public int Id { get; set; }
     public string Topic { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.MinValue;
 

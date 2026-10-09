@@ -31,4 +31,10 @@ public interface IRedisService
     /// <param name="topic">Topic poruke</param>
     /// <returns>Broj poruka za neki topic</returns>
     Task<int> GetTopicCountAsync(string topic);
+    
+    Task AddAsync(string topic, int userId);
+    Task RemoveAsync(string topic, int userId);
+    Task<bool> IsSubscribedAsync(string topic, int userId);
+    Task<IReadOnlyList<string>> GetUserTopicsAsync(int userId);
+    Task LoadAllAsync();
 }

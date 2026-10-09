@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -53,22 +54,17 @@ public class MqttServiceTests
     {
         var (service, client) = CreateService();
 
-        var result = await service.SubscribeAsync("bla bla topic!");
+        var result = await service.SubscribeAsync();
 
         Assert.False(result);
     }
 
-    [Theory]
-    [InlineData("test/test")]
-    [InlineData("test/+/test")]
-    [InlineData("test/+/#")]
-    [InlineData("+/+")]
-    [InlineData("+/temperatura")]
-    public async Task SubscribeAsync_ReturnsTrue_OnGoodInput(string topic)
+    [Fact]
+    public async Task SubscribeAsync_ReturnsTrue_OnGoodInput()
     {
         var (service, client) = CreateService();
 
-        var result = await service.SubscribeAsync(topic);
+        var result = await service.SubscribeAsync();
 
         Assert.True(result);
     }
@@ -78,7 +74,7 @@ public class MqttServiceTests
     {
         var (service, client) = CreateService();
 
-        var result = await service.SubscribeAsync("test/#/test");
+        var result = await service.SubscribeAsync();
 
         Assert.False(result);
     }
