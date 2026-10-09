@@ -5,5 +5,6 @@ namespace MQTTRestApi.Domain.DTO;
 /// </summary>
 public class SubscribeRequestDto
 {
+    public int TopicId { get; set; }
     public string Topic { get; set; }
 }

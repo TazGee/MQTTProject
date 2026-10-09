@@ -1,6 +1,8 @@
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using MQTTnet;
+using MQTTRestApi.Data;
 using MQTTRestApi.Domain.Enums;
 using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
@@ -16,6 +18,7 @@ public class RedisService : IRedisService
     private readonly IServiceScopeFactory scopeFactory;
     private readonly IConnectionMultiplexer redis;
     private readonly IConfiguration config;
+    private readonly IDatabase redisdb;
 
     public RedisService()
     {
@@ -26,6 +29,7 @@ public class RedisService : IRedisService
         this.scopeFactory = scopeFactory;
         this.redis = redis;
         this.config = config;
+        redisdb = redis.GetDatabase();
     }
 
     private async Task LogAsync(string message,  LogTypes logType)
@@ -136,5 +140,36 @@ public class RedisService : IRedisService
             Console.WriteLine($"Greska pri dobijanju topic count-a: {e.Message}");
             return 0;
         }
+    }
+    
+    public async Task AddAsync(string topic, int userId)
+    {
+        await redisdb.SetAddAsync($"topic:{topic}:users", userId);
+        await redisdb.SetAddAsync($"user:{userId}:topics", topic);
+    }
+
+    public async Task RemoveAsync(string topic, int userId)
+    {
+        await redisdb.SetRemoveAsync($"topic:{topic}:users", userId);
+        await redisdb.SetRemoveAsync($"user:{userId}:topics", topic);
+    }
+
+    public async Task<bool> IsSubscribedAsync(string topic, int userId)
+    {
+        return await redisdb.SetContainsAsync($"topic:{topic}:users", userId);
+    }
+
+    public async Task<IReadOnlyList<string>> GetUserTopicsAsync(int userId)
+    {
+        return (await redisdb.SetMembersAsync($"user:{userId}:topics")).Select(v => v.ToString()).ToList();
+    }
+    
+    public async Task LoadAllAsync()
+    {
+        using var scope = scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var subs = await db.UserSubscriptions.Include(s => s.Topic).ToListAsync();
+        
+        foreach (var s in subs) await AddAsync(s.Topic.Name, s.UserId);
     }
 }

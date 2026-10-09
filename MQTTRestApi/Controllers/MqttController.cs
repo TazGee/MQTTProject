@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
+using System.Security.Claims;
 
 namespace MQTTRestApi.Controllers;
 
 /// <summary>
 /// Controller sa endpointima
 /// </summary>
-[ApiController]
-[Route("api/mqtt")]
+[Authorize, ApiController, Route("api/mqtt")]
 public class MqttController : ControllerBase
 {
     private IMqttService mqttService;
@@ -24,24 +24,40 @@ public class MqttController : ControllerBase
     {
         this.mqttService = mqttService;
         this.redisService = redisService;
+        
+    }
+
+    private int UserId()
+    {
+        return int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("subscribe")]
+    public async Task<IActionResult> Subscribe(string topic)
+    {
+        var result = await mqttService.SubscribeAsync(topic);
+        
+        if (!result) return Forbid("Neuspesan pokusaj subscribe-a.");
+        
+        return Ok();
     }
     
-    [HttpPost("subscribe")]
-    public async Task<IActionResult> Subscribe(SubscribeRequestDto request)
+    [HttpPost("usersubscribe")]
+    public async Task<IActionResult> UserSubscribe(SubscribeRequestDto request)
     {
-        var result = await mqttService.SubscribeAsync(request.Topic);
+        var result = await mqttService.SubscribeUserAsync(request, UserId());
 
-        if (!result) return BadRequest("Neuspesan pokusaj subscribe-a.");
+        if (!result) return Forbid("Neuspesan pokusaj subscribe-a.");
 
         return Ok();
     }
     
-    [Authorize(Roles = "Admin")]
-    [HttpGet("messages")]
-    public IActionResult GetMessages()
+
+    [HttpGet("mysubscriptions")]
+    public async Task<IActionResult> MyTopics()
     {
-        var messages = mqttService.GetMessages();
-        return Ok(messages);
+        return Ok(await mqttService.MyTopics(UserId()));
     }
     
     [HttpGet("stats")]

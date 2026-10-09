@@ -47,6 +47,7 @@ var serverVersion = ServerVersion.AutoDetect(cs);
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(cs, serverVersion));
 
+builder.Services.AddSignalR();
 builder.Services.AddSingleton<IConnectionMultiplexer>(
     ConnectionMultiplexer.Connect(
         builder.Configuration["Redis:ConnectionString"]!
@@ -97,5 +98,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapControllers();
+app.UseStaticFiles();
 
 app.Run();
