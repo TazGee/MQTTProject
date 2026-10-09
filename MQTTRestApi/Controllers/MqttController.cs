@@ -37,17 +37,6 @@ public class MqttController : ControllerBase
     }
     
     [Authorize(Roles = "Admin")]
-    [HttpPost("publish")]
-    public async Task<IActionResult> Publish(PublishRequestDto request)
-    {
-        var result = await mqttService.PublishAsync(request.Topic, request.Payload, request.QoS);
-
-        if (!result) return BadRequest("Neuspesan pokusaj publish-a.");
-
-        return Ok();
-    }
-    
-    [Authorize(Roles = "Admin")]
     [HttpGet("messages")]
     public IActionResult GetMessages()
     {

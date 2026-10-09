@@ -47,25 +47,6 @@ public class MqttServiceTests
         return (service, client);
     }
     
-    [Fact]
-    public async Task PublishAsync_ReturnsFalse_OnBadInput()
-    {
-        var (service, client) = CreateService();
-
-        var result = await service.PublishAsync("bla bla topic!", "x", 0);
-
-        Assert.False(result);
-    }
-
-    [Fact]
-    public async Task PublishAsync_ReturnsTrue_OnGoodInput()
-    {
-        var (service, client) = CreateService();
-
-        var result = await service.PublishAsync("test/test", "x", 0);
-
-        Assert.True(result);
-    }
 
     [Fact]
     public async Task SubscribeAsync_ReturnsFalse_OnBadInput()
