@@ -7,7 +7,7 @@ namespace MQTTRestApi.Domain.Models;
 /// </summary>
 public class MqttMessage
 {
-    public long Id { get; set; }
+    public int Id { get; set; }
     public string Topic { get; set; } = string.Empty;
     public string Payload { get; set; } = string.Empty;
     public MqttQualityOfServiceLevel QoS { get; set; } = MqttQualityOfServiceLevel.AtMostOnce;

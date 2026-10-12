@@ -1,4 +1,4 @@
-using MQTTRestApi.Domain.Models;
+using MQTTRestApi.Domain.DTO;
 
 namespace MQTTRestApi.Domain.Services;
 
@@ -13,20 +13,13 @@ public interface IMqttService
     Task ConnectAsync();
     
     /// <summary>
-    /// Ponovno pretplacuje na topic-e
-    /// </summary>
-    Task ResubscribeToAll();
-    
-    /// <summary>
     /// Pretplacuje na topic
     /// </summary>
     /// <param name="topic">Topic</param>
     /// <returns>True ako je uspesno ili false ako nije.</returns>
     Task<bool> SubscribeAsync(string topic);
     
-    /// <summary>
-    /// Lista poruka iz baze
-    /// </summary>
-    /// <returns>Vraca listu poruka iz baze podataka.</returns>
-    List<MqttMessage> GetMessages();
+
+    Task<bool> SubscribeUserAsync(SubscribeRequestDto request, int userId);
+    Task<List<TopicListDto>> MyTopics(int userId);
 }

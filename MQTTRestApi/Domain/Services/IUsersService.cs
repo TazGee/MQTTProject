@@ -1,5 +1,4 @@
 using MQTTRestApi.Domain.DTO;
-using MQTTRestApi.Domain.Models;
 
 namespace MQTTRestApi.Domain.Services;
 
