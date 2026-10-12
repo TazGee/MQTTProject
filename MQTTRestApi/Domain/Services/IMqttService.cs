@@ -1,5 +1,4 @@
 using MQTTRestApi.Domain.DTO;
-using MQTTRestApi.Domain.Models;
 
 namespace MQTTRestApi.Domain.Services;
 
@@ -19,7 +18,6 @@ public interface IMqttService
     /// <param name="topic">Topic</param>
     /// <returns>True ako je uspesno ili false ako nije.</returns>
     Task<bool> SubscribeAsync(string topic);
-    
     
 
     Task<bool> SubscribeUserAsync(SubscribeRequestDto request, int userId);

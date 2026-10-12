@@ -1,6 +1,4 @@
-using System.Net;
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using MQTTnet;
 using MQTTRestApi.Domain.Models;
@@ -167,12 +165,66 @@ public class MqttService : IMqttService
 
             foreach (Topic t in dbContext.Topics)
             {
-                if(await SubscribeAsync(t.Name)) Console.WriteLine($"{t.Name} ponovo subscribed");
+                await SubscribeOnBrokerAsync(t.Name);
             }
         }
     }
     
     public async Task<bool> SubscribeAsync(string topic)
+    {
+        try
+        {
+            if (!Regex.IsMatch(topic, config["SubscribeRegex"]))
+            {
+                Console.WriteLine($"Vrednost topica nije validna!");
+                return false;
+            }
+            
+            var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
+                .WithTopicFilter(topic)
+                .Build();
+            
+            using (var scope = scopeFactory.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                if (await dbContext.Topics.AnyAsync(s => s.Name == topic))
+                {
+                    Console.WriteLine($"Vec postoji subscribe na topic {topic}");
+                    return false; 
+                }
+                
+                Topic top = new Topic(topic, String.Empty);
+                
+                dbContext.Topics.Add(top);
+                await dbContext.SaveChangesAsync();
+            }
+            
+            MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
+            
+            foreach (var item in result.Items)
+            {
+                var success = item.ResultCode is
+                    MqttClientSubscribeResultCode.GrantedQoS0 or
+                    MqttClientSubscribeResultCode.GrantedQoS1 or
+                    MqttClientSubscribeResultCode.GrantedQoS2;
+
+                if (!success)
+                {
+                    Console.WriteLine($"Subscribe nije uspeo!");
+                    return false;
+                }
+            }
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Greska pri subscribovanju: {e.Message}");
+            return false;
+        }
+    }
+
+    private async Task<bool> SubscribeOnBrokerAsync(string topic)
     {
         try
         {
@@ -202,22 +254,7 @@ public class MqttService : IMqttService
                 }
             }
             
-            using (var scope = scopeFactory.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-                if (await dbContext.Topics.AnyAsync(s => s.Name == topic))
-                {
-                    Console.WriteLine($"Vec postoji subscribe na topic {topic}");
-                    return false; 
-                }
-                
-                Topic top = new Topic(topic, String.Empty);
-                
-                dbContext.Topics.Add(top);
-                await dbContext.SaveChangesAsync();
-            }
-            
+            Console.WriteLine($"Uspesan subscribe na topic {topic}!");
             return true;
         }
         catch (Exception e)
@@ -229,28 +266,43 @@ public class MqttService : IMqttService
     
     public async Task<bool> SubscribeUserAsync(SubscribeRequestDto request, int userId)
     {
+        using var scope = scopeFactory.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        
+        var topic = await dbContext.Topics.FindAsync(request.TopicId);
+        if (topic is null) return false;
+        
+        if (await dbContext.UserSubscriptions.AnyAsync(s => s.UserId == userId && s.TopicId == request.TopicId))
+            return false;
+
+        UserSubscription sub = new UserSubscription { UserId = userId, TopicId = request.TopicId };
+        
+        dbContext.UserSubscriptions.Add(sub);
+        
         try
         {
-            using var scope = scopeFactory.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            
-            var topic = await dbContext.Topics.FindAsync(request.TopicId);
-            if (topic is null) return false;
-            
-            if (await dbContext.UserSubscriptions.AnyAsync(s => s.UserId == userId && s.TopicId == request.TopicId))
-                return false;
-            
-            dbContext.UserSubscriptions.Add(new UserSubscription { UserId = userId, TopicId = request.TopicId });
             await dbContext.SaveChangesAsync();
-            await redis.AddAsync(topic.Name, userId);
-            
-            return true;
         }
-        catch (Exception e)
+        catch (DbUpdateException)
         {
-            Console.WriteLine($"Greska pri subscribovanju: {e.Message}");
             return false;
         }
+        
+        try
+        {
+            await redis.AddAsync(topic.Name, userId);
+        }
+        catch (Exception ex)
+        {
+            await LogAsync($"Redis nije uspeo da doda podatak u bazu, radi se rollback! {ex.Message}", LogTypes.ERROR);
+
+            dbContext.UserSubscriptions.Remove(sub);
+            await dbContext.SaveChangesAsync();
+
+            return false;
+        }
+        
+        return true;
     }
 
     public async Task<List<TopicListDto>> MyTopics(int userId)

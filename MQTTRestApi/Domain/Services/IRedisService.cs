@@ -14,12 +14,6 @@ public interface IRedisService
     Task SaveMessageAsync(MqttMessage message);
     
     /// <summary>
-    /// Povecava counter za topic poruke
-    /// </summary>
-    /// <param name="topic">Topic poruke</param>
-    Task IncrementTopicCountAsync(string topic);
-    
-    /// <summary>
     /// Vraca broj poruka za svaki topic
     /// </summary>
     /// <returns>Dictionary: topic - broj poruka</returns>

@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MQTTRestApi.Data;
 using MQTTRestApi.Domain.DTO;
-using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
 
 namespace MQTTRestApi.Controllers;
