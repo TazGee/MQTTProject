@@ -186,6 +186,21 @@ public class MqttService : IMqttService
             
             MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
             
+            // Ovo sam u proslom commitu zaboravio da pomerim gore, sad je reseno
+            foreach (var item in result.Items)
+            {
+                var success = item.ResultCode is
+                    MqttClientSubscribeResultCode.GrantedQoS0 or
+                    MqttClientSubscribeResultCode.GrantedQoS1 or
+                    MqttClientSubscribeResultCode.GrantedQoS2;
+
+                if (!success)
+                {
+                    Console.WriteLine($"Subscribe nije uspeo!");
+                    return false;
+                }
+            }
+            
             using (var scope = scopeFactory.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -200,21 +215,6 @@ public class MqttService : IMqttService
                 
                 dbContext.Topics.Add(top);
                 await dbContext.SaveChangesAsync();
-            }
-            
-            
-            foreach (var item in result.Items)
-            {
-                var success = item.ResultCode is
-                    MqttClientSubscribeResultCode.GrantedQoS0 or
-                    MqttClientSubscribeResultCode.GrantedQoS1 or
-                    MqttClientSubscribeResultCode.GrantedQoS2;
-
-                if (!success)
-                {
-                    Console.WriteLine($"Subscribe nije uspeo!");
-                    return false;
-                }
             }
             return true;
         }
