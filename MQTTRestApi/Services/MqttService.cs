@@ -31,7 +31,7 @@ public class MqttService : IMqttService
     
     private readonly IRedisService redis;
     
-    List<Topic> failedTopics = new List<Topic>();
+    private readonly HashSet<string> failedTopics = new ();
     
     public MqttService(IServiceScopeFactory scopeFactory, IRedisService redis, IConfiguration config)
         : this(scopeFactory, redis, config, new MqttClientFactory().CreateMqttClient())
@@ -266,16 +266,18 @@ public class MqttService : IMqttService
                 if (!success)
                 {
                     Console.WriteLine($"Subscribe nije uspeo!");
-                    failedTopics.Add(new Topic(topic, String.Empty));
+                    failedTopics.Add(topic);
                     return false;
                 }
             }
             
+            failedTopics.Remove(topic);
             Console.WriteLine($"Uspesan subscribe na topic {topic}!");
             return true;
         }
         catch (Exception e)
         {
+            failedTopics.Add(topic);
             Console.WriteLine($"Greska pri subscribovanju: {e.Message}");
             return false;
         }
@@ -402,23 +404,20 @@ public class MqttService : IMqttService
     
     public List<Topic> GetFailedTopics()
     {
-        return failedTopics;
+        return failedTopics.Select(t => new Topic(t, String.Empty)).ToList();
     }
 
     public async Task<List<string>> ResubscribeToFailed()
     {
         List<string> results = new List<string>();
-        
-        foreach (Topic t in failedTopics.ToList())
+
+        foreach (var name in failedTopics.ToList())
         {
-            if (await SubscribeAsync(t.Name))
-            {
-                failedTopics.Remove(t);
-                results.Add($"Uspesan resubscribe na {t.Name}!");
-            }
-            else results.Add($"Neuspesan pokusaj resubscribe na {t.Name}");
+            results.Add(await SubscribeOnBrokerAsync(name)
+                ? $"Uspesan resubscribe na {name}!"
+                : $"Neuspesan pokusaj resubscribe na {name}");
         }
-        
+
         return results;
     }
 
