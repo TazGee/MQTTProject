@@ -8,10 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Domain\Enums\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="MQTTnet" Version="5.2.0.1603" />
     </ItemGroup>
 

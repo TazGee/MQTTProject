@@ -1,7 +1,6 @@
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
-using MQTTnet;
 using MQTTRestApi.Data;
 using MQTTRestApi.Domain.Enums;
 using MQTTRestApi.Domain.Exceptions;
@@ -71,7 +70,7 @@ public class RedisService : IRedisService
     }
 
     
-    public async Task IncrementTopicCountAsync(string topic)
+    private async Task IncrementTopicCountAsync(string topic)
     {
         try
         {
