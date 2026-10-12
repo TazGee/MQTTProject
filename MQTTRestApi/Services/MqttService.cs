@@ -324,7 +324,7 @@ public class MqttService : IMqttService
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Greska pri subscribovanju: {e.Message}");
+            Console.WriteLine($"Greska pri unsubscribovanju: {e.Message}");
             return false;
         }
     }
