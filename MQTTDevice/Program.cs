@@ -1,5 +1,4 @@
-﻿using MQTTDevice.Domain.Models;
-using System;
+﻿using System.Text.RegularExpressions;
 using MQTTDevice.Domain.Services;
 using MQTTDevice.Services;
 using MQTTGitProject.Config;
@@ -24,13 +23,13 @@ class Program
         Console.WriteLine($"00========--------------=======00");
         Console.WriteLine("- = == MQTT DEVICE SELECTOR == = -\n");
 
-        ProcessInput();
+        ProcessInput(config);
         await service.InitializeService(config);
         
         await RunLoop();
     }
 
-    static void ProcessInput()
+    static void ProcessInput(Config config)
     {
         do
         {
@@ -38,10 +37,15 @@ class Program
             {
                 Console.Write("Unesite topic uredjaja: ");
                 topic = Console.ReadLine();
+                if (!Regex.IsMatch(topic, config.PublishRegex))
+                {
+                    Console.WriteLine("Neispravan format topic-a! Mora biti u formatu rec(/rec...)");
+                    Console.WriteLine("Primer: kuca/soba/temperatura");
+                    topic = null!;
+                }
             }
             catch { }
         } while (String.IsNullOrEmpty(topic));
-        Console.Clear();
         
         do
         {
@@ -52,39 +56,43 @@ class Program
             }
             catch { }
         } while (refreshTime < 2 || refreshTime > 10);
-        Console.Clear();
-        
-        bool uspeo = false;
+
         do
         {
-            try
+            bool uspeo = false;
+            do
             {
-                Console.Write("Unesite minimalnu vrednost: ");
-                minValue = int.Parse(Console.ReadLine());
-                uspeo = true;
-            }
-            catch { }
-        } while (!uspeo);
-            
-        uspeo = false;
-        do
-        {
-            try
+                try
+                {
+                    Console.Write("Unesite minimalnu vrednost: ");
+                    minValue = int.Parse(Console.ReadLine());
+                    uspeo = true;
+                }
+                catch
+                {
+                }
+            } while (!uspeo);
+
+            uspeo = false;
+            do
             {
-                Console.Write("Unesite maksimalnu vrednost: ");
-                maxValue = int.Parse(Console.ReadLine());
-                uspeo = true;
-            }
-            catch { }
-        } while (!uspeo);
-        Console.Clear();
+                try
+                {
+                    Console.Write("Unesite maksimalnu vrednost: ");
+                    maxValue = int.Parse(Console.ReadLine());
+                    uspeo = true;
+                }
+                catch
+                {
+                }
+            } while (!uspeo);
+        } while (minValue >= maxValue);
     }
     
     static async Task RunLoop()
     {
         while (true)
         {
-            Console.Clear();
             Console.WriteLine($"Refresh - Nova vrednost - {DateTime.Now:HH:mm:ss}");
 
             float value = (float)minValue + (float)(random.NextDouble() * (maxValue - minValue));
