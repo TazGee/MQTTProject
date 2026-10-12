@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using MQTTnet.Protocol;
 using MQTTRestApi.Domain.DTO;
+using MQTTRestApi.Services;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
 using System.Security.Claims;
 
@@ -28,9 +32,8 @@ public class MqttController : ControllerBase
         return int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
     }
 
-    [Authorize(Roles = "Admin")]
-    [HttpPost("subscribe")]
-    public async Task<IActionResult> Subscribe([FromBody]SubscribeRequestDto request)
+    [HttpPost("subscribe"), Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Subscribe([FromBody] SubscribeRequestDto request)
     {
         var result = await mqttService.SubscribeAsync(request.Topic);
         
@@ -39,7 +42,7 @@ public class MqttController : ControllerBase
         return Ok();
     }
     
-    [HttpPost("usersubscribe")]
+    [HttpPost("user-subscribe")]
     public async Task<IActionResult> UserSubscribe(SubscribeRequestDto request)
     {
         var result = await mqttService.SubscribeUserAsync(request, UserId());
@@ -49,7 +52,7 @@ public class MqttController : ControllerBase
         return Ok();
     }
     
-    [HttpDelete("userunsubscribe/{*topicId}")]
+    [HttpDelete("user-unsubscribe/{*topicId}")]
     public async Task<IActionResult> UserUnsubscribe(int topicId)
     {
         var result = await mqttService.UnsubscribeUserAsync(topicId, UserId());
@@ -59,10 +62,44 @@ public class MqttController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("mysubscriptions")]
+    [HttpGet("my-subscriptions")]
     public async Task<IActionResult> MyTopics()
     {
-        return Ok(await mqttService.MyTopics(UserId()));
+        var list = await mqttService.MyTopics(UserId());
+        
+        if(list.Count == 0) return Ok("Lista je prazna.");
+        
+        return Ok(list);
+    }
+    
+    [HttpGet("failed-subscriptions"), Authorize(Roles = "Admin")]
+    public IActionResult FailedSubscriptions()
+    {
+        var list = mqttService.GetFailedTopics();
+        
+        if(list.Count == 0) return Ok("Lista je prazna.");
+        
+        return Ok(list);
+    }
+    
+    [HttpGet("resubscribe-to-failed"), Authorize(Roles = "Admin")]
+    public async Task<IActionResult> ResubscribeToFailed()
+    {
+        var lista = await mqttService.ResubscribeToFailed();
+        
+        if(lista.Count ==  0) return Ok("Lista palih topic-a koji su ponovo pretplaceni je prazna.");
+        
+        return Ok(lista);
+    }
+    
+    [HttpGet("messages")]
+    public async Task<IActionResult> GetMessages()
+    {
+        var messages = await mqttService.GetMessages(UserId());
+        
+        if (messages.Count == 0) return Ok("Lista poruka je prazna.");
+        
+        return Ok(messages);
     }
     
     [HttpGet("stats")]
@@ -85,5 +122,12 @@ public class MqttController : ControllerBase
             Topic = topic,
             Count = count
         });
+    }
+    
+    [HttpGet("force-reconnect-to-server"), Authorize(Roles = "Admin")]
+    public async Task<IActionResult> ReconnectToServer()
+    {
+        if(await mqttService.ForceReconnect()) return Ok();
+        else return BadRequest("Neuspesan pokusaj force reconnect-a");
     }
 }
