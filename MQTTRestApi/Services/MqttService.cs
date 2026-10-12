@@ -184,6 +184,8 @@ public class MqttService : IMqttService
                 .WithTopicFilter(topic)
                 .Build();
             
+            MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
+            
             using (var scope = scopeFactory.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -200,7 +202,6 @@ public class MqttService : IMqttService
                 await dbContext.SaveChangesAsync();
             }
             
-            MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
             
             foreach (var item in result.Items)
             {
