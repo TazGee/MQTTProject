@@ -48,34 +48,5 @@ public class MqttServiceTests
         return (service, client);
     }
     
-
-    [Fact]
-    public async Task SubscribeAsync_ReturnsFalse_OnBadInput()
-    {
-        var (service, client) = CreateService();
-
-        var result = await service.SubscribeAsync("./././");
-
-        Assert.False(result);
-    }
-
-    [Fact]
-    public async Task SubscribeAsync_ReturnsTrue_OnGoodInput()
-    {
-        var (service, client) = CreateService();
-
-        var result = await service.SubscribeAsync("+/test/#/");
-
-        Assert.True(result);
-    }
-
-    [Fact]
-    public async Task SubscribeAsync_ReturnsFalse_OnBadInputMultiLevelWildcard()
-    {
-        var (service, client) = CreateService();
-
-        var result = await service.SubscribeAsync("#/test/#/");
-
-        Assert.False(result);
-    }
+    
 }

@@ -18,7 +18,7 @@ public interface IMqttService
     /// </summary>
     /// <param name="topic">Topic</param>
     /// <returns>True ako je uspesno ili false ako nije.</returns>
-    Task<bool> SubscribeAsync(string topic);
+    Task SubscribeAsync(string topic);
     /// <summary>
     /// Lista poruka iz baze
     /// </summary>

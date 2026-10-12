@@ -181,13 +181,12 @@ public class MqttService : IMqttService
 
             foreach (Topic t in dbContext.Topics)
             {
-                if(await SubscribeAsync(t.Name)) Console.WriteLine($"{t.Name} ponovo subscribed");
-                else failedTopics.Add(t);
+                if (!await SubscribeOnBrokerAsync(t.Name)) failedTopics.Add(t);
             }
         }
     }
     
-    public async Task<bool> SubscribeAsync(string topic)
+    private async Task<bool> SubscribeOnBrokerAsync(string topic)
     {
         try
         {
@@ -216,8 +215,26 @@ public class MqttService : IMqttService
                     return false;
                 }
             }
-
-            if (connected) return true;
+            
+            Console.WriteLine($"Uspesan subscribe na topic {topic}!");
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Greska pri subscribovanju: {e.Message}");
+            return false;
+        }
+    }
+    
+    public async Task SubscribeAsync(string topic)
+    {
+        try
+        {
+            if (!Regex.IsMatch(topic, config["SubscribeRegex"]))
+            {
+                Console.WriteLine($"Naziv topic-a nije validan!");
+                throw new BadRequestException("Naziv topic-a nije validan!");
+            }
             
             using (var scope = scopeFactory.CreateScope())
             {
@@ -225,8 +242,7 @@ public class MqttService : IMqttService
 
                 if (await dbContext.Topics.AnyAsync(s => s.Name == topic))
                 {
-                    Console.WriteLine($"Vec postoji subscribe na topic {topic}");
-                    return false; 
+                    throw new BadRequestException($"Vec postoji subsribe na topic: {topic}!"); 
                 }
                 
                 Topic top = new Topic(topic, String.Empty);
@@ -235,12 +251,28 @@ public class MqttService : IMqttService
                 await dbContext.SaveChangesAsync();
             }
             
-            return true;
+            var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
+                .WithTopicFilter(topic)
+                .Build();
+            
+            MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
+            
+            foreach (var item in result.Items)
+            {
+                var success = item.ResultCode is
+                    MqttClientSubscribeResultCode.GrantedQoS0 or
+                    MqttClientSubscribeResultCode.GrantedQoS1 or
+                    MqttClientSubscribeResultCode.GrantedQoS2;
+
+                if (!success)
+                {
+                    throw new BadRequestException($"Neuspesan pokusaj subscribe-a! {result.ReasonString}");
+                }
+            }
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Greska pri subscribovanju: {e.Message}");
-            return false;
+            throw new BadRequestException($"Greska pri subscribe-u: {e.Message}!"); 
         }
     }
     
@@ -309,7 +341,7 @@ public class MqttService : IMqttService
         
         foreach (Topic t in failedTopics)
         {
-            if (await SubscribeAsync(t.Name))results.Add($"Uspesan resubscribe na {t.Name}!");
+            if (await SubscribeOnBrokerAsync(t.Name)) results.Add($"Uspesan resubscribe na {t.Name}!");
             else results.Add($"Neuspesan pokusaj resubscribe na {t.Name}");
         }
         

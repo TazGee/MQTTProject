@@ -35,7 +35,7 @@ public class UserController : ControllerBase
         }
         else
         {
-            return BadRequest();
+            return BadRequest("Neuspesan pokusaj prijave!");
         }
     }
     
@@ -51,7 +51,7 @@ public class UserController : ControllerBase
         }
         else
         {
-            return BadRequest();
+            return BadRequest("Neuspesan pokusaj registracije!");
         }
     }
     
