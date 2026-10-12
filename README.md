@@ -1,14 +1,14 @@
 # 👨‍💻 **RestAPI Backend Projekat** 👨‍💻
 ### RestAPI Backend za komunikaciju putem MQTT protokola
-**Verzija:** 0.26.10.12.1 by Nikola Tasić
+**Verzija:** 0.26.10.12.1 by **Nikola Tasić**
 \
 **Programski jezik:** C#
 \
 **Tehnologije:** .NET, Docker, MariaDB, Entity Framework
 \
 **Okruzenja:** Rider, MySQL Workbench
-## 📜 **Izmene i azuriranja** 📜️
-### **-= Verzija 0.26.10.12.1 =-**
+## 📜 - **Najnovije izmene** - 📜️
+### **-= Verzija 0.26.10.12.1 =-** 
 
 - **User authentication:**
   - Dodata **autentifikacija korisnika** putem korisnickog **imena** i **lozinke**
@@ -47,7 +47,7 @@
   - Dodat **change log** za verzije
   - Sredjeno **formatiranje teksta**
 ***
-## 🖥️ **Features** 🖥️
+## 🖥️ - **Features** - 🖥️
 - Pretplata backend-a na topic po zelji
 - Korisnicka autentifikacija putem korisnickog imena i lozinke
 - Vise korisnickih uloga
@@ -62,7 +62,7 @@
 - Mogucnost za force reconnect-om ukoliko je upkla veza
 - Globalni exception/error handling
 ***
-## 📀 **Prerequisites** 📀
+## 📀 - **Prerequisites** - 📀
 - .NET SDK 8
 - Visual Studio (Code) / Rider
 - Docker
@@ -70,14 +70,14 @@
 - Swagger (za testiranje)
 - MariaDB i Redis
 ***
-## 🧑‍💻 **Setup Instrukcije** 🧑‍💻
+## 🧑‍💻 - **Setup Instrukcije** - 🧑‍💻
 - Neophodno je prethodno kloniranje git repozitorijuma
 - U folderu **'MQTTRestApi'** neophodno je popuniti .env fajl (primer u .env.example)
 - Unutar foldera **'MQTTRestApi'** pritisnuti desni klik > **Open in Terminal**
 - Ukucati **docker compose up -d --build**
 - Ukoliko nema gresaka, API je spreman za upotrebu
 ***
-## 🌐 **API Endpoints** 🌐
+## 🌐 - **API Endpoints** - 🌐
 ### User ENDPOINTS:
 - **(POST)api/users/login**
     - Input parametri:
@@ -135,7 +135,7 @@
         - Nema input parametre
     - Vraca listu svih poruka za topic-e na koje je korisnik pretplacen
 ***
-## ⌨️ **Primeri curl komandi** ⌨️
+## ⌨️ - **Primeri curl komandi** - ⌨️
 - Subscribe
 ```bash
 curl -X 'POST' \
@@ -177,7 +177,7 @@ curl -X 'GET' \
   -H 'accept: */*'
 ```
 ***
-## 🎛️ **Testing instrukcije** 🎛️
+## 🎛️ - **Testing instrukcije** - 🎛️
 - Za pokretanje Unit testova neophodno je:
 - Otvoriti folder `MqttRestApi.Tests`
 - Pritisnuti desni klik > Open in Terminal
@@ -186,5 +186,16 @@ curl -X 'GET' \
     dotnet test
 ```
 ***
-## 📃 **Licenca** 📃
-- 
+## 📃 - **Licenca** - 📃
+- Trenutno ne postoji definisana licenca za ovaj proizvod
+***
+## 📜 - **Ranije izmene i azuriranja** - 📜️
+### **-= Verzija 0.26.10.9.1 =-**
+- **Simulator:**
+  - Dodat novi **projekat** unutar **solution-a** koji sluzi za **simuliranje uredjaja**
+  - Dodate **opcije za simuliranje** u vidu:
+    - Minimalne vrednosti
+    - Maksimalne vrednosti
+    - Intervala slanja poruka
+- **RestApi:**
+  - Iz **RestApi** projekta izbacena mogucnost **slanja poruke (publish)**
