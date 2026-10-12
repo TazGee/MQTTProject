@@ -409,9 +409,13 @@ public class MqttService : IMqttService
     {
         List<string> results = new List<string>();
         
-        foreach (Topic t in failedTopics)
+        foreach (Topic t in failedTopics.ToList())
         {
-            if (await SubscribeAsync(t.Name))results.Add($"Uspesan resubscribe na {t.Name}!");
+            if (await SubscribeAsync(t.Name))
+            {
+                failedTopics.Remove(t);
+                results.Add($"Uspesan resubscribe na {t.Name}!");
+            }
             else results.Add($"Neuspesan pokusaj resubscribe na {t.Name}");
         }
         

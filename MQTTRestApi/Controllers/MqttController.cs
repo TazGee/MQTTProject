@@ -87,7 +87,7 @@ public class MqttController : ControllerBase
     {
         var lista = await mqttService.ResubscribeToFailed();
         
-        if(lista.Count ==  0) return Ok("Lista palih pretplata je prazna.");
+        if(lista.Count ==  0) return Ok("Lista palih topic-a koji su ponovo pretplaceni je prazna.");
         
         return Ok(lista);
     }
