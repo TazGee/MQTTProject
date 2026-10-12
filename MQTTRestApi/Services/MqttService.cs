@@ -340,6 +340,8 @@ public class MqttService : IMqttService
         var topics = dbContext.UserSubscriptions
             .Where(s => s.UserId == userId)
             .Select(s => s.Topic.Name);
+        
+        if(await topics.AnyAsync()) throw new NotFoundException($"Lista poruka je prazna!");
     
         return await dbContext.Messages
             .Where(m => topics.Contains(m.Topic))
@@ -353,12 +355,18 @@ public class MqttService : IMqttService
         using var scope = scopeFactory.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        return await dbContext.UserSubscriptions.Where(s => s.UserId == userId)
+        var lista = await dbContext.UserSubscriptions.Where(s => s.UserId == userId)
             .Select(s => new TopicListDto(s.TopicId, s.Topic.Name)).ToListAsync();
+        
+        if(lista.Count == 0) throw new NotFoundException($"Lista topic-a je prazna!");
+        
+        return lista;
     }
     
     public List<Topic> GetFailedTopics()
     {
+        if(failedTopics.Count == 0) throw new NotFoundException($"Lista failed topics-a je prazna!");
+        
         return failedTopics;
     }
 
@@ -371,6 +379,8 @@ public class MqttService : IMqttService
             if (await SubscribeOnBrokerAsync(t.Name)) results.Add($"Uspesan resubscribe na {t.Name}!");
             else results.Add($"Neuspesan pokusaj resubscribe na {t.Name}");
         }
+        
+        if(results.Count == 0) throw new NotFoundException($"Lista resubscribed topics-a je prazna!");
         
         return results;
     }
@@ -399,7 +409,7 @@ public class MqttService : IMqttService
         catch (Exception ex)
         {
             Console.WriteLine($"Povezivanje nije uspelo: {ex.Message}");
-            throw new BadRequestException($"Server je vec povezan!");
+            throw new BadRequestException($"Greska pri povezivanju! {ex.Message}");
         }
     }
 }

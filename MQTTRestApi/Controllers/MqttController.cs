@@ -61,8 +61,6 @@ public class MqttController : ControllerBase
     {
         var list = await mqttService.MyTopics(UserId());
         
-        if(list.Count == 0) return BadRequest("Lista je prazna!");
-        
         return Ok(list);
     }
     
@@ -70,8 +68,6 @@ public class MqttController : ControllerBase
     public IActionResult FailedSubscriptions()
     {
         var list = mqttService.GetFailedTopics();
-        
-        if(list.Count == 0) return BadRequest("Lista je prazna!");
         
         return Ok(list);
     }
@@ -81,8 +77,6 @@ public class MqttController : ControllerBase
     {
         var lista = await mqttService.ResubscribeToFailed();
         
-        if(lista.Count ==  0) return BadRequest("Lista je prazna!");
-        
         return Ok(lista);
     }
     
@@ -90,8 +84,6 @@ public class MqttController : ControllerBase
     public async Task<IActionResult> GetMessages()
     {
         var messages = await mqttService.GetMessages(UserId());
-        
-        if (messages.Count == 0) return BadRequest("Lista je prazna!");
         
         return Ok(messages);
     }
