@@ -61,6 +61,8 @@ public class MqttController : ControllerBase
     {
         var list = await mqttService.MyTopics(UserId());
         
+        if(list.Count == 0) return Ok("Lista vasih topic-a je prazna.");
+        
         return Ok(list);
     }
     
@@ -77,6 +79,8 @@ public class MqttController : ControllerBase
     {
         var lista = await mqttService.ResubscribeToFailed();
         
+        if(lista.Count == 0) return Ok("Lista uspesno resubscribed je prazna.");
+        
         return Ok(lista);
     }
     
@@ -85,15 +89,19 @@ public class MqttController : ControllerBase
     {
         var messages = await mqttService.GetMessages(UserId());
         
+        if(messages.Count == 0) return Ok("Nemate dostupnih poruka.");
+        
         return Ok(messages);
     }
     
     [HttpGet("available-topics")]
     public async Task<IActionResult> GetAvailableTopics()
     {
-        var messages = await mqttService.GetAvailableTopics();
+        var topics = await mqttService.GetAvailableTopics();
+
+        if (topics.Count == 0) return Ok("Nema dostupnih topic-a");
         
-        return Ok(messages);
+        return Ok(topics);
     }
     
     [HttpGet("stats")]

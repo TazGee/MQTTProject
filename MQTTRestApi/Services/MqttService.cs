@@ -341,7 +341,7 @@ public class MqttService : IMqttService
             .Where(s => s.UserId == userId)
             .Select(s => s.Topic.Name);
         
-        if(await topics.AnyAsync()) throw new NotFoundException($"Lista poruka je prazna!");
+        if(await topics.AnyAsync()) throw new BadRequestException($"Niste prijavljeni ni na jedan topic!");
     
         return await dbContext.Messages
             .Where(m => topics.Contains(m.Topic))
@@ -356,8 +356,6 @@ public class MqttService : IMqttService
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         var topics = dbContext.Topics.ToList();
-        
-        if(topics.Count == 0) throw new NotFoundException($"Lista dostupnih topic-a je prazna!");
     
         return topics;
     }
@@ -370,20 +368,18 @@ public class MqttService : IMqttService
         var lista = await dbContext.UserSubscriptions.Where(s => s.UserId == userId)
             .Select(s => new TopicListDto(s.TopicId, s.Topic.Name)).ToListAsync();
         
-        if(lista.Count == 0) throw new NotFoundException($"Lista topic-a je prazna!");
-        
         return lista;
     }
     
     public List<Topic> GetFailedTopics()
     {
-        if(failedTopics.Count == 0) throw new NotFoundException($"Lista failed topics-a je prazna!");
-        
         return failedTopics;
     }
 
     public async Task<List<string>> ResubscribeToFailed()
     {
+        if (failedTopics.Count == 0) throw new BadRequestException("Nema topic-a za koje nije uspela pretplata!");
+        
         List<string> results = new List<string>();
         
         foreach (Topic t in failedTopics)
@@ -391,8 +387,6 @@ public class MqttService : IMqttService
             if (await SubscribeOnBrokerAsync(t.Name)) results.Add($"Uspesan resubscribe na {t.Name}!");
             else results.Add($"Neuspesan pokusaj resubscribe na {t.Name}");
         }
-        
-        if(results.Count == 0) throw new NotFoundException($"Lista resubscribed topics-a je prazna!");
         
         return results;
     }
