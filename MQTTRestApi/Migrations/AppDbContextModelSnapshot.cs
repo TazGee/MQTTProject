@@ -75,26 +75,6 @@ namespace MQTTRestApi.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("MQTTRestApi.Domain.Models.Subscription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Topic")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Subscriptions");
-                });
-
             modelBuilder.Entity("MQTTRestApi.Domain.Models.Topic", b =>
                 {
                     b.Property<int>("Id")
@@ -112,6 +92,9 @@ namespace MQTTRestApi.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
 
                     b.ToTable("Topics");
                 });
@@ -140,6 +123,9 @@ namespace MQTTRestApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Id")
+                        .IsUnique();
+
                     b.ToTable("Users");
                 });
 
@@ -164,7 +150,8 @@ namespace MQTTRestApi.Migrations
 
                     b.HasIndex("TopicId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "TopicId")
+                        .IsUnique();
 
                     b.ToTable("UserSubscriptions");
                 });

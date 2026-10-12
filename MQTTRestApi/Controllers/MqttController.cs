@@ -1,11 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using MQTTnet.Protocol;
 using MQTTRestApi.Domain.DTO;
-using MQTTRestApi.Services;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
 using System.Security.Claims;
 
@@ -33,12 +29,12 @@ public class MqttController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpGet("subscribe")]
-    public async Task<IActionResult> Subscribe(string topic)
+    [HttpPost("subscribe")]
+    public async Task<IActionResult> Subscribe([FromBody]SubscribeRequestDto request)
     {
-        var result = await mqttService.SubscribeAsync(topic);
+        var result = await mqttService.SubscribeAsync(request.Topic);
         
-        if (!result) return Forbid("Neuspesan pokusaj subscribe-a.");
+        if (!result) return BadRequest("Neuspesan pokusaj subscribe-a.");
         
         return Ok();
     }
@@ -48,7 +44,7 @@ public class MqttController : ControllerBase
     {
         var result = await mqttService.SubscribeUserAsync(request, UserId());
 
-        if (!result) return Forbid("Neuspesan pokusaj subscribe-a.");
+        if (!result) return BadRequest("Neuspesan pokusaj subscribe-a.");
 
         return Ok();
     }
