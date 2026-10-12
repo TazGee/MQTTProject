@@ -245,29 +245,29 @@ public class MqttService : IMqttService
                     throw new BadRequestException($"Vec postoji subsribe na topic: {topic}!"); 
                 }
                 
+                var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
+                    .WithTopicFilter(topic)
+                    .Build();
+            
+                MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
+            
+                foreach (var item in result.Items)
+                {
+                    var success = item.ResultCode is
+                        MqttClientSubscribeResultCode.GrantedQoS0 or
+                        MqttClientSubscribeResultCode.GrantedQoS1 or
+                        MqttClientSubscribeResultCode.GrantedQoS2;
+
+                    if (!success)
+                    {
+                        throw new BadRequestException($"Neuspesan pokusaj subscribe-a! {result.ReasonString}");
+                    }
+                }
+                
                 Topic top = new Topic(topic, String.Empty);
                 
                 dbContext.Topics.Add(top);
                 await dbContext.SaveChangesAsync();
-            }
-            
-            var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
-                .WithTopicFilter(topic)
-                .Build();
-            
-            MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
-            
-            foreach (var item in result.Items)
-            {
-                var success = item.ResultCode is
-                    MqttClientSubscribeResultCode.GrantedQoS0 or
-                    MqttClientSubscribeResultCode.GrantedQoS1 or
-                    MqttClientSubscribeResultCode.GrantedQoS2;
-
-                if (!success)
-                {
-                    throw new BadRequestException($"Neuspesan pokusaj subscribe-a! {result.ReasonString}");
-                }
             }
         }
         catch (Exception e)
@@ -286,10 +286,25 @@ public class MqttService : IMqttService
         
         if (await dbContext.UserSubscriptions.AnyAsync(s => s.UserId == userId && s.TopicId == request.TopicId))
             throw new ConflictException($"Vec si prijavljen na topic {request.TopicId}!");
+
+        UserSubscription sub = new UserSubscription { UserId = userId, TopicId = request.TopicId }; 
         
-        dbContext.UserSubscriptions.Add(new UserSubscription { UserId = userId, TopicId = request.TopicId });
+        dbContext.UserSubscriptions.Add(sub);
         await dbContext.SaveChangesAsync();
-        await redis.AddAsync(topic.Name, userId);
+        
+        try
+        {
+            await redis.AddAsync(topic.Name, userId);
+        }
+        catch (Exception ex)
+        {
+            await LogAsync($"Redis nije uspeo da doda podatak u bazu, radi se rollback! {ex.Message}", LogTypes.ERROR);
+
+            dbContext.UserSubscriptions.Remove(sub);
+            await dbContext.SaveChangesAsync();
+
+            throw new NotFoundException($"Redis nije uspeo da doda podatak u bazu, radi se rollback! {ex.Message}");
+        }
     }
 
     public async Task UnsubscribeUserAsync(int topicId, int userId)
@@ -302,7 +317,19 @@ public class MqttService : IMqttService
     
         dbContext.UserSubscriptions.Remove(sub);
         await dbContext.SaveChangesAsync();
-        await redis.RemoveAsync(sub.Topic.Name, userId);
+        
+        try
+        {
+            await redis.RemoveAsync(sub.Topic.Name, userId);
+        }
+        catch (Exception ex)
+        {
+            await LogAsync($"Redis nije uspeo da ukloni podatak, radi se rollback! {ex.Message}", LogTypes.ERROR);
+
+            dbContext.UserSubscriptions.Add(sub);
+            await dbContext.SaveChangesAsync();
+            throw new NotFoundException($"Redis nije uspeo da ukloni podatak, radi se rollback! {ex.Message}");
+        }
     }
     
     public async Task<List<MqttMessageDto>> GetMessages(int userId)

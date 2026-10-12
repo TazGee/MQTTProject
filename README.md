@@ -179,8 +179,8 @@ curl -X 'GET' \
 ***
 ## 🎛️ - **Testing instrukcije** - 🎛️
 - Za pokretanje Unit testova neophodno je:
-- Otvoriti folder `MqttRestApi.Tests`
-- Pritisnuti desni klik > Open in Terminal
+- Otvoriti folder **'MqttRestApi.Tests'**
+- Pritisnuti desni klik > **Open in Terminal**
 - ukucati:
 ```bash 
     dotnet test
