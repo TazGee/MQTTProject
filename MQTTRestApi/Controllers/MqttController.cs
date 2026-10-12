@@ -33,9 +33,9 @@ public class MqttController : ControllerBase
     }
 
     [HttpGet("subscribe"), Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Subscribe(string topic)
+    public async Task<IActionResult> Subscribe([FromBody] SubscribeRequestDto request)
     {
-        var result = await mqttService.SubscribeAsync(topic);
+        var result = await mqttService.SubscribeAsync(request.Topic);
         
         if (!result) return Forbid("Neuspesan pokusaj subscribe-a.");
         
