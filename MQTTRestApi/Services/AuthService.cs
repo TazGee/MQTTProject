@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using MQTTRestApi.Data;
 using MQTTRestApi.Domain.DTO;
 using MQTTRestApi.Domain.Enums;
+using MQTTRestApi.Domain.Exceptions;
 using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
 
@@ -17,43 +19,43 @@ public class AuthService : IAuthService
         this.logger = logger;
     }
     
-    public (UserInfoDto, bool) Login(string username, string password)
+    public async Task<UserInfoDto> Login(string username, string password)
     {
-        foreach (var user in dbContext.Users)
+        var user = await dbContext.Users
+            .FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
+
+        if (user is not null)
         {
-            if (String.Equals(user.Username, username) && String.Equals(user.Password, password))
-            {
-                UserInfoDto u = new UserInfoDto() { Id = user.Id, Username = username, Role = user.Role, CreatedAt = user.CreatedAt };
-                return (u, true);
-            }
+            await logger.LogMessage($"Korisnik [{user.Id}]{username} se uspesno ulogovao!", LogTypes.AUTH);
+            return new UserInfoDto { Id = user.Id, Username = username, Role = user.Role, CreatedAt = user.CreatedAt };
         }
 
-        return (new UserInfoDto(), false);
+        await logger.LogMessage($"Neko je probao da se uloguje na {username} i nije uspeo!", LogTypes.AUTH);
+        throw new BadRequestException("Username ili password nisu dobri!");
     }
 
-    public (UserInfoDto, bool) Register(string username, string password, UserTypes TipKorisnika)
+    public async Task<UserInfoDto> Register(string username, string password, UserTypes TipKorisnika)
     {
-        foreach (var user in dbContext.Users)
-        {
-            if (String.Equals(user.Username, username))
-            {
-                return (new UserInfoDto(), false);
-            }
-        }
-        
-        User novi = new User(username, password, TipKorisnika);
+        if (await dbContext.Users.AnyAsync(u => u.Username == username))
+            throw new BadRequestException("Neko vec koristi ovaj username!");
+
+        var novi = new User(username, password, TipKorisnika);
 
         try
         {
             dbContext.Users.Add(novi);
-            dbContext.SaveChanges();
-            UserInfoDto u = new UserInfoDto() { Id = novi.Id, Username = username, Role = novi.Role, CreatedAt = novi.CreatedAt };
-            return (u, true);
+            await dbContext.SaveChangesAsync();
         }
         catch (Exception e)
         {
-            Console.WriteLine("Greska pri dodavanju korisnika u bazu: " + e.Message);
-            return (new UserInfoDto(), false);
+            dbContext.Entry(novi).State = EntityState.Detached;
+
+            await logger.LogMessage($"Doslo je do greske prilikom cuvanja novog korisnika u bazu! {e.Message}", LogTypes.ERROR);
+            throw new BadRequestException("Doslo je do greske, molimo vas probajte kasnije!");
         }
+
+        await logger.LogMessage($"Korisnik [{novi.Id}]{username} se uspesno registrovao!", LogTypes.AUTH);
+
+        return new UserInfoDto { Id = novi.Id, Username = username, Role = novi.Role, CreatedAt = novi.CreatedAt };
     }
 }

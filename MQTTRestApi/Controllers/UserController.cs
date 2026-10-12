@@ -22,35 +22,21 @@ public class UserController : ControllerBase
     }
     
     [HttpPost("login")]
-    public IActionResult Login(LoginDto dto, [FromServices] ITokenService tokens)
+    public async Task<IActionResult> Login(LoginDto dto, [FromServices] ITokenService tokens)
     {
-        (UserInfoDto user, bool success) = authService.Login(dto.Username, dto.Password);
+        UserInfoDto user = await authService.Login(dto.Username, dto.Password);
         
-        if (success)
-        {
-            var token = tokens.CreateToken(userId: user.Id.ToString(), username: dto.Username, role: user.Role.ToString());
-            return Ok(new { token });
-        }
-        else
-        {
-            return BadRequest("Neuspesan pokusaj prijave!");
-        }
+        var token = tokens.CreateToken(userId: user.Id.ToString(), username: dto.Username, role: user.Role.ToString());
+        return Ok(new { token });
     }
     
     [HttpPost("register")]
-    public IActionResult Register(RegisterDto dto, [FromServices] ITokenService tokens)
+    public async Task<IActionResult> Register(RegisterDto dto, [FromServices] ITokenService tokens)
     {
-        (UserInfoDto user, bool success) = authService.Register(dto.Username, dto.Password, dto.UserType);
+        UserInfoDto user = await authService.Register(dto.Username, dto.Password, dto.UserType);
         
-        if (success)
-        {
-            var token = tokens.CreateToken(userId: user.Id.ToString(), username: dto.Username, role: user.Role.ToString());
-            return Ok(new { token });
-        }
-        else
-        {
-            return BadRequest("Neuspesan pokusaj registracije!");
-        }
+        var token = tokens.CreateToken(userId: user.Id.ToString(), username: dto.Username, role: user.Role.ToString());
+        return Ok(new { token });
     }
     
     [Authorize(Roles = "Admin")]

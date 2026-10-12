@@ -30,7 +30,6 @@
   - **api/users/login** promenjen sa **Get** na **Post**
   - **api/users/register** promenjen sa **Get** na **Post**
   - **api/users/list** promenjen sa **Post** na **Get**
-  - Odredjene rute vracaju **NoContent()** zbog novog **error handling-a**
 - **Services:**
   - Funkcija koju poziva **ReconnectToAll()** izmestena u privatnu funkciju **ConnectOnBrokerAsync()**
   - Izmenjeno da **SubscribeAsync()** sluzi samo za prijavu backenda na topic preko rute

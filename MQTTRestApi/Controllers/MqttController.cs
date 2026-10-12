@@ -37,7 +37,7 @@ public class MqttController : ControllerBase
     {
         await mqttService.SubscribeAsync(topic);
         
-        return NoContent();
+        return Ok("Subscribe uspesan!");
     }
     
     [HttpPost("user-subscribe")]
@@ -45,7 +45,7 @@ public class MqttController : ControllerBase
     {
         await mqttService.SubscribeUserAsync(request, UserId());
 
-        return NoContent();
+        return Ok("User subscribe uspesan!");
     }
     
     [HttpDelete("user-unsubscribe/{*topicId}")]
@@ -53,7 +53,7 @@ public class MqttController : ControllerBase
     {
         await mqttService.UnsubscribeUserAsync(topicId, UserId());
 
-        return NoContent();
+        return Ok("User unsubscribe uspesan!");
     }
 
     [HttpGet("my-subscriptions")]
@@ -123,6 +123,6 @@ public class MqttController : ControllerBase
     {
         await mqttService.ForceReconnect();
         
-        return NoContent();
+        return Ok("Force reconnect uspesan!");
     }
 }
