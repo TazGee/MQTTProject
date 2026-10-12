@@ -184,8 +184,6 @@ public class MqttService : IMqttService
                 .WithTopicFilter(topic)
                 .Build();
             
-            MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
-            
             using (var scope = scopeFactory.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -196,25 +194,27 @@ public class MqttService : IMqttService
                     return false; 
                 }
                 
+                MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
+            
+                // Ovo sam u proslom commitu zaboravio da pomerim gore, sad je reseno
+                foreach (var item in result.Items)
+                {
+                    var success = item.ResultCode is
+                        MqttClientSubscribeResultCode.GrantedQoS0 or
+                        MqttClientSubscribeResultCode.GrantedQoS1 or
+                        MqttClientSubscribeResultCode.GrantedQoS2;
+
+                    if (!success)
+                    {
+                        Console.WriteLine($"Subscribe nije uspeo!");
+                        return false;
+                    }
+                }
+                
                 Topic top = new Topic(topic, String.Empty);
                 
                 dbContext.Topics.Add(top);
                 await dbContext.SaveChangesAsync();
-            }
-            
-            
-            foreach (var item in result.Items)
-            {
-                var success = item.ResultCode is
-                    MqttClientSubscribeResultCode.GrantedQoS0 or
-                    MqttClientSubscribeResultCode.GrantedQoS1 or
-                    MqttClientSubscribeResultCode.GrantedQoS2;
-
-                if (!success)
-                {
-                    Console.WriteLine($"Subscribe nije uspeo!");
-                    return false;
-                }
             }
             return true;
         }
@@ -306,6 +306,40 @@ public class MqttService : IMqttService
         return true;
     }
 
+    public async Task<bool> UnsubscribeUserAsync(int topicId, int userId)
+    {
+        try
+        {
+            using var scope = scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        
+            var sub = await dbContext.UserSubscriptions.Include(s => s.Topic).FirstOrDefaultAsync(s => s.UserId == userId && s.TopicId == topicId);
+            if (sub is null) return false;
+        
+            dbContext.UserSubscriptions.Remove(sub);
+            await dbContext.SaveChangesAsync();
+            
+            try
+            {
+                await redis.RemoveAsync(sub.Topic.Name, userId);
+            }
+            catch (Exception ex)
+            {
+                await LogAsync($"Redis nije uspeo da ukloni podatak, radi se rollback! {ex.Message}", LogTypes.ERROR);
+
+                dbContext.UserSubscriptions.Add(sub);
+                await dbContext.SaveChangesAsync();
+                return false;
+            }
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Greska pri unsubscribovanju: {e.Message}");
+            return false;
+        }
+    }
+    
     public async Task<List<TopicListDto>> MyTopics(int userId)
     {
         using var scope = scopeFactory.CreateScope();

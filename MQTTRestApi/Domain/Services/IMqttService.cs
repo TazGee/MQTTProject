@@ -1,4 +1,5 @@
 using MQTTRestApi.Domain.DTO;
+using MQTTRestApi.Domain.Models;
 
 namespace MQTTRestApi.Domain.Services;
 
@@ -19,7 +20,7 @@ public interface IMqttService
     /// <returns>True ako je uspesno ili false ako nije.</returns>
     Task<bool> SubscribeAsync(string topic);
     
-
     Task<bool> SubscribeUserAsync(SubscribeRequestDto request, int userId);
+    Task<bool> UnsubscribeUserAsync(int topicId, int userId);
     Task<List<TopicListDto>> MyTopics(int userId);
 }
