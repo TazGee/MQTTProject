@@ -37,7 +37,7 @@ public class MqttController : ControllerBase
     {
         var result = await mqttService.SubscribeAsync(request.Topic);
         
-        if (!result) return Forbid("Neuspesan pokusaj subscribe-a.");
+        if (!result) return BadRequest("Neuspesan pokusaj subscribe-a.");
         
         return Ok();
     }
@@ -47,7 +47,7 @@ public class MqttController : ControllerBase
     {
         var result = await mqttService.SubscribeUserAsync(request, UserId());
 
-        if (!result) return Forbid("Neuspesan pokusaj subscribe-a.");
+        if (!result) return BadRequest("Neuspesan pokusaj subscribe-a.");
 
         return Ok();
     }
@@ -128,6 +128,6 @@ public class MqttController : ControllerBase
     public async Task<IActionResult> ReconnectToServer()
     {
         if(await mqttService.ForceReconnect()) return Ok();
-        else return BadRequest();
+        else return BadRequest("Neuspesan pokusaj force reconnect-a");
     }
 }
