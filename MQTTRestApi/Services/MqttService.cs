@@ -184,23 +184,6 @@ public class MqttService : IMqttService
                 .WithTopicFilter(topic)
                 .Build();
             
-            MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
-            
-            // Ovo sam u proslom commitu zaboravio da pomerim gore, sad je reseno
-            foreach (var item in result.Items)
-            {
-                var success = item.ResultCode is
-                    MqttClientSubscribeResultCode.GrantedQoS0 or
-                    MqttClientSubscribeResultCode.GrantedQoS1 or
-                    MqttClientSubscribeResultCode.GrantedQoS2;
-
-                if (!success)
-                {
-                    Console.WriteLine($"Subscribe nije uspeo!");
-                    return false;
-                }
-            }
-            
             using (var scope = scopeFactory.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -209,6 +192,23 @@ public class MqttService : IMqttService
                 {
                     Console.WriteLine($"Vec postoji subscribe na topic {topic}");
                     return false; 
+                }
+                
+                MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
+            
+                // Ovo sam u proslom commitu zaboravio da pomerim gore, sad je reseno
+                foreach (var item in result.Items)
+                {
+                    var success = item.ResultCode is
+                        MqttClientSubscribeResultCode.GrantedQoS0 or
+                        MqttClientSubscribeResultCode.GrantedQoS1 or
+                        MqttClientSubscribeResultCode.GrantedQoS2;
+
+                    if (!success)
+                    {
+                        Console.WriteLine($"Subscribe nije uspeo!");
+                        return false;
+                    }
                 }
                 
                 Topic top = new Topic(topic, String.Empty);
