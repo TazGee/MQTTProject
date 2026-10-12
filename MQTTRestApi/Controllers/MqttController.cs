@@ -32,7 +32,7 @@ public class MqttController : ControllerBase
         return int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
     }
 
-    [HttpGet("subscribe"), Authorize(Roles = "Admin")]
+    [HttpPost("subscribe"), Authorize(Roles = "Admin")]
     public async Task<IActionResult> Subscribe([FromBody] SubscribeRequestDto request)
     {
         var result = await mqttService.SubscribeAsync(request.Topic);
@@ -67,7 +67,7 @@ public class MqttController : ControllerBase
     {
         var list = await mqttService.MyTopics(UserId());
         
-        if(list.Count == 0) return BadRequest();
+        if(list.Count == 0) return Ok("Lista je prazna.");
         
         return Ok(list);
     }
@@ -77,7 +77,7 @@ public class MqttController : ControllerBase
     {
         var list = mqttService.GetFailedTopics();
         
-        if(list.Count == 0) return BadRequest();
+        if(list.Count == 0) return Ok("Lista je prazna.");
         
         return Ok(list);
     }
@@ -87,7 +87,7 @@ public class MqttController : ControllerBase
     {
         var lista = await mqttService.ResubscribeToFailed();
         
-        if(lista.Count ==  0) return BadRequest();
+        if(lista.Count ==  0) return Ok("Lista palih pretplata je prazna.");
         
         return Ok(lista);
     }
@@ -97,7 +97,7 @@ public class MqttController : ControllerBase
     {
         var messages = await mqttService.GetMessages(UserId());
         
-        if (messages.Count == 0) return BadRequest();
+        if (messages.Count == 0) return Ok("Lista poruka je prazna.");
         
         return Ok(messages);
     }

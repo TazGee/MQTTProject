@@ -212,7 +212,6 @@ public class MqttService : IMqttService
                 
                 MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
             
-                // Ovo sam u proslom commitu zaboravio da pomerim gore, sad je reseno
                 foreach (var item in result.Items)
                 {
                     var success = item.ResultCode is
@@ -267,6 +266,7 @@ public class MqttService : IMqttService
                 if (!success)
                 {
                     Console.WriteLine($"Subscribe nije uspeo!");
+                    failedTopics.Add(new Topic(topic, String.Empty));
                     return false;
                 }
             }
@@ -360,16 +360,35 @@ public class MqttService : IMqttService
     {
         using var scope = scopeFactory.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    
-        var topics = dbContext.UserSubscriptions
+
+        var filters = await dbContext.UserSubscriptions
             .Where(s => s.UserId == userId)
-            .Select(s => s.Topic.Name);
-    
-        return await dbContext.Messages
-            .Where(m => topics.Contains(m.Topic))
+            .Select(s => s.Topic.Name)
+            .ToListAsync();
+
+        var messages = await dbContext.Messages
             .OrderByDescending(m => m.Id)
             .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt))
             .ToListAsync();
+
+        return messages
+            .Where(m => filters.Any(f => TopicMatches(f, m.Topic)))
+            .ToList();
+    }
+    
+    private static bool TopicMatches(string filter, string topic)
+    {
+        var f = filter.Split('/');
+        var t = topic.Split('/');
+
+        for (var i = 0; i < f.Length; i++)
+        {
+            if (f[i] == "#") return true;
+            if (i >= t.Length) return false;
+            if (f[i] != "+" && f[i] != t[i]) return false;
+        }
+
+        return f.Length == t.Length;
     }
     
     public async Task<List<TopicListDto>> MyTopics(int userId)
@@ -418,13 +437,23 @@ public class MqttService : IMqttService
             reconnecting = false;
             connected = true;
 
-            await LogAsync($"Backend API se uspesno povezao na server.", LogTypes.INFO);
-            return true;
+            await LogAsync($"Backend API se uspesno povezao na server.", LogTypes.INFO);    
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Povezivanje nije uspelo: {ex.Message}");
             return false;
+        }
+
+        try
+        {
+            await ResubscribeToAll();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
         }
     }
 }
