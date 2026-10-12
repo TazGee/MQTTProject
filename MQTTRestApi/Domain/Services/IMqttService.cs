@@ -24,7 +24,7 @@ public interface IMqttService
     /// </summary>
     /// <returns>Vraca listu poruka iz baze podataka.</returns>
     Task<List<MqttMessageDto>> GetMessages(int userId);
-    
+    Task<List<Topic>> GetAvailableTopics();
     Task SubscribeUserAsync(SubscribeRequestDto request, int userId);
     Task UnsubscribeUserAsync(int topicId, int userId);
     Task<List<TopicListDto>> MyTopics(int userId);

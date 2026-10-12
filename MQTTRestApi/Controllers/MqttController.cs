@@ -88,6 +88,14 @@ public class MqttController : ControllerBase
         return Ok(messages);
     }
     
+    [HttpGet("available-topics")]
+    public async Task<IActionResult> GetAvailableTopics()
+    {
+        var messages = await mqttService.GetAvailableTopics();
+        
+        return Ok(messages);
+    }
+    
     [HttpGet("stats")]
     public async Task<IActionResult> GetStats()
     {

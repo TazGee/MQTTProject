@@ -349,6 +349,18 @@ public class MqttService : IMqttService
             .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt))
             .ToListAsync();
     }
+
+    public async Task<List<Topic>> GetAvailableTopics()
+    {
+        using var scope = scopeFactory.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        var topics = dbContext.Topics.ToList();
+        
+        if(topics.Count == 0) throw new NotFoundException($"Lista dostupnih topic-a je prazna!");
+    
+        return topics;
+    }
     
     public async Task<List<TopicListDto>> MyTopics(int userId)
     {

@@ -50,6 +50,7 @@
 - Pretplata backend-a na topic po zelji
 - Korisnicka autentifikacija putem korisnickog imena i lozinke
 - Vise korisnickih uloga
+- Prikazivanje svih dostupnih topic-a
 - Korisnicko pretplacivanje na topic po zelji
 - Uklanjanje pretplate sa topic-a
 - Pracenje poruka koje stizu na topic
