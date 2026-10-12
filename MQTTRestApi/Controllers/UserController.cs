@@ -56,7 +56,7 @@ public class UserController : ControllerBase
     }
     
     [Authorize(Roles = "Admin")]
-    [HttpPost("list")]
+    [HttpGet("list")]
     public IActionResult ListUsers()
     {
         List<UserInfoDto> listaKorisnika = usersService.GetUsers();
