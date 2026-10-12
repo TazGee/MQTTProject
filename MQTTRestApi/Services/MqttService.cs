@@ -318,8 +318,19 @@ public class MqttService : IMqttService
         
             dbContext.UserSubscriptions.Remove(sub);
             await dbContext.SaveChangesAsync();
-            await redis.RemoveAsync(sub.Topic.Name, userId);
-        
+            
+            try
+            {
+                await redis.RemoveAsync(sub.Topic.Name, userId);
+            }
+            catch (Exception ex)
+            {
+                await LogAsync($"Redis nije uspeo da ukloni podatak, radi se rollback! {ex.Message}", LogTypes.ERROR);
+
+                dbContext.UserSubscriptions.Add(sub);
+                await dbContext.SaveChangesAsync();
+                return false;
+            }
             return true;
         }
         catch (Exception e)
