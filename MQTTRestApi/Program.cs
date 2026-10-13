@@ -40,6 +40,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IMqttService, MqttService>();
 builder.Services.AddSingleton<IRedisService, RedisService>();
 
+builder.Services.AddScoped<IAlarmService, AlarmService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ILoggerService, LoggerService>();

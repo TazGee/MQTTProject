@@ -1,4 +1,5 @@
 using MQTTnet.Protocol;
+using MQTTRestApi.Domain.Enums;
 
 namespace MQTTRestApi.Domain.Models;
 
@@ -13,16 +14,18 @@ public class MqttMessage
     public MqttQualityOfServiceLevel QoS { get; set; } = MqttQualityOfServiceLevel.AtMostOnce;
     public bool Retain { get; set; } = false;
     public DateTime RecievedAt { get; set; } = DateTime.MinValue;
+    public ValueAlarmTypes AlarmType { get; set; } = ValueAlarmTypes.NONE;
 
     public MqttMessage() { }
     
-    public MqttMessage(string Topic, string Payload, MqttQualityOfServiceLevel QoS, bool Retain, DateTime RecievedAt)
+    public MqttMessage(string Topic, string Payload, MqttQualityOfServiceLevel QoS, bool Retain, DateTime RecievedAt, ValueAlarmTypes AlarmType)
     {
         this.Topic = Topic;
         this.Payload = Payload;
         this.QoS = QoS;
         this.Retain = Retain;
         this.RecievedAt = RecievedAt;
+        this.AlarmType = AlarmType;
     }
     /// <summary>
     /// Pretvara objekat u string

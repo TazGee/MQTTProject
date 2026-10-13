@@ -78,33 +78,57 @@ public class MqttService : IMqttService
             
             mqttClient.ApplicationMessageReceivedAsync += async e =>
             {
+                using var scope = scopeFactory.CreateScope();
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                
+                var topicId = await dbContext.Topics
+                    .Where(t => t.Name == e.ApplicationMessage.Topic)
+                    .Select(t => t.Id)
+                    .FirstOrDefaultAsync();
+
+                ValueAlarmTypes type = ValueAlarmTypes.NONE;
+                
+                var alarm = await dbContext.Alarms
+                    .FirstOrDefaultAsync(a => a.TopicId == topicId);
+
+                if (alarm != null)
+                {
+                    if ((alarm.AlarmType == AlarmTypes.Both || alarm.AlarmType == AlarmTypes.Maximum) && alarm.UpperLimit < float.Parse(e.ApplicationMessage.ConvertPayloadToString()))
+                    {
+                        type = ValueAlarmTypes.ALARM_HIGH;
+                        await LogAsync($"Detektovana odstupajuca (ALARM) vrednost! {e.ApplicationMessage.ConvertPayloadToString()} > {alarm.UpperLimit}", LogTypes.ALARM_HIGH);
+                    }
+                    if ((alarm.AlarmType == AlarmTypes.Both || alarm.AlarmType == AlarmTypes.Minimum) && alarm.LowerLimit > float.Parse(e.ApplicationMessage.ConvertPayloadToString()))
+                    {
+                        type = ValueAlarmTypes.ALARM_LOW;
+                        await LogAsync($"Detektovana odstupajuca (ALARM) vrednost! {e.ApplicationMessage.ConvertPayloadToString()} > {alarm.UpperLimit}", LogTypes.ALARM_LOW);
+                    }
+                }
+                
                 MqttMessage poruka = new MqttMessage(e.ApplicationMessage.Topic,
                                              e.ApplicationMessage.ConvertPayloadToString(),
                                              e.ApplicationMessage.QualityOfServiceLevel,
                                              e.ApplicationMessage.Retain,
-                                             DateTime.Now);
+                                             DateTime.Now,
+                                             type);
                 
                 Console.WriteLine(poruka.ToString());
                 
                 try
                 {
-                    using (var scope = scopeFactory.CreateScope())
+                    dbContext.Messages.Add(poruka);
+                
+                    var dbTask = Task.Run(async () =>
                     {
-                        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                        dbContext.Messages.Add(poruka);
-                    
-                        var dbTask = Task.Run(async () =>
-                        {
-                            await dbContext.SaveChangesAsync();
-                        });
+                        await dbContext.SaveChangesAsync();
+                    });
 
-                        var redisTask = Task.Run(async () =>
-                        {
-                            await redis.SaveMessageAsync(poruka);
-                        });
+                    var redisTask = Task.Run(async () =>
+                    {
+                        await redis.SaveMessageAsync(poruka);
+                    });
 
-                        await Task.WhenAll(dbTask, redisTask);
-                    }
+                    await Task.WhenAll(dbTask, redisTask);
                 }
                 catch (Exception ex)
                 {
@@ -345,7 +369,7 @@ public class MqttService : IMqttService
 
         var messages = await dbContext.Messages
             .OrderByDescending(m => m.Id)
-            .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt))
+            .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt, m.AlarmType))
             .ToListAsync();
 
         return messages
@@ -454,7 +478,7 @@ public class MqttService : IMqttService
 
         return await dbContext.Messages
             .OrderByDescending(m => m.Id)
-            .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt))
+            .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt, m.AlarmType))
             .ToListAsync();
     }
     
@@ -473,7 +497,7 @@ public class MqttService : IMqttService
         var messages = await dbContext.Messages
             .Where(m => m.RecievedAt >= since)
             .OrderByDescending(m => m.Id)
-            .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt))
+            .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt, m.AlarmType))
             .ToListAsync();
 
         return messages

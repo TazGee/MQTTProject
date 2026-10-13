@@ -1,17 +1,53 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MQTTRestApi.Domain.Enums;
+using MQTTRestApi.Domain.Services;
 
 namespace MQTTRestApi.Controllers;
 
 [Authorize(Roles = "Admin"), ApiController, Route("api/alarms")]
 public class AlarmController : ControllerBase
 {
+    private IAlarmService alarmService;
+
+    public AlarmController(IAlarmService alarmService)
+    {
+        this.alarmService = alarmService;
+    }
+    
     [HttpPost("create-alarm")]
     public async Task<IActionResult> CreateAlarm(int topicId, AlarmTypes alarmType,  int lowerLimit, int upperLimit)
     {
+        await alarmService.CreateAlarm(topicId, alarmType, lowerLimit, upperLimit);
         
+        return Ok("Uspesno kreiran alarm!");
+    }
+    
+    [HttpDelete("delete-alarm")]
+    public async Task<IActionResult> DeleteAlarm(int id)
+    {
+        await alarmService.DeleteAlarm(id);
         
-        return Ok();
+        return Ok("Uspesno obrisan alarm!");
+    }
+    
+    [HttpGet("all-alarms")]
+    public async Task<IActionResult> GetAllAlarms()
+    {
+        var alarms = await alarmService.GetAllAlarms();
+        
+        if(alarms.Count == 0) return Ok("Lista alarma je prazna!");
+        
+        return Ok(alarms);
+    }
+    
+    [HttpGet("alarmed-messages")]
+    public async Task<IActionResult> GetAllAlarmedMessages()
+    {
+        var messages = await alarmService.GetAllAlarmedMessages();
+        
+        if(messages.Count == 0) return Ok("Lista poruka je prazna!");
+        
+        return Ok(messages);
     }
 }

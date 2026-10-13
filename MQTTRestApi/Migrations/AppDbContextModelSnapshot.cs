@@ -84,6 +84,9 @@ namespace MQTTRestApi.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AlarmType")
+                        .HasColumnType("int");
+
                     b.Property<string>("Payload")
                         .IsRequired()
                         .HasColumnType("longtext");
