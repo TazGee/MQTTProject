@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using MQTTDevice.Domain.Services;
 using MQTTGitProject.Config;
 using MQTTnet;
@@ -10,6 +11,8 @@ public class MqttService : IMqttService
     private bool connected = false;
     private bool reconnecting = false;
     private IMqttClient client;
+    
+    public float VrednostSimulatora { get; set; }
 
     public async Task InitializeService(Config config)
     {
@@ -89,6 +92,34 @@ public class MqttService : IMqttService
         {
             Console.WriteLine($"Greska pri slanju poruke: {e.Message}");
         }
-            
+    }
+    
+    public async Task SubscribeAsync(string topic)
+    {
+        try
+        {
+            var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
+                .WithTopicFilter(topic)
+                .Build();
+        
+            MqttClientSubscribeResult result = await client.SubscribeAsync(subscribeOptions);
+        
+            foreach (var item in result.Items)
+            {
+                var success = item.ResultCode is
+                    MqttClientSubscribeResultCode.GrantedQoS0 or
+                    MqttClientSubscribeResultCode.GrantedQoS1 or
+                    MqttClientSubscribeResultCode.GrantedQoS2;
+
+                if (!success)
+                {
+                    throw new Exception("Nije moguce pretplatiti se na topic. Probajte da uneseti drugi topic ili probajte ponovo.");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Nije moguce pretplatiti se na topic. Probajte da uneseti drugi topic ili probajte ponovo.");
+        }
     }
 }
