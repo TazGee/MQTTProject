@@ -94,6 +94,14 @@ public class MqttController : ControllerBase
         return Ok(messages);
     }
     
+    [Authorize(Roles = "Admin"), HttpGet("all-messages")]
+    public async Task<IActionResult> GetAllMessages()
+    {
+        var messages = await mqttService.GetAllMessages();
+        
+        return Ok(messages);
+    }
+    
     [HttpGet("available-topics")]
     public async Task<IActionResult> GetAvailableTopics()
     {

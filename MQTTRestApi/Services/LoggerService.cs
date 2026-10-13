@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using MQTTRestApi.Data;
 using MQTTRestApi.Domain.Enums;
 using MQTTRestApi.Domain.Models;
@@ -12,6 +13,11 @@ public class LoggerService : ILoggerService
     public LoggerService(AppDbContext dbContext)
     {
         this.dbContext = dbContext;
+    }
+
+    public async Task<List<Log>> GetLogs()
+    {
+        return await dbContext.Logs.ToListAsync();
     }
     
     public async Task LogMessage(string msg, LogTypes type)

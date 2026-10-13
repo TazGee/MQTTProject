@@ -51,4 +51,26 @@ public class UsersService : IUsersService
         
         return userDtos;
     }
+
+    public async Task ChangeRole(int adminId, int userId, UserTypes role)
+    {
+        if(adminId == userId) throw new NotFoundException("Ne mozete menjati role sami sebi!");
+        
+        var user = await dbContext.Users.FindAsync(userId);
+        
+        if (user == null) throw new NotFoundException($"Korisnik sa ovim ID-em ne postoji! [id: {userId}]");
+        
+        UserTypes oldRole = user.Role;
+        user.Role = role;
+        
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            user.Role = oldRole;
+            throw new BadRequestException($"Neuspesno cuvanje u bazu podataka, probajte kasnije! {e.Message}");
+        }
+    }
 }

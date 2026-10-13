@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MQTTRestApi.Domain.DTO;
+using MQTTRestApi.Domain.Enums;
 using MQTTRestApi.Domain.Services;
 
 namespace MQTTRestApi.Controllers;
@@ -51,6 +52,14 @@ public class UserController : ControllerBase
         await usersService.ChangePassword(UserId(), dto);
         
         return Ok("Sifra uspesno promenjena.");
+    }
+    
+    [Authorize(Roles = "Admin"), HttpPost("change-role")]
+    public async Task<IActionResult> ChangeRole(int userId, UserTypes role)
+    {
+        await usersService.ChangeRole(UserId(), userId, role);
+        
+        return Ok("Role uspesno promenjen.");
     }
 
     [Authorize(Roles = "Admin")]
