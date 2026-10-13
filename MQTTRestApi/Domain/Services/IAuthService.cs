@@ -5,6 +5,6 @@ namespace MQTTRestApi.Domain.Services;
 
 public interface IAuthService
 {
-    (UserInfoDto, bool) Login(string username, string password);
-    (UserInfoDto, bool) Register(string username, string password, UserTypes TipKorisnika);
+    Task<UserInfoDto> Login(string username, string password);
+    Task<UserInfoDto> Register(string username, string password, UserTypes TipKorisnika);
 }

@@ -22,39 +22,25 @@ public class UserController : ControllerBase
     }
     
     [HttpPost("login")]
-    public IActionResult Login(LoginDto dto, [FromServices] ITokenService tokens)
+    public async Task<IActionResult> Login(LoginDto dto, [FromServices] ITokenService tokens)
     {
-        (UserInfoDto user, bool success) = authService.Login(dto.Username, dto.Password);
+        var user = await authService.Login(dto.Username, dto.Password);
         
-        if (success)
-        {
-            var token = tokens.CreateToken(userId: user.Id.ToString(), username: dto.Username, role: user.Role.ToString());
-            return Ok(new { token });
-        }
-        else
-        {
-            return BadRequest();
-        }
+        var token = tokens.CreateToken(userId: user.Id.ToString(), username: dto.Username, role: user.Role.ToString());
+        return Ok(new { token });
     }
     
     [HttpPost("register")]
-    public IActionResult Register(RegisterDto dto, [FromServices] ITokenService tokens)
+    public async Task<IActionResult> Register(RegisterDto dto, [FromServices] ITokenService tokens)
     {
-        (UserInfoDto user, bool success) = authService.Register(dto.Username, dto.Password, dto.UserType);
+        var user = await authService.Register(dto.Username, dto.Password, dto.UserType);
         
-        if (success)
-        {
-            var token = tokens.CreateToken(userId: user.Id.ToString(), username: dto.Username, role: user.Role.ToString());
-            return Ok(new { token });
-        }
-        else
-        {
-            return BadRequest();
-        }
+        var token = tokens.CreateToken(userId: user.Id.ToString(), username: dto.Username, role: user.Role.ToString());
+        return Ok(new { token });
     }
     
     [Authorize(Roles = "Admin")]
-    [HttpPost("list")]
+    [HttpGet("list")]
     public IActionResult ListUsers()
     {
         List<UserInfoDto> listaKorisnika = usersService.GetUsers();

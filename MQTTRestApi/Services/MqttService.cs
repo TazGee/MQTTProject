@@ -7,6 +7,7 @@ using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Data;
 using MQTTRestApi.Domain.DTO;
 using MQTTRestApi.Domain.Enums;
+using MQTTRestApi.Domain.Exceptions;
 using MQTTRestApi.Domain.Services;
 
 namespace MQTTRestApi.Services;
@@ -110,8 +111,6 @@ public class MqttService : IMqttService
                     Console.WriteLine($"Greska pri cuvanju u bazu i/ili redis: {ex.Message}");
                     throw;
                 }
-                
-                
             };
         }
         catch (Exception e)
@@ -169,7 +168,6 @@ public class MqttService : IMqttService
         {
             Console.WriteLine($"Neuspesan pokusaj resubscribe-a: {e.Message}");
             await LogAsync($"Neuspesan pokusaj resubscribe-a na topic-e!", LogTypes.ERROR);
-            throw;
         }
     }
 
@@ -186,60 +184,6 @@ public class MqttService : IMqttService
         }
     }
     
-    public async Task<bool> SubscribeAsync(string topic)
-    {
-        try
-        {
-            if (!Regex.IsMatch(topic, config["SubscribeRegex"]))
-            {
-                Console.WriteLine($"Vrednost topica nije validna!");
-                return false;
-            }
-            
-            var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
-                .WithTopicFilter(topic)
-                .Build();
-            
-            using (var scope = scopeFactory.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-                if (await dbContext.Topics.AnyAsync(s => s.Name == topic))
-                {
-                    Console.WriteLine($"Vec postoji subscribe na topic {topic}");
-                    return false; 
-                }
-                
-                MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
-            
-                foreach (var item in result.Items)
-                {
-                    var success = item.ResultCode is
-                        MqttClientSubscribeResultCode.GrantedQoS0 or
-                        MqttClientSubscribeResultCode.GrantedQoS1 or
-                        MqttClientSubscribeResultCode.GrantedQoS2;
-
-                    if (!success)
-                    {
-                        Console.WriteLine($"Subscribe nije uspeo!");
-                        return false;
-                    }
-                }
-                
-                Topic top = new Topic(topic, String.Empty);
-                
-                dbContext.Topics.Add(top);
-                await dbContext.SaveChangesAsync();
-            }
-            return true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Greska pri subscribovanju: {e.Message}");
-            return false;
-        }
-    }
-
     private async Task<bool> SubscribeOnBrokerAsync(string topic)
     {
         try
@@ -283,29 +227,71 @@ public class MqttService : IMqttService
         }
     }
     
-    public async Task<bool> SubscribeUserAsync(SubscribeRequestDto request, int userId)
+    public async Task SubscribeAsync(string topic)
+    {
+        try
+        {
+            if (!Regex.IsMatch(topic, config["SubscribeRegex"]))
+            {
+                Console.WriteLine($"Naziv topic-a nije validan!");
+                throw new BadRequestException("Naziv topic-a nije validan!");
+            }
+            
+            using (var scope = scopeFactory.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                if (await dbContext.Topics.AnyAsync(s => s.Name == topic))
+                {
+                    throw new BadRequestException($"Vec postoji subsribe na topic: {topic}!"); 
+                }
+                
+                var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
+                    .WithTopicFilter(topic)
+                    .Build();
+            
+                MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
+            
+                foreach (var item in result.Items)
+                {
+                    var success = item.ResultCode is
+                        MqttClientSubscribeResultCode.GrantedQoS0 or
+                        MqttClientSubscribeResultCode.GrantedQoS1 or
+                        MqttClientSubscribeResultCode.GrantedQoS2;
+
+                    if (!success)
+                    {
+                        throw new BadRequestException($"Neuspesan pokusaj subscribe-a! {result.ReasonString}");
+                    }
+                }
+                
+                Topic top = new Topic(topic, String.Empty);
+                
+                dbContext.Topics.Add(top);
+                await dbContext.SaveChangesAsync();
+            }
+        }
+        catch (Exception e)
+        {
+            throw new BadRequestException($"Greska pri subscribe-u: {e.Message}!"); 
+        }
+    }
+    
+    public async Task SubscribeUserAsync(SubscribeRequestDto request, int userId)
     {
         using var scope = scopeFactory.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         
-        var topic = await dbContext.Topics.FindAsync(request.TopicId);
-        if (topic is null) return false;
+        var topic = await dbContext.Topics.FindAsync(request.TopicId)
+            ?? throw new NotFoundException($"Topic {request.TopicId} ne postoji.");
         
         if (await dbContext.UserSubscriptions.AnyAsync(s => s.UserId == userId && s.TopicId == request.TopicId))
-            return false;
+            throw new ConflictException($"Vec si prijavljen na topic {request.TopicId}!");
 
-        UserSubscription sub = new UserSubscription { UserId = userId, TopicId = request.TopicId };
+        UserSubscription sub = new UserSubscription { UserId = userId, TopicId = request.TopicId }; 
         
         dbContext.UserSubscriptions.Add(sub);
-        
-        try
-        {
-            await dbContext.SaveChangesAsync();
-        }
-        catch (DbUpdateException)
-        {
-            return false;
-        }
+        await dbContext.SaveChangesAsync();
         
         try
         {
@@ -318,43 +304,32 @@ public class MqttService : IMqttService
             dbContext.UserSubscriptions.Remove(sub);
             await dbContext.SaveChangesAsync();
 
-            return false;
+            throw new BadRequestException($"Redis nije uspeo da doda podatak, radi se rollback! {ex.Message}");
         }
-        
-        return true;
     }
 
-    public async Task<bool> UnsubscribeUserAsync(int topicId, int userId)
+    public async Task UnsubscribeUserAsync(int topicId, int userId)
     {
+        using var scope = scopeFactory.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    
+        var sub = await dbContext.UserSubscriptions.Include(s => s.Topic).FirstOrDefaultAsync(s => s.UserId == userId && s.TopicId == topicId);
+        if (sub == null) throw new NotFoundException($"Topic {topicId} ne postoji.");
+    
+        dbContext.UserSubscriptions.Remove(sub);
+        await dbContext.SaveChangesAsync();
+        
         try
         {
-            using var scope = scopeFactory.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        
-            var sub = await dbContext.UserSubscriptions.Include(s => s.Topic).FirstOrDefaultAsync(s => s.UserId == userId && s.TopicId == topicId);
-            if (sub is null) return false;
-        
-            dbContext.UserSubscriptions.Remove(sub);
-            await dbContext.SaveChangesAsync();
-            
-            try
-            {
-                await redis.RemoveAsync(sub.Topic.Name, userId);
-            }
-            catch (Exception ex)
-            {
-                await LogAsync($"Redis nije uspeo da ukloni podatak, radi se rollback! {ex.Message}", LogTypes.ERROR);
-
-                dbContext.UserSubscriptions.Add(sub);
-                await dbContext.SaveChangesAsync();
-                return false;
-            }
-            return true;
+            await redis.RemoveAsync(sub.Topic.Name, userId);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine($"Greska pri unsubscribovanju: {e.Message}");
-            return false;
+            await LogAsync($"Redis nije uspeo da ukloni podatak, radi se rollback! {ex.Message}", LogTypes.ERROR);
+
+            dbContext.UserSubscriptions.Add(sub);
+            await dbContext.SaveChangesAsync();
+            throw new NotFoundException($"Redis nije uspeo da ukloni podatak, radi se rollback! {ex.Message}");
         }
     }
     
@@ -392,14 +367,26 @@ public class MqttService : IMqttService
 
         return f.Length == t.Length;
     }
+
+    public async Task<List<Topic>> GetAvailableTopics()
+    {
+        using var scope = scopeFactory.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        var topics = await dbContext.Topics.ToListAsync();
+    
+        return topics;
+    }
     
     public async Task<List<TopicListDto>> MyTopics(int userId)
     {
         using var scope = scopeFactory.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        return await dbContext.UserSubscriptions.Where(s => s.UserId == userId)
+        var lista = await dbContext.UserSubscriptions.Where(s => s.UserId == userId)
             .Select(s => new TopicListDto(s.TopicId, s.Topic.Name)).ToListAsync();
+        
+        return lista;
     }
     
     public List<Topic> GetFailedTopics()
@@ -409,6 +396,8 @@ public class MqttService : IMqttService
 
     public async Task<List<string>> ResubscribeToFailed()
     {
+        if (failedTopics.Count == 0) throw new BadRequestException("Nema topic-a za koje nije uspela pretplata!");
+        
         List<string> results = new List<string>();
 
         foreach (var name in failedTopics.ToList())
@@ -421,9 +410,9 @@ public class MqttService : IMqttService
         return results;
     }
 
-    public async Task<bool> ForceReconnect()
+    public async Task ForceReconnect()
     {
-        if (connected) return false;
+        if (connected) throw new BadRequestException($"Server je vec povezan!");
         
         try
         {
@@ -440,23 +429,21 @@ public class MqttService : IMqttService
             reconnecting = false;
             connected = true;
 
-            await LogAsync($"Backend API se uspesno povezao na server.", LogTypes.INFO);    
+            await LogAsync($"Backend API se uspesno povezao na server.", LogTypes.INFO);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Povezivanje nije uspelo: {ex.Message}");
-            return false;
+            throw new BadRequestException($"Greska pri povezivanju! {ex.Message}");
         }
-
+        
         try
         {
             await ResubscribeToAll();
-            return true;
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            Console.WriteLine($"Resubscribe na topics-e nije uspeo!");
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using MQTTRestApi.Data;
 using MQTTRestApi.Domain.Enums;
+using MQTTRestApi.Domain.Exceptions;
 using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
 using StackExchange.Redis;
@@ -55,7 +56,7 @@ public class RedisService : IRedisService
                 json,
                 TimeSpan.FromHours(1)
             );
-
+            
             Console.WriteLine("Poruka sacuvana u Redis!");
 
             await LogAsync($"Poruka za topic {message.Topic} sacuvana u redisu!", LogTypes.REDIS);
@@ -75,7 +76,7 @@ public class RedisService : IRedisService
         {
             if (!Regex.IsMatch(topic, config["PublishRegex"]))
             {
-                Console.WriteLine($"Vrednost topica nije validna!");
+                throw new BadRequestException("Topic nije validno formatiran!");
             }
         
             var db = redis.GetDatabase();
@@ -88,7 +89,6 @@ public class RedisService : IRedisService
         catch (Exception e)
         {
             await LogAsync($"Greska prilikom inkrementiranja brojaca za topic {topic} u redisu!", LogTypes.REDIS);
-            throw;
         }
     }
     
@@ -149,8 +149,10 @@ public class RedisService : IRedisService
 
     public async Task RemoveAsync(string topic, int userId)
     {
-        await redisdb.SetRemoveAsync($"topic:{topic}:users", userId);
-        await redisdb.SetRemoveAsync($"user:{userId}:topics", topic);
+        if(!await redisdb.SetRemoveAsync($"topic:{topic}:users", userId))
+            throw new BadRequestException($"Neuspesno brisanje iz redisa!");
+        if(!await redisdb.SetRemoveAsync($"user:{userId}:topics", topic))
+            throw new BadRequestException($"Neuspesno brisanje iz redisa!");
     }
 
     public async Task<bool> IsSubscribedAsync(string topic, int userId)

@@ -11,7 +11,7 @@ public class MqttMessage
     public string Topic { get; set; } = string.Empty;
     public string Payload { get; set; } = string.Empty;
     public MqttQualityOfServiceLevel QoS { get; set; } = MqttQualityOfServiceLevel.AtMostOnce;
-    public bool Retain { get; set; }  = false;
+    public bool Retain { get; set; } = false;
     public DateTime RecievedAt { get; set; } = DateTime.MinValue;
 
     public MqttMessage() { }

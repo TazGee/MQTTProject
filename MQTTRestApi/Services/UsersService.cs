@@ -1,5 +1,7 @@
 using MQTTRestApi.Data;
 using MQTTRestApi.Domain.DTO;
+using MQTTRestApi.Domain.Exceptions;
+using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
 
 namespace MQTTRestApi.Services;
@@ -23,7 +25,8 @@ public class UsersService : IUsersService
             Username = u.Username,
             Role = u.Role,
             CreatedAt = u.CreatedAt
-        }).ToList();
+        }).ToList() 
+        ?? throw new BadRequestException($"Neuspesno dobavljanje liste korisnika!");
         
         return userDtos;
     }

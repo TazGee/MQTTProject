@@ -18,17 +18,17 @@ public interface IMqttService
     /// </summary>
     /// <param name="topic">Topic</param>
     /// <returns>True ako je uspesno ili false ako nije.</returns>
-    Task<bool> SubscribeAsync(string topic);
+    Task SubscribeAsync(string topic);
     /// <summary>
     /// Lista poruka iz baze
     /// </summary>
     /// <returns>Vraca listu poruka iz baze podataka.</returns>
     Task<List<MqttMessageDto>> GetMessages(int userId);
-    
-    Task<bool> SubscribeUserAsync(SubscribeRequestDto request, int userId);
-    Task<bool> UnsubscribeUserAsync(int topicId, int userId);
+    Task<List<Topic>> GetAvailableTopics();
+    Task SubscribeUserAsync(SubscribeRequestDto request, int userId);
+    Task UnsubscribeUserAsync(int topicId, int userId);
     Task<List<TopicListDto>> MyTopics(int userId);
     List<Topic> GetFailedTopics();
     Task<List<string>> ResubscribeToFailed();
-    Task<bool> ForceReconnect();
+    Task ForceReconnect();
 }

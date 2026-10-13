@@ -35,31 +35,25 @@ public class MqttController : ControllerBase
     [HttpPost("subscribe"), Authorize(Roles = "Admin")]
     public async Task<IActionResult> Subscribe([FromBody] SubscribeRequestDto request)
     {
-        var result = await mqttService.SubscribeAsync(request.Topic);
+        await mqttService.SubscribeAsync(request.Topic);
         
-        if (!result) return BadRequest("Neuspesan pokusaj subscribe-a.");
-        
-        return Ok();
+        return Ok("Subscribe uspesan!");
     }
     
     [HttpPost("user-subscribe")]
     public async Task<IActionResult> UserSubscribe(SubscribeRequestDto request)
     {
-        var result = await mqttService.SubscribeUserAsync(request, UserId());
+        await mqttService.SubscribeUserAsync(request, UserId());
 
-        if (!result) return BadRequest("Neuspesan pokusaj subscribe-a.");
-
-        return Ok();
+        return Ok("User subscribe uspesan!");
     }
     
     [HttpDelete("user-unsubscribe/{*topicId}")]
     public async Task<IActionResult> UserUnsubscribe(int topicId)
     {
-        var result = await mqttService.UnsubscribeUserAsync(topicId, UserId());
+        await mqttService.UnsubscribeUserAsync(topicId, UserId());
 
-        if (!result) return BadRequest("Neuspesan pokusaj unsubscribe-a.");
-
-        return Ok();
+        return Ok("User unsubscribe uspesan!");
     }
 
     [HttpGet("my-subscriptions")]
@@ -67,7 +61,7 @@ public class MqttController : ControllerBase
     {
         var list = await mqttService.MyTopics(UserId());
         
-        if(list.Count == 0) return Ok("Lista je prazna.");
+        if(list.Count == 0) return Ok("Lista vasih topic-a je prazna.");
         
         return Ok(list);
     }
@@ -77,17 +71,15 @@ public class MqttController : ControllerBase
     {
         var list = mqttService.GetFailedTopics();
         
-        if(list.Count == 0) return Ok("Lista je prazna.");
-        
         return Ok(list);
     }
     
-    [HttpGet("resubscribe-to-failed"), Authorize(Roles = "Admin")]
+    [HttpPost("resubscribe-to-failed"), Authorize(Roles = "Admin")]
     public async Task<IActionResult> ResubscribeToFailed()
     {
         var lista = await mqttService.ResubscribeToFailed();
         
-        if(lista.Count ==  0) return Ok("Lista palih topic-a koji su ponovo pretplaceni je prazna.");
+        if(lista.Count == 0) return Ok("Lista uspesno resubscribed je prazna.");
         
         return Ok(lista);
     }
@@ -97,9 +89,19 @@ public class MqttController : ControllerBase
     {
         var messages = await mqttService.GetMessages(UserId());
         
-        if (messages.Count == 0) return Ok("Lista poruka je prazna.");
+        if(messages.Count == 0) return Ok("Nemate dostupnih poruka.");
         
         return Ok(messages);
+    }
+    
+    [HttpGet("available-topics")]
+    public async Task<IActionResult> GetAvailableTopics()
+    {
+        var topics = await mqttService.GetAvailableTopics();
+
+        if (topics.Count == 0) return Ok("Nema dostupnih topic-a");
+        
+        return Ok(topics);
     }
     
     [HttpGet("stats")]
@@ -124,10 +126,11 @@ public class MqttController : ControllerBase
         });
     }
     
-    [HttpGet("force-reconnect-to-server"), Authorize(Roles = "Admin")]
+    [HttpPost("force-reconnect-to-server"), Authorize(Roles = "Admin")]
     public async Task<IActionResult> ReconnectToServer()
     {
-        if(await mqttService.ForceReconnect()) return Ok();
-        else return BadRequest("Neuspesan pokusaj force reconnect-a");
+        await mqttService.ForceReconnect();
+        
+        return Ok("Force reconnect uspesan!");
     }
 }
