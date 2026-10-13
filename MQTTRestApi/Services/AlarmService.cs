@@ -19,12 +19,13 @@ public class AlarmService : IAlarmService
         this.loggerService = loggerService;
     }
 
-    public async Task CreateAlarm(int topicId, AlarmTypes alarmType, int lowerLimit, int upperLimit)
+    public async Task CreateAlarm(CreateAlarmDto createAlarmDto)
     {
-        if (!await dbContext.Topics.AnyAsync(s => s.Id == topicId)) throw new BadRequestException($"Topic sa id-em {topicId} ne postoji!");
-        if (alarmType == AlarmTypes.Both && lowerLimit >= upperLimit) throw new BadRequestException("Donja granica mora biti manja od gornje granice!");
+        if (!await dbContext.Topics.AnyAsync(s => s.Id == createAlarmDto.topicID)) throw new BadRequestException($"Topic sa id-em {createAlarmDto.topicID} ne postoji!");
+        if (!await dbContext.Alarms.AnyAsync(a => a.TopicId == createAlarmDto.topicID)) throw new BadRequestException($"Vec postoji alarm na topicu: {createAlarmDto.topicID}!");
+        if (createAlarmDto.AlarmType == AlarmTypes.Both && createAlarmDto.lowerLimit >= createAlarmDto.upperLimit) throw new BadRequestException("Donja granica mora biti manja od gornje granice!");
         
-        Alarm alarm = new Alarm(topicId, alarmType, lowerLimit, upperLimit);
+        Alarm alarm = new Alarm(createAlarmDto.topicID, createAlarmDto.AlarmType, createAlarmDto.lowerLimit, createAlarmDto.upperLimit);
 
         try
         {
@@ -50,14 +51,17 @@ public class AlarmService : IAlarmService
         }
         catch (Exception e)
         {
-            await loggerService.LogMessage($"Neuspesno dodavanje alarma u bazu. {e.Message}", LogTypes.ERROR);
-            throw new BadRequestException($"Neuspesno dodavanje alarma u bazu. Probajte opet kasnije! {e.Message}");
+            await loggerService.LogMessage($"Neuspesno brisanje alarma iz baze. {e.Message}", LogTypes.ERROR);
+            throw new BadRequestException($"Neuspesno brisanje alarma iz baze. Probajte opet kasnije! {e.Message}");
         }
     }
 
-    public async Task<List<Alarm>> GetAllAlarms()
+    public async Task<List<AlarmDto>> GetAllAlarms()
     {
-        return await dbContext.Alarms.ToListAsync();
+        var lista =  await dbContext.Alarms
+            .Select(a => new AlarmDto(a.Id, a.TopicId, a.AlarmType, a.LowerLimit, a.UpperLimit, a.CreatedAt))
+            .ToListAsync();
+        return lista;
     }
     
     public async Task<List<MqttMessageDto>> GetAllAlarmedMessages()

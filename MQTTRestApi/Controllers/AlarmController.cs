@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MQTTRestApi.Domain.DTO;
 using MQTTRestApi.Domain.Enums;
 using MQTTRestApi.Domain.Services;
 
@@ -15,15 +16,15 @@ public class AlarmController : ControllerBase
         this.alarmService = alarmService;
     }
     
-    [HttpPost("create-alarm")]
-    public async Task<IActionResult> CreateAlarm(int topicId, AlarmTypes alarmType,  int lowerLimit, int upperLimit)
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateAlarm(CreateAlarmDto createAlarmDto)
     {
-        await alarmService.CreateAlarm(topicId, alarmType, lowerLimit, upperLimit);
+        await alarmService.CreateAlarm(createAlarmDto);
         
         return Ok("Uspesno kreiran alarm!");
     }
     
-    [HttpDelete("delete-alarm")]
+    [HttpDelete("delete")]
     public async Task<IActionResult> DeleteAlarm(int id)
     {
         await alarmService.DeleteAlarm(id);
@@ -31,7 +32,7 @@ public class AlarmController : ControllerBase
         return Ok("Uspesno obrisan alarm!");
     }
     
-    [HttpGet("all-alarms")]
+    [HttpGet("all")]
     public async Task<IActionResult> GetAllAlarms()
     {
         var alarms = await alarmService.GetAllAlarms();

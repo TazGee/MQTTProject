@@ -6,8 +6,8 @@ namespace MQTTRestApi.Domain.Services;
 
 public interface IAlarmService
 {
-    Task CreateAlarm(int topicId, AlarmTypes alarmType,  int lowerLimit, int upperLimit);
+    Task CreateAlarm(CreateAlarmDto createAlarmDto);
     Task DeleteAlarm(int id);
-    Task<List<Alarm>> GetAllAlarms();
-    public Task<List<MqttMessageDto>> GetAllAlarmedMessages();
+    Task<List<AlarmDto>> GetAllAlarms();
+    Task<List<MqttMessageDto>> GetAllAlarmedMessages();
 }
