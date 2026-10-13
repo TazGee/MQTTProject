@@ -33,9 +33,9 @@ public class MqttController : ControllerBase
     }
 
     [HttpPost("subscribe"), Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Subscribe(string topic)
+    public async Task<IActionResult> Subscribe([FromBody] SubscribeRequestDto request)
     {
-        await mqttService.SubscribeAsync(topic);
+        await mqttService.SubscribeAsync(request.Topic);
         
         return Ok("Subscribe uspesan!");
     }

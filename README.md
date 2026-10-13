@@ -118,6 +118,10 @@
         - Nema input parametre
     - Vraca broj koliko puta je bila poslata poruka na svaki od topic-a
 ### User MQTT ENDPOINTS:
+- **(GET)api/mqtt/available-topics**
+  - Input parametri:
+    - Nema input parametre
+  - Vraca listu topics-a na koje je broker pretplacen
 - **(POST)api/mqtt/user-subscribe**
     - Input parametri:
         - SubscribeRequestDto (topicId, topic)
