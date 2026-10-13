@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MQTTRestApi.Domain.Services;
 using MQTTRestApi.Handlers;
+using MQTTRestApi.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +46,12 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ILoggerService, LoggerService>();
 
+builder.Services.AddCors(o => o.AddDefaultPolicy(p =>
+    p.WithOrigins("http://localhost:63342")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials()));
+
 builder.Services.AddControllers();
 
 var cs = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -77,14 +84,18 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();
-
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+app.MapHub<MessagesHub>("/hubs/messages");
 
 using (var scope = app.Services.CreateScope())
 {

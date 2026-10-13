@@ -9,6 +9,7 @@ using MQTTRestApi.Domain.DTO;
 using MQTTRestApi.Domain.Enums;
 using MQTTRestApi.Domain.Exceptions;
 using MQTTRestApi.Domain.Services;
+using MQTTRestApi.Hubs;
 
 namespace MQTTRestApi.Services;
 
@@ -24,6 +25,8 @@ public class MqttService : IMqttService
     
     private MqttClientFactory factory = new MqttClientFactory();
     private IMqttClient mqttClient;
+    
+    private readonly IHubContext<MessagesHub> hub;
 
     private int[] reconnectIntervali = [];
     int reconnectCounter = 0;
@@ -34,18 +37,19 @@ public class MqttService : IMqttService
     
     private readonly HashSet<string> failedTopics = new ();
     
-    public MqttService(IServiceScopeFactory scopeFactory, IRedisService redis, IConfiguration config)
-        : this(scopeFactory, redis, config, new MqttClientFactory().CreateMqttClient())
+    public MqttService(IServiceScopeFactory scopeFactory, IRedisService redis, IConfiguration config, IHubContext<MessagesHub> hub)
+        : this(scopeFactory, redis, config, new MqttClientFactory().CreateMqttClient(), hub)
     {
         
     }
 
-    public MqttService(IServiceScopeFactory scopeFactory, IRedisService redis, IConfiguration config, IMqttClient mqttClient)
+    public MqttService(IServiceScopeFactory scopeFactory, IRedisService redis, IConfiguration config, IMqttClient mqttClient, IHubContext<MessagesHub> hub)
     {
         this.scopeFactory = scopeFactory;
         this.redis = redis;
         this.config = config;
         this.mqttClient = mqttClient;
+        this.hub = hub;
         
         InitializeMqttClient();
     }
@@ -113,6 +117,7 @@ public class MqttService : IMqttService
                                              type);
                 
                 Console.WriteLine(poruka.ToString());
+                await hub.Clients.All.SendAsync("Message", poruka.Topic, poruka.Payload, type.ToString());
                 
                 try
                 {
