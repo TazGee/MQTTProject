@@ -81,15 +81,14 @@ public class MqttService : IMqttService
                 using var scope = scopeFactory.CreateScope();
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 
-                var topicId = await dbContext.Topics
-                    .Where(t => t.Name == e.ApplicationMessage.Topic)
-                    .Select(t => t.Id)
-                    .FirstOrDefaultAsync();
+                var alarm = await (
+                    from t in dbContext.Topics
+                    join a in dbContext.Alarms on t.Id equals a.TopicId
+                    where t.Name == e.ApplicationMessage.Topic
+                    select a
+                ).FirstOrDefaultAsync();
 
                 ValueAlarmTypes type = ValueAlarmTypes.NONE;
-                
-                var alarm = await dbContext.Alarms
-                    .FirstOrDefaultAsync(a => a.TopicId == topicId);
 
                 if (alarm != null)
                 {
@@ -101,7 +100,7 @@ public class MqttService : IMqttService
                     if ((alarm.AlarmType == AlarmTypes.Both || alarm.AlarmType == AlarmTypes.Minimum) && alarm.LowerLimit > float.Parse(e.ApplicationMessage.ConvertPayloadToString()))
                     {
                         type = ValueAlarmTypes.ALARM_LOW;
-                        await LogAsync($"Detektovana odstupajuca (ALARM) vrednost! {e.ApplicationMessage.ConvertPayloadToString()} > {alarm.UpperLimit}", LogTypes.ALARM_LOW);
+                        await LogAsync($"Detektovana odstupajuca (ALARM) vrednost! {e.ApplicationMessage.ConvertPayloadToString()} < {alarm.UpperLimit}", LogTypes.ALARM_LOW);
                     }
                 }
                 
