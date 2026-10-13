@@ -457,4 +457,32 @@ public class MqttService : IMqttService
             .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt))
             .ToListAsync();
     }
+    
+    public async Task<List<MqttMessageDto>> GetFilteredMessages(int userId, string topic, uint minutes)
+    {
+        using var scope = scopeFactory.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        var subbed = await dbContext.UserSubscriptions
+            .Where(s => s.UserId == userId && s.Topic.Name == topic).ToListAsync();
+        
+        if(subbed.Count == 0) throw new UnauthorizedException("Niste pretplaceni na ovaj topic!");
+        
+        var filters = await dbContext.UserSubscriptions.Distinct()
+            .Where(s => s.Topic.Name == topic)
+            .Select(s => s.Topic.Name)
+            .ToListAsync();
+
+        var since = DateTime.Now.AddMinutes(-minutes);
+        
+        var messages = await dbContext.Messages
+            .Where(m => m.RecievedAt >= since)
+            .OrderByDescending(m => m.Id)
+            .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt))
+            .ToListAsync();
+
+        return messages
+            .Where(m => filters.Any(f => TopicMatches(f, m.Topic)))
+            .ToList();
+    }
 }
