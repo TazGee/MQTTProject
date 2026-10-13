@@ -33,4 +33,5 @@ public interface IMqttService
     Task<List<string>> ResubscribeToFailed();
     Task ForceReconnect();
     Task<List<MqttMessageDto>> GetFilteredMessages(string topic, uint minutes);
+    Task DeviceSuggestValueChange(string topic, float payload);
 }

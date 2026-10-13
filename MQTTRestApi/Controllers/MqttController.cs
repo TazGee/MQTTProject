@@ -153,4 +153,13 @@ public class MqttController : ControllerBase
         
         return Ok("Force reconnect uspesan!");
     }
+    
+    [HttpPost("suggest-device-value-change"), Authorize(Roles = "Admin")]
+    public async Task<IActionResult> SuggestDeviceValueChange(string topic, float value)
+    {
+        await mqttService.DeviceSuggestValueChange(topic, value);
+        
+        return Ok("Uspesno poslata poruke uredjaju da promeni vrednost!");
+    }
+    
 }

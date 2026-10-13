@@ -29,6 +29,8 @@ class Program
         ProcessInput(config);
         await service.InitializeService(config);
         await service.SubscribeAsync(topic + "/updateValue");
+
+        service.VrednostSimulatora = config.VrednostSimulatora;
         
         await RunLoop(config);
     }
@@ -59,11 +61,11 @@ class Program
         {
             try
             {
-                Console.Write("Unesite (u sekundama) vreme osvezavanja (min 2, max 10): ");
+                Console.Write("Unesite (u sekundama) vreme osvezavanja (min 2, max 60): ");
                 refreshTime = int.Parse(Console.ReadLine());
             }
             catch { }
-        } while (refreshTime < 2 || refreshTime > 10);
+        } while (refreshTime < 2 || refreshTime > 60);
 
         do
         {

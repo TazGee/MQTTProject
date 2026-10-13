@@ -27,6 +27,19 @@ public class MqttService : IMqttService
             
             await TryToConnect(options, config);
             
+            client.ApplicationMessageReceivedAsync += async e =>
+            {
+                try
+                {
+                    VrednostSimulatora = float.Parse(e.ApplicationMessage.ConvertPayloadToString());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Greska pri ucitavanju pristigle vrednosti: {ex.Message}");
+                    throw;
+                }
+            };
+            
             client.DisconnectedAsync += async e =>
             {
                 Console.WriteLine();

@@ -504,4 +504,24 @@ public class MqttService : IMqttService
             .Where(m => filters.Any(f => TopicMatches(f, m.Topic)))
             .ToList();
     }
+    
+    public async Task DeviceSuggestValueChange(string topic, float payload)
+    {
+        if(!connected) return;
+        
+        try
+        {
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic(topic)
+                .WithPayload(payload.ToString())
+                .Build();
+
+            await mqttClient.PublishAsync(message);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Greska pri slanju poruke: {e.Message}");
+            throw new BadRequestException($"Nije moguce poslati poruku zbog: {e.Message}");
+        }
+    }
 }
