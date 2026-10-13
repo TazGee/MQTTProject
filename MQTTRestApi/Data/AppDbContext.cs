@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<Log> Logs { get; set; }
     public DbSet<Topic> Topics { get; set; }
     public DbSet<UserSubscription> UserSubscriptions { get; set; }
+    public DbSet<Alarm> Alarms { get; set; }
     
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -33,6 +34,10 @@ public class AppDbContext : DbContext
         
         modelBuilder.Entity<Topic>()
             .HasIndex(s => new { s.Name })
+            .IsUnique();
+        
+        modelBuilder.Entity<Alarm>()
+            .HasIndex(s => new { s.TopicId })
             .IsUnique();
     }
 }
