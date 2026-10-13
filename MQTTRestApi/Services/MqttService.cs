@@ -85,15 +85,14 @@ public class MqttService : IMqttService
                 using var scope = scopeFactory.CreateScope();
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 
-                var topicId = await dbContext.Topics
-                    .Where(t => t.Name == e.ApplicationMessage.Topic)
-                    .Select(t => t.Id)
-                    .FirstOrDefaultAsync();
+                var alarm = await (
+                    from t in dbContext.Topics
+                    join a in dbContext.Alarms on t.Id equals a.TopicId
+                    where t.Name == e.ApplicationMessage.Topic
+                    select a
+                ).FirstOrDefaultAsync();
 
                 ValueAlarmTypes type = ValueAlarmTypes.NONE;
-                
-                var alarm = await dbContext.Alarms
-                    .FirstOrDefaultAsync(a => a.TopicId == topicId);
 
                 if (alarm != null)
                 {
@@ -105,7 +104,7 @@ public class MqttService : IMqttService
                     if ((alarm.AlarmType == AlarmTypes.Both || alarm.AlarmType == AlarmTypes.Minimum) && alarm.LowerLimit > float.Parse(e.ApplicationMessage.ConvertPayloadToString()))
                     {
                         type = ValueAlarmTypes.ALARM_LOW;
-                        await LogAsync($"Detektovana odstupajuca (ALARM) vrednost! {e.ApplicationMessage.ConvertPayloadToString()} > {alarm.UpperLimit}", LogTypes.ALARM_LOW);
+                        await LogAsync($"Detektovana odstupajuca (ALARM) vrednost! {e.ApplicationMessage.ConvertPayloadToString()} < {alarm.UpperLimit}", LogTypes.ALARM_LOW);
                     }
                 }
                 
@@ -333,7 +332,7 @@ public class MqttService : IMqttService
             dbContext.UserSubscriptions.Remove(sub);
             await dbContext.SaveChangesAsync();
 
-            throw new NotFoundException($"Redis nije uspeo da doda podatak u bazu, radi se rollback! {ex.Message}");
+            throw new BadRequestException($"Redis nije uspeo da doda podatak, radi se rollback! {ex.Message}");
         }
     }
 
@@ -487,12 +486,17 @@ public class MqttService : IMqttService
             .ToListAsync();
     }
     
-    public async Task<List<MqttMessageDto>> GetFilteredMessages(string topic, uint minutes)
+    public async Task<List<MqttMessageDto>> GetFilteredMessages(int userId, string topic, uint minutes)
     {
         using var scope = scopeFactory.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        var filters = await dbContext.UserSubscriptions
+        var subbed = await dbContext.UserSubscriptions
+            .Where(s => s.UserId == userId && s.Topic.Name == topic).ToListAsync();
+        
+        if(subbed.Count == 0) throw new UnauthorizedException("Niste pretplaceni na ovaj topic!");
+        
+        var filters = await dbContext.UserSubscriptions.Distinct()
             .Where(s => s.Topic.Name == topic)
             .Select(s => s.Topic.Name)
             .ToListAsync();

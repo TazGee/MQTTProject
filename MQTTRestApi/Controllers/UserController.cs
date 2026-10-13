@@ -57,7 +57,7 @@ public class UserController : ControllerBase
     [Authorize(Roles = "Admin"), HttpPost("change-role")]
     public async Task<IActionResult> ChangeRole(int userId, UserTypes role)
     {
-        await usersService.ChangeRole(userId, role);
+        await usersService.ChangeRole(UserId(), userId, role);
         
         return Ok("Role uspesno promenjen.");
     }
