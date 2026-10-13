@@ -5,6 +5,7 @@ using MQTTRestApi.Domain.Enums;
 using MQTTRestApi.Domain.Exceptions;
 using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
+using BCrypt.Net;
 
 namespace MQTTRestApi.Services;
 
@@ -21,17 +22,18 @@ public class AuthService : IAuthService
     
     public async Task<UserInfoDto> Login(string username, string password)
     {
+        var hash = BCrypt.Net.BCrypt.HashPassword(password);
         var user = await dbContext.Users
-            .FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
+            .FirstOrDefaultAsync(u => u.Username == username);
 
-        if (user is not null)
+        if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
         {
-            await logger.LogMessage($"Korisnik [{user.Id}]{username} se uspesno ulogovao!", LogTypes.AUTH);
-            return new UserInfoDto { Id = user.Id, Username = username, Role = user.Role, CreatedAt = user.CreatedAt };
+            await logger.LogMessage($"Neko je probao da se uloguje na {username} i nije uspeo!", LogTypes.AUTH);
+            throw new BadRequestException("Username ili password nisu dobri!");
         }
-
-        await logger.LogMessage($"Neko je probao da se uloguje na {username} i nije uspeo!", LogTypes.AUTH);
-        throw new BadRequestException("Username ili password nisu dobri!");
+        
+        await logger.LogMessage($"Korisnik [{user.Id}]{username} se uspesno ulogovao!", LogTypes.AUTH);
+        return new UserInfoDto { Id = user.Id, Username = username, Role = user.Role, CreatedAt = user.CreatedAt };
     }
 
     public async Task<UserInfoDto> Register(string username, string password, UserTypes TipKorisnika)
@@ -39,7 +41,8 @@ public class AuthService : IAuthService
         if (await dbContext.Users.AnyAsync(u => u.Username == username))
             throw new BadRequestException("Neko vec koristi ovaj username!");
 
-        var novi = new User(username, password, TipKorisnika);
+        var hash = BCrypt.Net.BCrypt.HashPassword(password);
+        var novi = new User(username, hash, TipKorisnika);
 
         try
         {
