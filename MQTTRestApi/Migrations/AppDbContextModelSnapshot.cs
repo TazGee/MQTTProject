@@ -22,6 +22,37 @@ namespace MQTTRestApi.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("MQTTRestApi.Domain.Models.Alarm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AlarmType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("LowerLimit")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TopicId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UpperLimit")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TopicId")
+                        .IsUnique();
+
+                    b.ToTable("Alarms");
+                });
+
             modelBuilder.Entity("MQTTRestApi.Domain.Models.Log", b =>
                 {
                     b.Property<int>("Id")
@@ -52,6 +83,9 @@ namespace MQTTRestApi.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AlarmType")
+                        .HasColumnType("int");
 
                     b.Property<string>("Payload")
                         .IsRequired()
@@ -89,11 +123,11 @@ namespace MQTTRestApi.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("Topics");

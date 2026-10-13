@@ -7,5 +7,7 @@ public enum LogTypes
     ERROR,
     AUTH,
     MESSAGE,
-    REDIS
+    REDIS,
+    ALARM_LOW,
+    ALARM_HIGH
 }
