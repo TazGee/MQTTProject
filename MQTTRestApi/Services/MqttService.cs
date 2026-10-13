@@ -328,7 +328,7 @@ public class MqttService : IMqttService
             dbContext.UserSubscriptions.Remove(sub);
             await dbContext.SaveChangesAsync();
 
-            throw new NotFoundException($"Redis nije uspeo da doda podatak u bazu, radi se rollback! {ex.Message}");
+            throw new BadRequestException($"Redis nije uspeo da doda podatak, radi se rollback! {ex.Message}");
         }
     }
 
@@ -482,12 +482,17 @@ public class MqttService : IMqttService
             .ToListAsync();
     }
     
-    public async Task<List<MqttMessageDto>> GetFilteredMessages(string topic, uint minutes)
+    public async Task<List<MqttMessageDto>> GetFilteredMessages(int userId, string topic, uint minutes)
     {
         using var scope = scopeFactory.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        var filters = await dbContext.UserSubscriptions
+        var subbed = await dbContext.UserSubscriptions
+            .Where(s => s.UserId == userId && s.Topic.Name == topic).ToListAsync();
+        
+        if(subbed.Count == 0) throw new UnauthorizedException("Niste pretplaceni na ovaj topic!");
+        
+        var filters = await dbContext.UserSubscriptions.Distinct()
             .Where(s => s.Topic.Name == topic)
             .Select(s => s.Topic.Name)
             .ToListAsync();
