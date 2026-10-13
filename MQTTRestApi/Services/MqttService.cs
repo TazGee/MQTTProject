@@ -457,4 +457,27 @@ public class MqttService : IMqttService
             .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt))
             .ToListAsync();
     }
+    
+    public async Task<List<MqttMessageDto>> GetFilteredMessages(string topic, uint minutes)
+    {
+        using var scope = scopeFactory.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        var filters = await dbContext.UserSubscriptions
+            .Where(s => s.Topic.Name == topic)
+            .Select(s => s.Topic.Name)
+            .ToListAsync();
+
+        var since = DateTime.Now.AddMinutes(-minutes);
+        
+        var messages = await dbContext.Messages
+            .Where(m => m.RecievedAt >= since)
+            .OrderByDescending(m => m.Id)
+            .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt))
+            .ToListAsync();
+
+        return messages
+            .Where(m => filters.Any(f => TopicMatches(f, m.Topic)))
+            .ToList();
+    }
 }
