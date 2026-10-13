@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MQTTRestApi.Domain.DTO;
@@ -21,6 +22,11 @@ public class UserController : ControllerBase
         this.usersService = usersService;
     }
     
+    private int UserId()
+    {
+        return int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+    }
+    
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto dto, [FromServices] ITokenService tokens)
     {
@@ -39,6 +45,14 @@ public class UserController : ControllerBase
         return Ok(new { token });
     }
     
+    [Authorize, HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
+    {
+        await usersService.ChangePassword(UserId(), dto);
+        
+        return Ok("Sifra uspesno promenjena.");
+    }
+
     [Authorize(Roles = "Admin")]
     [HttpGet("list")]
     public IActionResult ListUsers()
