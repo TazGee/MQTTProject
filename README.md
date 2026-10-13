@@ -8,43 +8,27 @@
 \
 **Okruzenja:** Rider, MySQL Workbench
 ## 📜 - **Najnovije izmene** - 📜️
-### **-= Verzija 0.26.10.12.1 =-** 
+### **-= Verzija 0.26.10.13.1 =-** 
 
 - **User authentication:**
-  - Dodata **autentifikacija korisnika** putem korisnickog **imena** i **lozinke**
-  - Uspesan login/register generise **JWT token** za korisnika
-- **Subscriptions:**
-  - Dodata opcija da se korisnik **licno pretplati** na neki topic iz **liste dostupnih topica**
-  - **Lista dostupnih topica** predstavlja **listu topica** na koje je backend prijavljen
-  - Korisnik takodje moze da se **odjavi sa topic-a**
-  - Dodato da korisnik vidi poruke samo za topic-e na koje je **prijavljen**
-  - Sve **MQTT rute** su zakljucane za **neprijavljene korisnike (goste)**
-  - Neuspesne pretplate se cuvaju u **listi** i admin moze **ponovo da pokusa da pretplati backend** na njih
-  - Dodat inkrementalni tajmer za ponovno povezivanje prilikom pucanja veze sa brokerom, vreme se podesava u **appsettings.json** fajlu
-  - Dodato da **admin** moze **rucno da pokusa reconnect** u slucaju pucanja konekcije (nezavisno od tajmera)
-- **Error Handling:**
-  - Dodat **global exception/error handling** unutar servisa
-- **Controllers:**
-  - **api/mqtt/resubscribe-to-failed** promenjen sa **Get** na **Post**
-  - **api/mqtt/force-reconnect-to-server** promenjen sa **Get** na **Post**
-  - **api/users/login** promenjen sa **Get** na **Post**
-  - **api/users/register** promenjen sa **Get** na **Post**
-  - **api/users/list** promenjen sa **Post** na **Get**
-- **Services:**
-  - Funkcija koju poziva **ReconnectToAll()** izmestena u privatnu funkciju **ConnectOnBrokerAsync()**
-  - Izmenjeno da **SubscribeAsync()** sluzi samo za prijavu backenda na topic preko rute
-  - Popravljen **bug** pogresnog redosleda prilikom **subscribe-a**
-- **Database:**
-  - Tabela **'Subscriptions'** zamenjena tabelom **'Topics'**
-  - Nova vezna tabela **'UserSubscriptions'** koja povezuje Korisnika (**UserId**) i Topic (**TopicID**)
-  - Dodat **unique index** za tabele kako bi se izbegao race condition u **AnyAsync**
-- **Tests:**
-  - Unit testovi **privremeno obrisani** zbog konstantnog azuriranja servisa
-- **README.md**
-  - Azurirana **features lista**
-  - Azurirana **lista ruta**
-  - Dodat **change log** za verzije
-  - Sredjeno **formatiranje teksta**
+  - Dodato **hesiranje (hashing) lozinke** za vecu bezbednost
+  - Dodata opcija **promene lozinke**
+  - Dodata **administrator** opcija za **promenu role-a korisnika**
+- **Nove Admin opcije:**
+  - **Log list** - prikaz kompletnog log-a (svih log-ova iz baze)
+  - **All messages** - prikaz svih log-ova sa svih topic-a
+- **Poruke:**
+  - Dodata opcija za filtrirani pregled poruka (filter po vremenu unazad u minutima)
+- **Sistem alarmiranja:**
+  - Dodat **sistem alarmiranja** koji prati vrednosti na odredjenim topics-ima
+  - **Alarme** kreira **admin** i oni se za svaki topic cuvaju u bazi
+  - Postoje 3 vrste alarma:
+    - **Alarm** koji prati samo odstupanje vrednosti **ispod minimalne granice**
+    - **Alarm** koji prati samo odstupanje vrednosti **iznad maksimalne granice**
+    - **Alarm** koji prati odstupanje vrednosti **izvan obe granice**
+  - Kada se **alarm aktivira** zapisuje se u **logu** i u samom **entitetu poruke**
+  - Dodata nova kolona za **MqttMessage** - **AlarmType**
+  - Dodata nova tabela - **Alarm**
 ***
 ## 🖥️ - **Features** - 🖥️
 - Pretplata backend-a na topic po zelji
@@ -61,6 +45,10 @@
 - Sistem za automatski reconnect prilikom pucanja veze
 - Mogucnost za force reconnect-om ukoliko je upkla veza
 - Globalni exception/error handling
+- Podesiv sistem alarmiranja koji se edituje realtime
+- Istorija poruka filtrirana po vremenu
+- Password hashing za bolju bezbednost
+- Mogucnost promene lozinke
 ***
 ## 📀 - **Prerequisites** - 📀
 - .NET SDK 8
@@ -78,6 +66,31 @@
 - Ukoliko nema gresaka, API je spreman za upotrebu
 ***
 ## 🌐 - **API Endpoints** - 🌐
+### Alarm ENDPOINTS:
+- **(POST)api/alarms/create-alarm**
+  - Input parametri:
+    - topicId (int32)
+    - alarmType (0, 1, 2)
+    - lowerLimit (int32)
+    - upperLimit (int32)
+  - Kreira alarm
+- **(POST)api/alarms/delete-alarm**
+  - Input parametri:
+    - alarmId (int32)
+  - Brise alarm iz baze podataka
+- **(GET)api/alarms/all-alarms**
+  - Input parametri:
+    - Nema input parametre
+  - Vraca listu svih kreiranih alarma
+- **(GET)api/alarms/alarmed-messages**
+  - Input parametri:
+    - Nema input parametre
+  - Vraca listu svih alarmiranih poruka
+### Log ENDPOINTS:
+- **(GET)api/logs/all-logs**
+  - Input parametri:
+    - Nema input parametre
+  - Vraca listu svih logova
 ### User ENDPOINTS:
 - **(POST)api/users/login**
     - Input parametri:
@@ -87,6 +100,15 @@
     - Input parametri:
         - RegisterDto (username, password, userType)
     - Vrsi registraciju korisnika u sistem
+- **(POST)api/users/change-password**
+  - Input parametri:
+    - ChangePasswordDto (oldPassword, newPassword)
+  - Vrsi promenu sifre korisnika
+- **(POST)api/users/change-role**
+  - Input parametri:
+    - userId (int32)
+    - role (0, 1)
+  - Vrsi promenu role-a korisnika
 - **(GET)api/users/list**
     - Input parametri:
         - Nema input parametre
@@ -138,6 +160,15 @@
     - Input parametri:
         - Nema input parametre
     - Vraca listu svih poruka za topic-e na koje je korisnik pretplacen
+- **(GET)api/mqtt/all-messages**
+  - Input parametri:
+    - Nema input parametre
+  - Vraca listu svih poruka koje su ikada stigle
+- **(GET)api/mqtt/messages-filtered**
+  - Input parametri:
+    - topic (string)
+    - minutes (int)
+  - Vraca listu svih poruka za topic u poslednjih n minuta
 ***
 ## ⌨️ - **Primeri curl komandi** - ⌨️
 - Subscribe
@@ -194,6 +225,44 @@ curl -X 'GET' \
 - Trenutno ne postoji definisana licenca za ovaj proizvod
 ***
 ## 📜 - **Ranije izmene i azuriranja** - 📜️
+### **-= Verzija 0.26.10.12.1 =-**
+
+- **User authentication:**
+  - Dodata **autentifikacija korisnika** putem korisnickog **imena** i **lozinke**
+  - Uspesan login/register generise **JWT token** za korisnika
+- **Subscriptions:**
+  - Dodata opcija da se korisnik **licno pretplati** na neki topic iz **liste dostupnih topica**
+  - **Lista dostupnih topica** predstavlja **listu topica** na koje je backend prijavljen
+  - Korisnik takodje moze da se **odjavi sa topic-a**
+  - Dodato da korisnik vidi poruke samo za topic-e na koje je **prijavljen**
+  - Sve **MQTT rute** su zakljucane za **neprijavljene korisnike (goste)**
+  - Neuspesne pretplate se cuvaju u **listi** i admin moze **ponovo da pokusa da pretplati backend** na njih
+  - Dodat inkrementalni tajmer za ponovno povezivanje prilikom pucanja veze sa brokerom, vreme se podesava u **appsettings.json** fajlu
+  - Dodato da **admin** moze **rucno da pokusa reconnect** u slucaju pucanja konekcije (nezavisno od tajmera)
+- **Error Handling:**
+  - Dodat **global exception/error handling** unutar servisa
+- **Controllers:**
+  - **api/mqtt/resubscribe-to-failed** promenjen sa **Get** na **Post**
+  - **api/mqtt/force-reconnect-to-server** promenjen sa **Get** na **Post**
+  - **api/users/login** promenjen sa **Get** na **Post**
+  - **api/users/register** promenjen sa **Get** na **Post**
+  - **api/users/list** promenjen sa **Post** na **Get**
+- **Services:**
+  - Funkcija koju poziva **ReconnectToAll()** izmestena u privatnu funkciju **ConnectOnBrokerAsync()**
+  - Izmenjeno da **SubscribeAsync()** sluzi samo za prijavu backenda na topic preko rute
+  - Popravljen **bug** pogresnog redosleda prilikom **subscribe-a**
+- **Database:**
+  - Tabela **'Subscriptions'** zamenjena tabelom **'Topics'**
+  - Nova vezna tabela **'UserSubscriptions'** koja povezuje Korisnika (**UserId**) i Topic (**TopicID**)
+  - Dodat **unique index** za tabele kako bi se izbegao race condition u **AnyAsync**
+- **Tests:**
+  - Unit testovi **privremeno obrisani** zbog konstantnog azuriranja servisa
+- **README.md**
+  - Azurirana **features lista**
+  - Azurirana **lista ruta**
+  - Dodat **change log** za verzije
+  - Sredjeno **formatiranje teksta**
+***
 ### **-= Verzija 0.26.10.9.1 =-**
 - **Simulator:**
   - Dodat novi **projekat** unutar **solution-a** koji sluzi za **simuliranje uredjaja**
