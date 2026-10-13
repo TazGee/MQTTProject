@@ -446,4 +446,15 @@ public class MqttService : IMqttService
             Console.WriteLine($"Resubscribe na topics-e nije uspeo!");
         }
     }
+    
+    public async Task<List<MqttMessageDto>> GetAllMessages()
+    {
+        using var scope = scopeFactory.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        return await dbContext.Messages
+            .OrderByDescending(m => m.Id)
+            .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt))
+            .ToListAsync();
+    }
 }

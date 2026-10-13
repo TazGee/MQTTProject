@@ -94,6 +94,16 @@ public class MqttController : ControllerBase
         return Ok(messages);
     }
     
+    [Authorize(Roles = "Admin"), HttpGet("all-messages")]
+    public async Task<IActionResult> GetAllMessages()
+    {
+        var messages = await mqttService.GetAllMessages();
+        
+        if(messages.Count == 0) return Ok("Nema dostupnih poruka.");
+        
+        return Ok(messages);
+    }
+    
     [HttpGet("available-topics")]
     public async Task<IActionResult> GetAvailableTopics()
     {
