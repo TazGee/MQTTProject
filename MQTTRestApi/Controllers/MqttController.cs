@@ -105,7 +105,7 @@ public class MqttController : ControllerBase
     [HttpGet("messages-filtered")]
     public async Task<IActionResult> GetMessagesFiltered(string topic, uint minutes)
     {
-        var messages = await mqttService.GetFilteredMessages(topic, minutes);
+        var messages = await mqttService.GetFilteredMessages(UserId(), topic, minutes);
         
         if(messages.Count == 0) return Ok("Nema dostupnih poruka.");
         

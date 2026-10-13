@@ -32,5 +32,5 @@ public interface IMqttService
     List<Topic> GetFailedTopics();
     Task<List<string>> ResubscribeToFailed();
     Task ForceReconnect();
-    Task<List<MqttMessageDto>> GetFilteredMessages(string topic, uint minutes);
+    Task<List<MqttMessageDto>> GetFilteredMessages(int userId, string topic, uint minutes);
 }
