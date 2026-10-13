@@ -50,7 +50,7 @@ public class UserController : ControllerBase
     {
         await usersService.ChangePassword(UserId(), dto);
         
-        return Ok("Sigra uspesno promenjena.");
+        return Ok("Sifra uspesno promenjena.");
     }
 
     [Authorize(Roles = "Admin")]
