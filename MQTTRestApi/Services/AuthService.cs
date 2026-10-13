@@ -5,7 +5,6 @@ using MQTTRestApi.Domain.Enums;
 using MQTTRestApi.Domain.Exceptions;
 using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
-using BCrypt.Net;
 
 namespace MQTTRestApi.Services;
 

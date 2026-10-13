@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using MQTTRestApi.Data;
 using MQTTRestApi.Domain.DTO;
+using MQTTRestApi.Domain.Enums;
 using MQTTRestApi.Domain.Exceptions;
 using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
@@ -11,8 +13,27 @@ public class UsersService : IUsersService
     private readonly AppDbContext dbContext;
     
     public UsersService(AppDbContext dbContext)
-    {
+    {   
         this.dbContext = dbContext;
+    }
+
+    public async Task ChangePassword(int userId, ChangePasswordDto changePasswordDto)
+    {
+        var user = await dbContext.Users.FindAsync(userId);
+        
+        if (user == null) throw new BadRequestException($"Korisnik sa ovim ID-em ne postoji! [id: {userId}]");
+        if (!BCrypt.Net.BCrypt.Verify(changePasswordDto.OldPassword, user.Password)) throw new BadRequestException("Stara sifra se ne poklapa!");
+        
+        user.Password = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
+        
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            throw new BadRequestException($"Neuspesno cuvanje u bazu podataka, probajte kasnije! {e.Message}");
+        }
     }
     
     public List<UserInfoDto> GetUsers()
