@@ -151,7 +151,7 @@ public class RedisService : IRedisService
     {
         if(!await redisdb.SetRemoveAsync($"topic:{topic}:users", userId))
             throw new BadRequestException($"Neuspesno brisanje iz redisa!");
-        if(await redisdb.SetRemoveAsync($"user:{userId}:topics", topic))
+        if(!await redisdb.SetRemoveAsync($"user:{userId}:topics", topic))
             throw new BadRequestException($"Neuspesno brisanje iz redisa!");
     }
 

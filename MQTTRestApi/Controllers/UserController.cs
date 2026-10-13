@@ -51,13 +51,13 @@ public class UserController : ControllerBase
     {
         await usersService.ChangePassword(UserId(), dto);
         
-        return Ok("Sigra uspesno promenjena.");
+        return Ok("Sifra uspesno promenjena.");
     }
     
     [Authorize(Roles = "Admin"), HttpPost("change-role")]
     public async Task<IActionResult> ChangeRole(int userId, UserTypes role)
     {
-        await usersService.ChangeRole(userId, role);
+        await usersService.ChangeRole(UserId(), userId, role);
         
         return Ok("Role uspesno promenjen.");
     }

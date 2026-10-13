@@ -304,7 +304,7 @@ public class MqttService : IMqttService
             dbContext.UserSubscriptions.Remove(sub);
             await dbContext.SaveChangesAsync();
 
-            throw new NotFoundException($"Redis nije uspeo da doda podatak u bazu, radi se rollback! {ex.Message}");
+            throw new BadRequestException($"Redis nije uspeo da doda podatak, radi se rollback! {ex.Message}");
         }
     }
 

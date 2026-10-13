@@ -99,8 +99,6 @@ public class MqttController : ControllerBase
     {
         var messages = await mqttService.GetAllMessages();
         
-        if(messages.Count == 0) return Ok("Nema dostupnih poruka.");
-        
         return Ok(messages);
     }
     
