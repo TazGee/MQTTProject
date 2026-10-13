@@ -32,7 +32,7 @@ public class MqttController : ControllerBase
         return int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
     }
 
-    [HttpGet("subscribe"), Authorize(Roles = "Admin")]
+    [HttpPost("subscribe"), Authorize(Roles = "Admin")]
     public async Task<IActionResult> Subscribe(string topic)
     {
         await mqttService.SubscribeAsync(topic);

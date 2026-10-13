@@ -24,7 +24,7 @@ public class UserController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto dto, [FromServices] ITokenService tokens)
     {
-        UserInfoDto user = await authService.Login(dto.Username, dto.Password);
+        var user = await authService.Login(dto.Username, dto.Password);
         
         var token = tokens.CreateToken(userId: user.Id.ToString(), username: dto.Username, role: user.Role.ToString());
         return Ok(new { token });
@@ -33,7 +33,7 @@ public class UserController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto dto, [FromServices] ITokenService tokens)
     {
-        UserInfoDto user = await authService.Register(dto.Username, dto.Password, dto.UserType);
+        var user = await authService.Register(dto.Username, dto.Password, dto.UserType);
         
         var token = tokens.CreateToken(userId: user.Id.ToString(), username: dto.Username, role: user.Role.ToString());
         return Ok(new { token });

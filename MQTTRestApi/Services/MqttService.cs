@@ -32,7 +32,7 @@ public class MqttService : IMqttService
     
     private readonly IRedisService redis;
     
-    List<Topic> failedTopics = new List<Topic>();
+    private readonly HashSet<string> failedTopics = new ();
     
     public MqttService(IServiceScopeFactory scopeFactory, IRedisService redis, IConfiguration config)
         : this(scopeFactory, redis, config, new MqttClientFactory().CreateMqttClient())
@@ -111,8 +111,6 @@ public class MqttService : IMqttService
                     Console.WriteLine($"Greska pri cuvanju u bazu i/ili redis: {ex.Message}");
                     throw;
                 }
-                
-                
             };
         }
         catch (Exception e)
@@ -181,7 +179,7 @@ public class MqttService : IMqttService
 
             foreach (Topic t in dbContext.Topics)
             {
-                if (!await SubscribeOnBrokerAsync(t.Name)) failedTopics.Add(t);
+                await SubscribeOnBrokerAsync(t.Name);
             }
         }
     }
@@ -212,15 +210,18 @@ public class MqttService : IMqttService
                 if (!success)
                 {
                     Console.WriteLine($"Subscribe nije uspeo!");
+                    failedTopics.Add(topic);
                     return false;
                 }
             }
             
+            failedTopics.Remove(topic);
             Console.WriteLine($"Uspesan subscribe na topic {topic}!");
             return true;
         }
         catch (Exception e)
         {
+            failedTopics.Add(topic);
             Console.WriteLine($"Greska pri subscribovanju: {e.Message}");
             return false;
         }
@@ -336,18 +337,35 @@ public class MqttService : IMqttService
     {
         using var scope = scopeFactory.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    
-        var topics = dbContext.UserSubscriptions
+
+        var filters = await dbContext.UserSubscriptions
             .Where(s => s.UserId == userId)
-            .Select(s => s.Topic.Name);
-        
-        if(await topics.AnyAsync()) throw new BadRequestException($"Niste prijavljeni ni na jedan topic!");
-    
-        return await dbContext.Messages
-            .Where(m => topics.Contains(m.Topic))
+            .Select(s => s.Topic.Name)
+            .ToListAsync();
+
+        var messages = await dbContext.Messages
             .OrderByDescending(m => m.Id)
             .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt))
             .ToListAsync();
+
+        return messages
+            .Where(m => filters.Any(f => TopicMatches(f, m.Topic)))
+            .ToList();
+    }
+    
+    private static bool TopicMatches(string filter, string topic)
+    {
+        var f = filter.Split('/');
+        var t = topic.Split('/');
+
+        for (var i = 0; i < f.Length; i++)
+        {
+            if (f[i] == "#") return true;
+            if (i >= t.Length) return false;
+            if (f[i] != "+" && f[i] != t[i]) return false;
+        }
+
+        return f.Length == t.Length;
     }
 
     public async Task<List<Topic>> GetAvailableTopics()
@@ -355,7 +373,7 @@ public class MqttService : IMqttService
         using var scope = scopeFactory.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        var topics = dbContext.Topics.ToList();
+        var topics = await dbContext.Topics.ToListAsync();
     
         return topics;
     }
@@ -373,7 +391,7 @@ public class MqttService : IMqttService
     
     public List<Topic> GetFailedTopics()
     {
-        return failedTopics;
+        return failedTopics.Select(t => new Topic(t, String.Empty)).ToList();
     }
 
     public async Task<List<string>> ResubscribeToFailed()
@@ -381,13 +399,14 @@ public class MqttService : IMqttService
         if (failedTopics.Count == 0) throw new BadRequestException("Nema topic-a za koje nije uspela pretplata!");
         
         List<string> results = new List<string>();
-        
-        foreach (Topic t in failedTopics)
+
+        foreach (var name in failedTopics.ToList())
         {
-            if (await SubscribeOnBrokerAsync(t.Name)) results.Add($"Uspesan resubscribe na {t.Name}!");
-            else results.Add($"Neuspesan pokusaj resubscribe na {t.Name}");
+            results.Add(await SubscribeOnBrokerAsync(name)
+                ? $"Uspesan resubscribe na {name}!"
+                : $"Neuspesan pokusaj resubscribe na {name}");
         }
-        
+
         return results;
     }
 
@@ -416,6 +435,15 @@ public class MqttService : IMqttService
         {
             Console.WriteLine($"Povezivanje nije uspelo: {ex.Message}");
             throw new BadRequestException($"Greska pri povezivanju! {ex.Message}");
+        }
+        
+        try
+        {
+            await ResubscribeToAll();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Resubscribe na topics-e nije uspeo!");
         }
     }
 }
