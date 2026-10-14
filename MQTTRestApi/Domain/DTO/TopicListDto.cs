@@ -5,9 +5,9 @@ public class TopicListDto
     public int TopicId { get; set; }
     public string TopicName { get; set; }
 
-    public TopicListDto(int TopicId, string TopicName)
+    public TopicListDto(int topicId, string topicName)
     {
-        this.TopicId = TopicId;
-        this.TopicName = TopicName;
+        TopicId = topicId;
+        TopicName = topicName;
     }
 }

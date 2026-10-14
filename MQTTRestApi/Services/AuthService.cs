@@ -21,7 +21,6 @@ public class AuthService : IAuthService
     
     public async Task<UserInfoDto> Login(string username, string password)
     {
-        var hash = BCrypt.Net.BCrypt.HashPassword(password);
         var user = await dbContext.Users
             .FirstOrDefaultAsync(u => u.Username == username);
 

@@ -25,12 +25,12 @@ public class LoggerService : ILoggerService
         try
         {
             Log log = new Log(msg, type);
-            Console.WriteLine(log.ToString());
             
             dbContext.Logs.Add(log);
             await dbContext.SaveChangesAsync();
             
-            Console.WriteLine("Log uspesno sacuvan u bazi podataka");
+            Console.WriteLine("Log uspesno sacuvan u bazi podataka:");
+            Console.WriteLine(log.ToString());
         }
         catch (Exception e)
         {

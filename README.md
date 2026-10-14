@@ -33,6 +33,9 @@
   - Razlaganje velikih na manje servise
   - Brisanje promeljivih, klasa i metoda koje se ne koriste
   - Poboljsano imenovanje promenljivih
+- **Testing:**
+  - Rucno istestirane sve opcije i mogucnosti
+  - Korisceni neocekivani slucajevi i vrednosti da bi se osigurala sigurnost i stabilnost rada
 ***
 ## 🖥️ - **Features** - 🖥️
 - Pretplata backend-a na topic po zelji

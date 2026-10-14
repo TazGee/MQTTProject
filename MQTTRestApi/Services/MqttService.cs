@@ -19,29 +19,22 @@ namespace MQTTRestApi.Services;
 public class MqttService : IMqttService
 {
     private bool reconnecting = false;
+    private bool connected = false;
     
     private readonly IServiceScopeFactory scopeFactory;
     private readonly IConfiguration config;
-    
-    private MqttClientFactory factory = new MqttClientFactory();
+    private readonly IHubContext<MessagesHub> hub;
+    private readonly IRedisService redis;
     private IMqttClient mqttClient;
     
-    private readonly IHubContext<MessagesHub> hub;
-
     private int[] reconnectIntervali = [];
     int reconnectCounter = 0;
-    
-    private bool connected = false;
-    
-    private readonly IRedisService redis;
     
     private readonly HashSet<string> failedTopics = new ();
     
     public MqttService(IServiceScopeFactory scopeFactory, IRedisService redis, IConfiguration config, IHubContext<MessagesHub> hub)
         : this(scopeFactory, redis, config, new MqttClientFactory().CreateMqttClient(), hub)
-    {
-        
-    }
+    { }
 
     public MqttService(IServiceScopeFactory scopeFactory, IRedisService redis, IConfiguration config, IMqttClient mqttClient, IHubContext<MessagesHub> hub)
     {
@@ -99,12 +92,12 @@ public class MqttService : IMqttService
                     if ((alarm.AlarmType == AlarmTypes.Both || alarm.AlarmType == AlarmTypes.Maximum) && alarm.UpperLimit < float.Parse(e.ApplicationMessage.ConvertPayloadToString()))
                     {
                         type = ValueAlarmTypes.ALARM_HIGH;
-                        await LogAsync($"Detektovana odstupajuca (ALARM) vrednost! {e.ApplicationMessage.ConvertPayloadToString()} > {alarm.UpperLimit}", LogTypes.ALARM_HIGH);
+                        await LogAsync($"Detektovana odstupajuca (ALARM) vrednost! {e.ApplicationMessage.ConvertPayloadToString()} > (LIMIT){alarm.UpperLimit}", LogTypes.ALARM_HIGH);
                     }
                     if ((alarm.AlarmType == AlarmTypes.Both || alarm.AlarmType == AlarmTypes.Minimum) && alarm.LowerLimit > float.Parse(e.ApplicationMessage.ConvertPayloadToString()))
                     {
                         type = ValueAlarmTypes.ALARM_LOW;
-                        await LogAsync($"Detektovana odstupajuca (ALARM) vrednost! {e.ApplicationMessage.ConvertPayloadToString()} < {alarm.UpperLimit}", LogTypes.ALARM_LOW);
+                        await LogAsync($"Detektovana odstupajuca (ALARM) vrednost! {e.ApplicationMessage.ConvertPayloadToString()} < (LIMIT){alarm.UpperLimit}", LogTypes.ALARM_LOW);
                     }
                 }
                 
@@ -114,8 +107,8 @@ public class MqttService : IMqttService
                                              e.ApplicationMessage.Retain,
                                              DateTime.Now,
                                              type);
-                
                 Console.WriteLine(poruka.ToString());
+                
                 await hub.Clients.All.SendAsync("Message", poruka.Topic, poruka.Payload, type.ToString());
                 
                 try
@@ -149,7 +142,7 @@ public class MqttService : IMqttService
 
     public async Task ConnectAsync()
     {
-        reconnectIntervali = config.GetSection("ReconnectTimerValues").Get<int[]>() ?? [];
+        reconnectIntervali = config.GetSection("ReconnectTimerValues").Get<int[]>() ?? [3, 5, 10, 30, 60];
         reconnectCounter = 0;
         
         reconnecting = true;
@@ -176,7 +169,7 @@ public class MqttService : IMqttService
                 reconnecting = false;
                 connected = true;
                 
-                await LogAsync($"Backend API se uspesno povezao na server.", LogTypes.INFO);
+                await LogAsync("Backend API se uspesno povezao na server.", LogTypes.INFO);
             }
             catch (Exception ex)
             {
@@ -216,7 +209,7 @@ public class MqttService : IMqttService
     {
         try
         {
-            if (!Regex.IsMatch(topic, config["SubscribeRegex"]))
+            if (!Regex.IsMatch(topic, config["SubscribeRegex"] ?? "^(?:#|(?:[^/#+\\s]+|\\+)(?:/(?:[^/#+\\s]+|\\+))*(?:/#)?)$"))
             {
                 Console.WriteLine($"Vrednost topica nije validna!");
                 return false;
@@ -244,13 +237,13 @@ public class MqttService : IMqttService
             }
             
             failedTopics.Remove(topic);
-            Console.WriteLine($"Uspesan subscribe na topic {topic}!");
+            Console.WriteLine($"Uspesan resubscribe na topic {topic}!");
             return true;
         }
         catch (Exception e)
         {
             failedTopics.Add(topic);
-            Console.WriteLine($"Greska pri subscribovanju: {e.Message}");
+            Console.WriteLine($"Greska pri resubscribovanju: {e.Message}");
             return false;
         }
     }
@@ -264,40 +257,38 @@ public class MqttService : IMqttService
                 Console.WriteLine($"Naziv topic-a nije validan!");
                 throw new BadRequestException("Naziv topic-a nije validan!");
             }
-            
-            using (var scope = scopeFactory.CreateScope())
+
+            using var scope = scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            if (await dbContext.Topics.AnyAsync(s => s.Name == topic))
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-                if (await dbContext.Topics.AnyAsync(s => s.Name == topic))
-                {
-                    throw new BadRequestException($"Vec postoji subsribe na topic: {topic}!"); 
-                }
-                
-                var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
-                    .WithTopicFilter(topic)
-                    .Build();
-            
-                MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
-            
-                foreach (var item in result.Items)
-                {
-                    var success = item.ResultCode is
-                        MqttClientSubscribeResultCode.GrantedQoS0 or
-                        MqttClientSubscribeResultCode.GrantedQoS1 or
-                        MqttClientSubscribeResultCode.GrantedQoS2;
-
-                    if (!success)
-                    {
-                        throw new BadRequestException($"Neuspesan pokusaj subscribe-a! {result.ReasonString}");
-                    }
-                }
-                
-                Topic top = new Topic(topic, String.Empty);
-                
-                dbContext.Topics.Add(top);
-                await dbContext.SaveChangesAsync();
+                throw new BadRequestException($"Vec postoji subsribe na topic: {topic}!"); 
             }
+            
+            var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
+                .WithTopicFilter(topic)
+                .Build();
+        
+            MqttClientSubscribeResult result = await mqttClient.SubscribeAsync(subscribeOptions);
+        
+            foreach (var item in result.Items)
+            {
+                var success = item.ResultCode is
+                    MqttClientSubscribeResultCode.GrantedQoS0 or
+                    MqttClientSubscribeResultCode.GrantedQoS1 or
+                    MqttClientSubscribeResultCode.GrantedQoS2;
+
+                if (!success)
+                {
+                    throw new BadRequestException($"Neuspesan pokusaj subscribe-a! {result.ReasonString}");
+                }
+            }
+            
+            Topic top = new Topic(topic, String.Empty);
+            
+            dbContext.Topics.Add(top);
+            await dbContext.SaveChangesAsync();
         }
         catch (Exception e)
         {
@@ -517,6 +508,12 @@ public class MqttService : IMqttService
     public async Task DeviceSuggestValueChange(string topic, float payload)
     {
         if(!connected) throw new BadRequestException("Backend nije povezan na broker!");
+     
+        if (!Regex.IsMatch(topic, config["PublishRegex"] ?? "^[^/#+\\s]+(?:/[^/#+\\s]+)*$"))
+        {
+            Console.WriteLine($"Vrednost topica nije validna!");
+            throw new BadRequestException("Vrednost topica nije validna! Primer: kuca/soba/temperatura");
+        }
         
         try
         {

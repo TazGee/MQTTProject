@@ -20,10 +20,6 @@ public class RedisService : IRedisService
     private readonly IConfiguration config;
     private readonly IDatabase redisdb;
 
-    public RedisService()
-    {
-        
-    }
     public RedisService(IConnectionMultiplexer redis, IConfiguration config, IServiceScopeFactory scopeFactory)
     {
         this.scopeFactory = scopeFactory;
@@ -65,7 +61,7 @@ public class RedisService : IRedisService
         }
         catch (Exception e)
         {
-            Console.WriteLine($"GRESKA REDIS: {e}");
+            Console.WriteLine($"Greska prilikom cuvanja u redis: {e}");
         }
     }
 
@@ -137,7 +133,7 @@ public class RedisService : IRedisService
         catch (Exception e)
         {
             Console.WriteLine($"Greska pri dobijanju topic count-a: {e.Message}");
-            return 0;
+            return 00;
         }
     }
     
