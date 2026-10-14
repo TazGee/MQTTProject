@@ -1,5 +1,5 @@
 # 👨‍💻🌐 -= **RestAPI Backend Projekat** =- 🌐👨‍💻
-### RestAPI Backend za komunikaciju putem MQTT protokola
+### RestAPI Backend (+ test Frontend) za komunikaciju putem MQTT protokola
 #### **● Verzija:** 0.26.10.14.1 by **Nikola Tasić**
 - **Programski jezik:** C#
 - **Tehnologije:** .NET, Docker, MariaDB, Entity Framework
@@ -9,6 +9,7 @@
   - **MQTTRestApi:** RestAPI Backend aplikacija (dokerizovana)
   - **MQTTRestApi.Tests:** Unit testovi za **'MQTTRestApi'** projekat
   - **MQTTGitProject:** prva probna verzija rada sa MQTT (ne koristi se)
+- **Frontend** unutar projekta je namenjen samo i iskljucivo za testiranje backend-a!
 ****
 ## 📜 - **Najnovije izmene** - 📜️
 ### **-= Verzija 0.26.10.14.1 =-**
