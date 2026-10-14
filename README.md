@@ -1,34 +1,38 @@
-# 👨‍💻 **RestAPI Backend Projekat** 👨‍💻
+# 👨‍💻🌐 -= **RestAPI Backend Projekat** =- 🌐👨‍💻
 ### RestAPI Backend za komunikaciju putem MQTT protokola
-**Verzija:** 0.26.10.12.1 by **Nikola Tasić**
-\
-**Programski jezik:** C#
-\
-**Tehnologije:** .NET, Docker, MariaDB, Entity Framework
-\
-**Okruzenja:** Rider, MySQL Workbench
+#### **● Verzija:** 0.26.10.14.1 by **Nikola Tasić**
+- **Programski jezik:** C#
+- **Tehnologije:** .NET, Docker, MariaDB, Entity Framework
+- **Okruzenja:** Rider, MySQL Workbench
+- **Solution sadrzi projekte:**
+  - **MQTTDevice:** simulator slanja poruka na broker
+  - **MQTTRestApi:** RestAPI Backend aplikacija (dokerizovana)
+  - **MQTTRestApi.Tests:** Unit testovi za **'MQTTRestApi'** projekat
+  - **MQTTGitProject:** prva probna verzija rada sa MQTT (ne koristi se)
+****
 ## 📜 - **Najnovije izmene** - 📜️
-### **-= Verzija 0.26.10.13.1 =-** 
+### **-= Verzija 0.26.10.14.1 =-**
 
-- **User authentication:**
-  - Dodato **hesiranje (hashing) lozinke** za vecu bezbednost
-  - Dodata opcija **promene lozinke**
-  - Dodata **administrator** opcija za **promenu role-a korisnika**
-- **Nove Admin opcije:**
-  - **Log list** - prikaz kompletnog log-a (svih log-ova iz baze)
-  - **All messages** - prikaz svih log-ova sa svih topic-a
-- **Poruke:**
-  - Dodata opcija za filtrirani pregled poruka (filter po vremenu unazad u minutima)
-- **Sistem alarmiranja:**
-  - Dodat **sistem alarmiranja** koji prati vrednosti na odredjenim topics-ima
-  - **Alarme** kreira **admin** i oni se za svaki topic cuvaju u bazi
-  - Postoje 3 vrste alarma:
-    - **Alarm** koji prati samo odstupanje vrednosti **ispod minimalne granice**
-    - **Alarm** koji prati samo odstupanje vrednosti **iznad maksimalne granice**
-    - **Alarm** koji prati odstupanje vrednosti **izvan obe granice**
-  - Kada se **alarm aktivira** zapisuje se u **logu** i u samom **entitetu poruke**
-  - Dodata nova kolona za **MqttMessage** - **AlarmType**
-  - Dodata nova tabela - **Alarm**
+- **SignalIR:**
+  - Implementiran **SignalIR** za dalju upotrebu sa frontend-om
+- **Unit tests:**
+  - Napravljeno **109 unit testova** za ispitivanje ispravnosti svih **kontrolera i servisa**
+- **Frontend:**
+  - Implementiran osnovni **test frontend** koji se koristi **iskljucivo za testiranje**
+  - **Frontend** sadrzi samo **najosnovnije opcije i mogucnosti**
+  - Nije namenjen i projektovan za upotrebu van **testiranja backend-a**
+  - Koristi **SignalIR** za primanje/azuriranje podataka bez polling-a
+- **Backend Publishing:**
+  - Od sada admini unose samo topic uredjaja za promenu vrednosti, program sam dodaje sufiks
+  - Ispravljeni sitne greske u logici
+- **Alarm bug fixing:**
+  - Ispravljena greska obrnute logike gde false za proveru postojanja alarma vraca true i obrnuto
+  - izmenjen redosled u enum-u i definisane vrednosti rucno zbog unit testova
+- **Refactoring:**
+  - Totalno refaktorisanje projekta
+  - Razlaganje velikih na manje servise
+  - Brisanje promeljivih, klasa i metoda koje se ne koriste
+  - Poboljsano imenovanje promenljivih
 ***
 ## 🖥️ - **Features** - 🖥️
 - Pretplata backend-a na topic po zelji
@@ -49,6 +53,11 @@
 - Istorija poruka filtrirana po vremenu
 - Password hashing za bolju bezbednost
 - Mogucnost promene lozinke
+- Mogucnost promene uloge korisnika
+- SignalIR koji se koristi umesto polling-a
+- Unit testovi za testiranje kontrolera i servisa
+- Mogucnost da admin govori simulatoru koje vrednosti da salje
+- Test frontend za testiranje
 ***
 ## 📀 - **Prerequisites** - 📀
 - .NET SDK 8
@@ -225,6 +234,28 @@ curl -X 'GET' \
 - Trenutno ne postoji definisana licenca za ovaj proizvod
 ***
 ## 📜 - **Ranije izmene i azuriranja** - 📜️
+### **-= Verzija 0.26.10.13.1 =-**
+
+- **User authentication:**
+  - Dodato **hesiranje (hashing) lozinke** za vecu bezbednost
+  - Dodata opcija **promene lozinke**
+  - Dodata **administrator** opcija za **promenu role-a korisnika**
+- **Nove Admin opcije:**
+  - **Log list** - prikaz kompletnog log-a (svih log-ova iz baze)
+  - **All messages** - prikaz svih log-ova sa svih topic-a
+- **Poruke:**
+  - Dodata opcija za filtrirani pregled poruka (filter po vremenu unazad u minutima)
+- **Sistem alarmiranja:**
+  - Dodat **sistem alarmiranja** koji prati vrednosti na odredjenim topics-ima
+  - **Alarme** kreira **admin** i oni se za svaki topic cuvaju u bazi
+  - Postoje 3 vrste alarma:
+    - **Alarm** koji prati samo odstupanje vrednosti **ispod minimalne granice**
+    - **Alarm** koji prati samo odstupanje vrednosti **iznad maksimalne granice**
+    - **Alarm** koji prati odstupanje vrednosti **izvan obe granice**
+  - Kada se **alarm aktivira** zapisuje se u **logu** i u samom **entitetu poruke**
+  - Dodata nova kolona za **MqttMessage** - **AlarmType**
+  - Dodata nova tabela - **Alarm**
+
 ### **-= Verzija 0.26.10.12.1 =-**
 
 - **User authentication:**
