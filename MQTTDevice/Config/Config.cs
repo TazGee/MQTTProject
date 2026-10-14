@@ -11,6 +11,7 @@ public class Config
     public string ServerIP { get; set; }
     public int ServerPort { get; set; }
     public uint ReconnectTimer { get; set; }
+    public float VrednostSimulatora { get; set; }
 
     public static Config Load()
     {

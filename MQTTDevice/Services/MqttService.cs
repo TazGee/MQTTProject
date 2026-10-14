@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using MQTTDevice.Domain.Services;
 using MQTTGitProject.Config;
 using MQTTnet;
@@ -10,6 +11,9 @@ public class MqttService : IMqttService
     private bool connected = false;
     private bool reconnecting = false;
     private IMqttClient client;
+    
+    public float VrednostSimulatora { get; set; }
+    public string DeviceValueTopic { get; set; }
 
     public async Task InitializeService(Config config)
     {
@@ -23,6 +27,19 @@ public class MqttService : IMqttService
                 .Build();
             
             await TryToConnect(options, config);
+            
+            client.ApplicationMessageReceivedAsync += async e =>
+            {
+                try
+                {
+                    VrednostSimulatora = float.Parse(e.ApplicationMessage.ConvertPayloadToString());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Greska pri ucitavanju pristigle vrednosti: {ex.Message}");
+                    throw;
+                }
+            };
             
             client.DisconnectedAsync += async e =>
             {
@@ -68,7 +85,16 @@ public class MqttService : IMqttService
                 await Task.Delay(TimeSpan.FromSeconds(config.ReconnectTimer));
             }
         } while (!client.IsConnected);
-            
+
+        try
+        {
+            await SubscribeAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Greska pri pretplati: {e.Message}");
+        }
+        
         Console.WriteLine("\nPovezivanje uspesno!");
     }
     
@@ -89,6 +115,34 @@ public class MqttService : IMqttService
         {
             Console.WriteLine($"Greska pri slanju poruke: {e.Message}");
         }
-            
+    }
+    
+    public async Task SubscribeAsync()
+    {
+        try
+        {
+            var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
+                .WithTopicFilter(DeviceValueTopic)
+                .Build();
+        
+            MqttClientSubscribeResult result = await client.SubscribeAsync(subscribeOptions);
+        
+            foreach (var item in result.Items)
+            {
+                var success = item.ResultCode is
+                    MqttClientSubscribeResultCode.GrantedQoS0 or
+                    MqttClientSubscribeResultCode.GrantedQoS1 or
+                    MqttClientSubscribeResultCode.GrantedQoS2;
+
+                if (!success)
+                {
+                    throw new Exception("Nije moguce pretplatiti se na topic. Probajte da uneseti drugi topic ili probajte ponovo.");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Nije moguce pretplatiti se na topic. Probajte da uneseti drugi topic ili probajte ponovo. {e.Message}");
+        }
     }
 }

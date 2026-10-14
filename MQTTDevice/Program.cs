@@ -11,7 +11,8 @@ class Program
     
     private static int refreshTime = -1;
     private static string topic;
-    private static int minValue, maxValue;
+    private static int izbor = -1;
+    private static float vrednostZaSlanje;
 
     private static IMqttService service = new MqttService();
     
@@ -24,9 +25,14 @@ class Program
         Console.WriteLine("- = == MQTT DEVICE SELECTOR == = -\n");
 
         ProcessInput(config);
-        await service.InitializeService(config);
+
+        service.DeviceValueTopic = topic + "/updateValue";
         
-        await RunLoop();
+        await service.InitializeService(config);
+
+        service.VrednostSimulatora = config.VrednostSimulatora;
+        
+        await RunLoop(config);
     }
 
     static void ProcessInput(Config config)
@@ -47,59 +53,31 @@ class Program
             catch { }
         } while (String.IsNullOrEmpty(topic));
         
+        Console.WriteLine("Topic na koji ce vam admin slati azuriranja vrednosti:");
+        Console.WriteLine(topic);
+        
+        
         do
         {
             try
             {
-                Console.Write("Unesite (u sekundama) vreme osvezavanja (min 2, max 10): ");
+                Console.Write("Unesite (u sekundama) vreme osvezavanja (min 2, max 60): ");
                 refreshTime = int.Parse(Console.ReadLine());
             }
             catch { }
-        } while (refreshTime < 2 || refreshTime > 10);
-
-        do
-        {
-            bool uspeo = false;
-            do
-            {
-                try
-                {
-                    Console.Write("Unesite minimalnu vrednost: ");
-                    minValue = int.Parse(Console.ReadLine());
-                    uspeo = true;
-                }
-                catch
-                {
-                }
-            } while (!uspeo);
-
-            uspeo = false;
-            do
-            {
-                try
-                {
-                    Console.Write("Unesite maksimalnu vrednost: ");
-                    maxValue = int.Parse(Console.ReadLine());
-                    uspeo = true;
-                }
-                catch
-                {
-                }
-            } while (!uspeo);
-        } while (minValue >= maxValue);
+        } while (refreshTime < 2 || refreshTime > 60);
     }
     
-    static async Task RunLoop()
+    static async Task RunLoop(Config config)
     {
         while (true)
         {
             Console.WriteLine($"Refresh - Nova vrednost - {DateTime.Now:HH:mm:ss}");
 
-            float value = (float)minValue + (float)(random.NextDouble() * (maxValue - minValue));
-            Console.WriteLine($"{topic}: {value}");
+            vrednostZaSlanje = service.VrednostSimulatora;
+            Console.WriteLine($"{topic}: {vrednostZaSlanje}");
 
-            await service.PublishMessageAsync(topic, value.ToString());
-            
+            await service.PublishMessageAsync(topic, vrednostZaSlanje.ToString());
             await Task.Delay(TimeSpan.FromSeconds(refreshTime));
         }
     }
