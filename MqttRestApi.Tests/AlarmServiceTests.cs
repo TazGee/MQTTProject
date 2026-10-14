@@ -40,6 +40,20 @@ public class AlarmServiceTests
 
         Assert.Equal(0, await db.Alarms.CountAsync());
     }
+    
+    [Fact]
+    public async Task CreateTwoAlarms_SameTopic_ThrowsBadRequest()
+    {
+        var (svc, db, _) = Create();
+        var topicId = await SeedTopic(db);
+
+        await svc.CreateAlarm(new CreateAlarmDto(topicId, AlarmTypes.Both, 10, 30));
+
+        await Assert.ThrowsAsync<BadRequestException>(() =>
+            svc.CreateAlarm(new CreateAlarmDto(topicId, AlarmTypes.Both, 5, 50)));
+
+        Assert.Equal(1, await db.Alarms.CountAsync());
+    }
 
     [Theory]
     [InlineData(30, 10)]

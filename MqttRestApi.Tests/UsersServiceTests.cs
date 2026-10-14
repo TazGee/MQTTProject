@@ -91,6 +91,14 @@ public class UsersServiceTests
     }
 
     [Fact]
+    public async Task ChangeRole_AdminChangesHisRole_ThrowsBadRequest()
+    {
+        var (svc, _) = Create();
+
+        await Assert.ThrowsAsync<NotFoundException>(() => svc.ChangeRole(1, 1, UserTypes.Admin));
+    }
+    
+    [Fact]
     public async Task ChangeRole_Valid_UpdatesRole()
     {
         var (svc, db) = Create();

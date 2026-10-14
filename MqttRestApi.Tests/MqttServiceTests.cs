@@ -284,11 +284,13 @@ public class MqttServiceTests
         Assert.Equal(t1, result[0].TopicId);
     }
 
-    [Fact]
-    public async Task GetMessages_ReturnsOnlyMessagesMatchingUserSubscriptions()
+    [Theory]
+    [InlineData("kuca/#")]
+    [InlineData("kuca/+/temperatura")]
+    public async Task GetMessages_ReturnsOnlyMessagesMatchingUserSubscriptions(string value)
     {
         var f = CreateService();
-        await SubscribeUserToTopic(f, "kuca/#", 1);
+        await SubscribeUserToTopic(f, value, 1);
 
         await f.WithDb(async db =>
         {
@@ -397,6 +399,44 @@ public class MqttServiceTests
     }
 
     [Fact]
+    public async Task ResubscribeToFailed_BrokerAcceptsLater_ReturnsSuccessAndClearsFailedList()
+    {
+        var f = CreateService();
+        await SubscribeTopic(f, "kuca/test");
+        
+        f.Client
+            .Setup(c => c.SubscribeAsync(It.IsAny<MqttClientSubscribeOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new MqttClientSubscribeResult(
+                0,
+                new List<MqttClientSubscribeResultItem>
+                {
+                    new(new MqttTopicFilter { Topic = "x" }, MqttClientSubscribeResultCode.NotAuthorized)
+                },
+                "denied",
+                new List<MqttUserProperty>()));
+
+        await f.Service.ResubscribeToAll();
+        Assert.Single(f.Service.GetFailedTopics());
+        
+        f.Client
+            .Setup(c => c.SubscribeAsync(It.IsAny<MqttClientSubscribeOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new MqttClientSubscribeResult(
+                0,
+                new List<MqttClientSubscribeResultItem>
+                {
+                    new(new MqttTopicFilter { Topic = "x" }, MqttClientSubscribeResultCode.GrantedQoS0)
+                },
+                string.Empty,
+                new List<MqttUserProperty>()));
+
+        var results = await f.Service.ResubscribeToFailed();
+
+        Assert.Single(results);
+        Assert.Equal("Uspesan resubscribe na kuca/test!", results[0]);
+        Assert.Empty(f.Service.GetFailedTopics());
+    }
+    
+    [Fact]
     public async Task ForceReconnect_WhenNotConnected_ConnectsAndResubscribes()
     {
         var f = CreateService();
@@ -429,13 +469,15 @@ public class MqttServiceTests
     }
 
     [Fact]
-    public async Task DeviceSuggestValueChange_NotConnected_ThrowsBadRequestAndDoesNotPublish()
+    public async Task DeviceSuggestValueChange_NotConnected_DoesNotPublish()
     {
         var f = CreateService();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => f.Service.DeviceSuggestValueChange("kuca/soba/temperatura/updateValue", 22.5f));
+        await Assert.ThrowsAsync<BadRequestException>(() =>
+            f.Service.DeviceSuggestValueChange("kuca/test", 1f));
 
-        f.Client.Verify(c => c.PublishAsync(It.IsAny<MqttApplicationMessage>(), It.IsAny<CancellationToken>()), Times.Never);
+        f.Client.Verify(c => c.PublishAsync(It.IsAny<MqttApplicationMessage>(),
+            It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -460,7 +502,7 @@ public class MqttServiceTests
                 .ThrowsAsync(new Exception("greska"));
 
         await Assert.ThrowsAsync<BadRequestException>(() =>
-            f.Service.DeviceSuggestValueChange("kuca/test/updateValue", 1f));
+            f.Service.DeviceSuggestValueChange("kuca/test", 1f));
     }
 
     private static async Task RaiseMessage(Fixture f, string topic, string payload)
@@ -585,6 +627,28 @@ public class MqttServiceTests
         Assert.Equal(ValueAlarmTypes.NONE, saved.AlarmType);
     }
 
+    [Fact]
+    public async Task MessageHandler_AlarmOnTopic_NonNumericPayload_SavesWithoutAlarmAndNotifiesHub()
+    {
+        var f = CreateService();
+        await SeedTopicWithAlarm(f, "kuca/soba/temperatura", AlarmTypes.Both, 10, 30);
+
+        await RaiseMessage(f, "kuca/soba/temperatura", "nije broj");
+
+        var saved = await f.WithDb(db => db.Messages.SingleAsync());
+        Assert.Equal("nije broj", saved.Payload);
+        Assert.Equal(ValueAlarmTypes.NONE, saved.AlarmType);
+
+        f.HubProxy.Verify(p => p.SendCoreAsync("Message",
+            It.Is<object?[]>(a => (string)a[0]! == "kuca/soba/temperatura"
+                                  && (string)a[1]! == "nije broj"
+                                  && (string)a[2]! == "NONE"),
+            It.IsAny<CancellationToken>()), Times.Once);
+        f.Redis.Verify(r => r.SaveMessageAsync(It.IsAny<MqttMessage>()), Times.Once);
+        f.Logger.Verify(l => l.LogMessage(It.IsAny<string>(), LogTypes.ALARM_HIGH), Times.Never);
+        f.Logger.Verify(l => l.LogMessage(It.IsAny<string>(), LogTypes.ALARM_LOW), Times.Never);
+    }
+    
     [Fact]
     public async Task MessageHandler_AlarmOnOtherTopic_DoesNotAffectMessage()
     {
