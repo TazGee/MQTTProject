@@ -516,12 +516,12 @@ public class MqttService : IMqttService
     
     public async Task DeviceSuggestValueChange(string topic, float payload)
     {
-        if(!connected) return;
+        if(!connected) throw new BadRequestException("Backend nije povezan na broker!");
         
         try
         {
             var message = new MqttApplicationMessageBuilder()
-                .WithTopic(topic)
+                .WithTopic(topic + "/updateValue")
                 .WithPayload(payload.ToString())
                 .Build();
 
