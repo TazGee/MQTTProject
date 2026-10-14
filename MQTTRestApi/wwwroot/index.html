@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <title>MQTT poruke uživo</title>
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 2rem; background: #f5f6f8; color: #222; }
+        h1 { margin-bottom: .25rem; }
+        #status { display: inline-block; padding: .2rem .6rem; border-radius: 999px; font-size: .85rem; background: #ccc; }
+        #status.on { background: #c8f0cf; }
+        #status.off { background: #f5c6c6; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+        th, td { padding: .5rem .75rem; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #fafafa; position: sticky; top: 0; }
+        tr.ALARM_HIGH td { background: #fde2e2; font-weight: 600; }
+        tr.ALARM_LOW td { background: #fff1d6; font-weight: 600; }
+        .tag { padding: .1rem .5rem; border-radius: 4px; font-size: .8rem; background: #e8eaed; }
+        .ALARM_HIGH .tag { background: #e53935; color: #fff; }
+        .ALARM_LOW .tag { background: #fb8c00; color: #fff; }
+    </style>
+</head>
+<body>
+<h1>MQTT poruke uživo</h1>
+<span id="status">povezivanje...</span>
+
+<table>
+    <thead>
+    <tr><th>Vreme</th><th>Topic</th><th>Vrednost</th><th>Tip</th></tr>
+    </thead>
+    <tbody id="messages"></tbody>
+</table>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+<script>
+    const MAX_ROWS = 200;
+    const statusEl = document.getElementById("status");
+    const body = document.getElementById("messages");
+
+    function setStatus(text, cls) {
+        statusEl.textContent = text;
+        statusEl.className = cls;
+    }
+
+    function addRow(topic, payload, type) {
+        const tr = document.createElement("tr");
+        if (type && type !== "NONE") tr.className = type;
+
+        [new Date().toLocaleTimeString(), topic, payload].forEach(text => {
+            const td = document.createElement("td");
+            td.textContent = text;
+            tr.appendChild(td);
+        });
+
+        const tdType = document.createElement("td");
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = type;
+        tdType.appendChild(tag);
+        tr.appendChild(tdType);
+
+        body.prepend(tr);
+        while (body.rows.length > MAX_ROWS) body.deleteRow(-1);
+    }
+
+    const conn = new signalR.HubConnectionBuilder()
+        .withUrl("http://localhost:5000/hubs/messages")
+        .withAutomaticReconnect()
+        .build();
+
+    conn.on("Message", (topic, payload, type) => {
+        console.log("Poruka:", topic, payload, type);
+        addRow(topic, payload, type);
+    });
+
+    conn.onreconnecting(() => setStatus("ponovno povezivanje...", ""));
+    conn.onreconnected(() => setStatus("povezan", "on"));
+    conn.onclose(() => setStatus("prekinuto", "off"));
+
+    conn.start()
+        .then(() => setStatus("povezan", "on"))
+        .catch(err => { console.error(err); setStatus("greška", "off"); });
+</script>
+</body>
+</html>
