@@ -429,14 +429,13 @@ public class MqttServiceTests
     }
 
     [Fact]
-    public async Task DeviceSuggestValueChange_NotConnected_DoesNotPublish()
+    public async Task DeviceSuggestValueChange_NotConnected_ThrowsBadRequestAndDoesNotPublish()
     {
         var f = CreateService();
 
-        await f.Service.DeviceSuggestValueChange("kuca/soba/temperatura/updateValue", 22.5f);
+        await Assert.ThrowsAsync<BadRequestException>(() => f.Service.DeviceSuggestValueChange("kuca/soba/temperatura/updateValue", 22.5f));
 
-        f.Client.Verify(c => c.PublishAsync(It.IsAny<MqttApplicationMessage>(),
-            It.IsAny<CancellationToken>()), Times.Never);
+        f.Client.Verify(c => c.PublishAsync(It.IsAny<MqttApplicationMessage>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -445,7 +444,7 @@ public class MqttServiceTests
         var f = CreateService();
         await f.Service.ForceReconnect();
 
-        await f.Service.DeviceSuggestValueChange("kuca/test/updateValue", 22.5f);
+        await f.Service.DeviceSuggestValueChange("kuca/test", 22.5f);
 
         f.Client.Verify(c => c.PublishAsync(
             It.Is<MqttApplicationMessage>(m => m.Topic == "kuca/test/updateValue"),
