@@ -25,7 +25,7 @@ public class AuthService : IAuthService
         var user = await dbContext.Users
             .FirstOrDefaultAsync(u => u.Username == username);
 
-        if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
+        if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
         {
             await logger.LogMessage($"Neko je probao da se uloguje na {username} i nije uspeo!", LogTypes.AUTH);
             throw new BadRequestException("Username ili password nisu dobri!");
