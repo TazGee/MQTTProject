@@ -22,12 +22,12 @@ public class LogControllerTests
     [Fact]
     public async Task GetAllLogs_ReturnsOkWithLogsFromService()
     {
-        var svc = new Mock<ILoggerService>();
+        var service = new Mock<ILoggerService>();
         var logs = new List<Log> { new("poruka", LogTypes.INFO) };
-        svc.Setup(s => s.GetLogs()).ReturnsAsync(logs);
-        var ctrl = new LogController(svc.Object);
+        service.Setup(s => s.GetLogs()).ReturnsAsync(logs);
+        var controller = new LogController(service.Object);
 
-        var result = await ctrl.MyTopics();
+        var result = await controller.MyTopics();
 
         Assert.Same(logs, Assert.IsType<OkObjectResult>(result).Value);
     }

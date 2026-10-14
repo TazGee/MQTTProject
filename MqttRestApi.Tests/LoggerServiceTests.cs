@@ -12,10 +12,10 @@ public class LoggerServiceTests
         var db = TestHelpers.CreateDb();
         var svc = new LoggerService(db);
 
-        await svc.LogMessage("Test poruka", LogTypes.INFO);
+        await svc.LogMessage("Test", LogTypes.INFO);
 
         var log = await db.Logs.SingleAsync();
-        Assert.Equal("Test poruka", log.Message);
+        Assert.Equal("Test", log.Message);
         Assert.Equal(LogTypes.INFO, log.Type);
     }
 
@@ -23,32 +23,32 @@ public class LoggerServiceTests
     public async Task GetLogs_ReturnsAllSavedLogs()
     {
         var db = TestHelpers.CreateDb();
-        var svc = new LoggerService(db);
-        await svc.LogMessage("prva", LogTypes.INFO);
-        await svc.LogMessage("druga", LogTypes.ERROR);
+        var service = new LoggerService(db);
+        await service.LogMessage("test1", LogTypes.INFO);
+        await service.LogMessage("test2", LogTypes.ERROR);
 
-        var logs = await svc.GetLogs();
+        var logs = await service.GetLogs();
 
         Assert.Equal(2, logs.Count);
-        Assert.Contains(logs, l => l.Message == "prva");
-        Assert.Contains(logs, l => l.Message == "druga");
+        Assert.Contains(logs, l => l.Message == "test1");
+        Assert.Contains(logs, l => l.Message == "test2");
     }
 
     [Fact]
     public async Task GetLogs_NoLogs_ReturnsEmptyList()
     {
-        var svc = new LoggerService(TestHelpers.CreateDb());
+        var service = new LoggerService(TestHelpers.CreateDb());
 
-        Assert.Empty(await svc.GetLogs());
+        Assert.Empty(await service.GetLogs());
     }
 
     [Fact]
     public async Task LogMessage_DisposedContext_RethrowsException()
     {
         var db = TestHelpers.CreateDb();
-        var svc = new LoggerService(db);
+        var service = new LoggerService(db);
         await db.DisposeAsync();
 
-        await Assert.ThrowsAnyAsync<Exception>(() => svc.LogMessage("x", LogTypes.INFO));
+        await Assert.ThrowsAnyAsync<Exception>(() => service.LogMessage("x", LogTypes.INFO));
     }
 }

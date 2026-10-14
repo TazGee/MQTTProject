@@ -33,13 +33,13 @@ public class UserControllerTests
     public async Task Login_ValidCredentials_ReturnsToken()
     {
         var (ctrl, auth, _, tokens) = Create();
-        auth.Setup(a => a.Login("pera", "tajna123"))
-            .ReturnsAsync(new UserInfoDto { Id = 4, Username = "pera", Role = UserTypes.Admin });
+        auth.Setup(a => a.Login("test", "test123"))
+            .ReturnsAsync(new UserInfoDto { Id = 4, Username = "test", Role = UserTypes.Admin });
 
-        var result = await ctrl.Login(new LoginDto("pera", "tajna123"), tokens.Object);
+        var result = await ctrl.Login(new LoginDto("test", "test123"), tokens.Object);
 
         Assert.Equal("jwt-token", TokenOf(result));
-        tokens.Verify(t => t.CreateToken("4", "pera", UserTypes.Admin.ToString()), Times.Once);
+        tokens.Verify(t => t.CreateToken("4", "test", UserTypes.Admin.ToString()), Times.Once);
     }
 
     [Fact]
@@ -58,20 +58,20 @@ public class UserControllerTests
     {
         var (ctrl, auth, _, tokens) = Create();
         auth.Setup(a => a.Register(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<UserTypes>()))
-            .ReturnsAsync(new UserInfoDto { Id = 9, Username = "pera", Role = UserTypes.Admin });
+            .ReturnsAsync(new UserInfoDto { Id = 9, Username = "test", Role = UserTypes.Admin });
 
         var result = await ctrl.Register(
-            new RegisterDto("pera", "tajna123"), tokens.Object);
+            new RegisterDto("test", "test123"), tokens.Object);
 
         Assert.Equal("jwt-token", TokenOf(result));
-        tokens.Verify(t => t.CreateToken("9", "pera", UserTypes.Admin.ToString()), Times.Once);
+        tokens.Verify(t => t.CreateToken("9", "test", UserTypes.Admin.ToString()), Times.Once);
     }
 
     [Fact]
     public async Task ChangePassword_UsesUserIdFromClaims()
     {
         var (ctrl, _, users, _) = Create(userId: 42);
-        var dto = new ChangePasswordDto { OldPassword = "stara", NewPassword = "nova12345" };
+        var dto = new ChangePasswordDto { OldPassword = "stara", NewPassword = "nova123" };
 
         var result = await ctrl.ChangePassword(dto);
 
@@ -94,7 +94,7 @@ public class UserControllerTests
     public void ListUsers_ReturnsUsersFromService()
     {
         var (ctrl, _, users, _) = Create();
-        var list = new List<UserInfoDto> { new() { Id = 1, Username = "pera", Role = UserTypes.Admin } };
+        var list = new List<UserInfoDto> { new() { Id = 1, Username = "test", Role = UserTypes.Admin } };
         users.Setup(u => u.GetUsers()).Returns(list);
 
         var result = ctrl.ListUsers();

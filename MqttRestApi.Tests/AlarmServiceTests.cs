@@ -13,7 +13,7 @@ namespace MqttRestApi.Tests;
 
 public class AlarmServiceTests
 {
-    private static (AlarmService svc, AppDbContext db, Mock<ILoggerService> logger) Create()
+    private static (AlarmService service, AppDbContext db, Mock<ILoggerService> logger) Create()
     {
         var db = TestHelpers.CreateDb();
         var logger = new Mock<ILoggerService>();

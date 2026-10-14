@@ -12,10 +12,10 @@ namespace MqttRestApi.Tests;
 
 public class AlarmControllerTests
 {
-    private static (AlarmController ctrl, Mock<IAlarmService> svc) Create()
+    private static (AlarmController controller, Mock<IAlarmService> service) Create()
     {
-        var svc = new Mock<IAlarmService>();
-        return (new AlarmController(svc.Object), svc);
+        var service = new Mock<IAlarmService>();
+        return (new AlarmController(service.Object), service);
     }
 
     [Fact]
@@ -30,11 +30,11 @@ public class AlarmControllerTests
     [Fact]
     public async Task CreateAlarm_CallsServiceAndReturnsOk()
     {
-        var (ctrl, svc) = Create();
+        var (controller, service) = Create();
 
-        var result = await ctrl.CreateAlarm(new CreateAlarmDto(3, AlarmTypes.Both, 10, 30));
+        var result = await controller.CreateAlarm(new CreateAlarmDto(3, AlarmTypes.Both, 10, 30));
 
-        svc.Verify(s => s.CreateAlarm(It.Is<CreateAlarmDto>(d =>
+        service.Verify(s => s.CreateAlarm(It.Is<CreateAlarmDto>(d =>
             d.topicID == 3 && d.AlarmType == AlarmTypes.Both &&
             d.lowerLimit == 10 && d.upperLimit == 30)), Times.Once);
     }
@@ -42,21 +42,21 @@ public class AlarmControllerTests
     [Fact]
     public async Task DeleteAlarm_CallsServiceAndReturnsOk()
     {
-        var (ctrl, svc) = Create();
+        var (controller, service) = Create();
 
-        var result = await ctrl.DeleteAlarm(5);
+        var result = await controller.DeleteAlarm(5);
 
-        svc.Verify(s => s.DeleteAlarm(5), Times.Once);
+        service.Verify(s => s.DeleteAlarm(5), Times.Once);
         Assert.Equal("Uspesno obrisan alarm!", Assert.IsType<OkObjectResult>(result).Value);
     }
 
     [Fact]
     public async Task GetAllAlarms_Empty_ReturnsMessage()
     {
-        var (ctrl, svc) = Create();
-        svc.Setup(s => s.GetAllAlarms()).ReturnsAsync(new List<AlarmDto>());
+        var (controller, service) = Create();
+        service.Setup(s => s.GetAllAlarms()).ReturnsAsync(new List<AlarmDto>());
 
-        var result = await ctrl.GetAllAlarms();
+        var result = await controller.GetAllAlarms();
 
         Assert.Equal("Lista alarma je prazna!", Assert.IsType<OkObjectResult>(result).Value);
     }
@@ -64,11 +64,11 @@ public class AlarmControllerTests
     [Fact]
     public async Task GetAllAlarms_NotEmpty_ReturnsList()
     {
-        var (ctrl, svc) = Create();
+        var (controller, service) = Create();
         var list = new List<AlarmDto> { new (1, 1, AlarmTypes.Both, 10, 30, DateTime.Now) };
-        svc.Setup(s => s.GetAllAlarms()).ReturnsAsync(list);
+        service.Setup(s => s.GetAllAlarms()).ReturnsAsync(list);
 
-        var result = await ctrl.GetAllAlarms();
+        var result = await controller.GetAllAlarms();
 
         Assert.Same(list, Assert.IsType<OkObjectResult>(result).Value);
     }
@@ -76,10 +76,10 @@ public class AlarmControllerTests
     [Fact]
     public async Task GetAllAlarmedMessages_Empty_ReturnsMessage()
     {
-        var (ctrl, svc) = Create();
-        svc.Setup(s => s.GetAllAlarmedMessages()).ReturnsAsync(new List<MqttMessageDto>());
+        var (controller, service) = Create();
+        service.Setup(s => s.GetAllAlarmedMessages()).ReturnsAsync(new List<MqttMessageDto>());
 
-        var result = await ctrl.GetAllAlarmedMessages();
+        var result = await controller.GetAllAlarmedMessages();
 
         Assert.Equal("Lista poruka je prazna!", Assert.IsType<OkObjectResult>(result).Value);
     }
@@ -87,14 +87,14 @@ public class AlarmControllerTests
     [Fact]
     public async Task GetAllAlarmedMessages_NotEmpty_ReturnsList()
     {
-        var (ctrl, svc) = Create();
+        var (controller, service) = Create();
         var list = new List<MqttMessageDto>
         {
             new(1, "kuca/test", "35", MqttQualityOfServiceLevel.AtMostOnce, false, DateTime.Now, ValueAlarmTypes.ALARM_HIGH)
         };
-        svc.Setup(s => s.GetAllAlarmedMessages()).ReturnsAsync(list);
+        service.Setup(s => s.GetAllAlarmedMessages()).ReturnsAsync(list);
 
-        var result = await ctrl.GetAllAlarmedMessages();
+        var result = await controller.GetAllAlarmedMessages();
 
         Assert.Same(list, Assert.IsType<OkObjectResult>(result).Value);
     }

@@ -38,11 +38,11 @@ public class UsersServiceTests
     public async Task ChangePassword_WrongOldPassword_ThrowsAndKeepsOldHash()
     {
         var (svc, db) = Create();
-        var user = await SeedUser(db, "pera", "stara123");
+        var user = await SeedUser(db, "test", "test123");
         var oldHash = user.Password;
 
         await Assert.ThrowsAsync<BadRequestException>(() =>
-            svc.ChangePassword(user.Id, new ChangePasswordDto { OldPassword = "pogresna", NewPassword = "nova12345" }));
+            svc.ChangePassword(user.Id, new ChangePasswordDto { OldPassword = "pogresna", NewPassword = "nova123" }));
 
         Assert.Equal(oldHash, (await db.Users.FindAsync(user.Id))!.Password);
     }
@@ -51,27 +51,27 @@ public class UsersServiceTests
     public async Task ChangePassword_Valid_StoresNewHash()
     {
         var (svc, db) = Create();
-        var user = await SeedUser(db, "pera", "stara123");
+        var user = await SeedUser(db, "test", "test123");
 
-        await svc.ChangePassword(user.Id, new ChangePasswordDto { OldPassword = "stara123", NewPassword = "nova12345" });
+        await svc.ChangePassword(user.Id, new ChangePasswordDto { OldPassword = "test123", NewPassword = "nova123" });
 
         var saved = await db.Users.FindAsync(user.Id);
-        Assert.True(BCrypt.Net.BCrypt.Verify("nova12345", saved!.Password));
-        Assert.False(BCrypt.Net.BCrypt.Verify("stara123", saved.Password));
+        Assert.True(BCrypt.Net.BCrypt.Verify("nova123", saved!.Password));
+        Assert.False(BCrypt.Net.BCrypt.Verify("test123", saved.Password));
     }
 
     [Fact]
     public async Task GetUsers_ReturnsAllUsersWithoutPasswords()
     {
         var (svc, db) = Create();
-        await SeedUser(db, "pera", "x12345678");
-        await SeedUser(db, "mika", "y12345678");
+        await SeedUser(db, "test1", "t12345");
+        await SeedUser(db, "test2", "t2345678");
 
         var result = svc.GetUsers();
 
         Assert.Equal(2, result.Count);
-        Assert.Contains(result, u => u.Username == "pera");
-        Assert.Contains(result, u => u.Username == "mika");
+        Assert.Contains(result, u => u.Username == "test1");
+        Assert.Contains(result, u => u.Username == "test2");
     }
 
     [Fact]
@@ -94,7 +94,7 @@ public class UsersServiceTests
     public async Task ChangeRole_Valid_UpdatesRole()
     {
         var (svc, db) = Create();
-        var user = await SeedUser(db, "pera", "x12345678", UserTypes.Admin);
+        var user = await SeedUser(db, "test1", "t12345", UserTypes.Admin);
         var otherRole = Enum.GetValues<UserTypes>().First(r => r != UserTypes.Admin);
 
         await svc.ChangeRole(500, user.Id, otherRole);

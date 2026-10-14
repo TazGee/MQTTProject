@@ -136,8 +136,7 @@ public class MqttServiceTests
 
         await Assert.ThrowsAsync<BadRequestException>(() => f.Service.SubscribeAsync(topic));
 
-        f.Client.Verify(c => c.SubscribeAsync(It.IsAny<MqttClientSubscribeOptions>(),
-            It.IsAny<CancellationToken>()), Times.Never);
+        f.Client.Verify(c => c.SubscribeAsync(It.IsAny<MqttClientSubscribeOptions>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -147,8 +146,7 @@ public class MqttServiceTests
 
         await f.Service.SubscribeAsync("kuca/soba/temperatura");
 
-        f.Client.Verify(c => c.SubscribeAsync(It.IsAny<MqttClientSubscribeOptions>(),
-            It.IsAny<CancellationToken>()), Times.Once);
+        f.Client.Verify(c => c.SubscribeAsync(It.IsAny<MqttClientSubscribeOptions>(), It.IsAny<CancellationToken>()), Times.Once);
         Assert.True(await f.WithDb(db => db.Topics.AnyAsync(t => t.Name == "kuca/soba/temperatura")));
     }
 
@@ -168,8 +166,7 @@ public class MqttServiceTests
     {
         var f = CreateService();
         f.Client
-            .Setup(c => c.SubscribeAsync(It.IsAny<MqttClientSubscribeOptions>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new MqttClientSubscribeResult(
+            .Setup(c => c.SubscribeAsync(It.IsAny<MqttClientSubscribeOptions>(), It.IsAny<CancellationToken>())).ReturnsAsync(new MqttClientSubscribeResult(
                 0,
                 new List<MqttClientSubscribeResultItem>
                 {
@@ -297,7 +294,7 @@ public class MqttServiceTests
         {
             db.Messages.AddRange(
                 Msg("kuca/soba/temperatura", "20", DateTime.Now),
-                Msg("kuca/kuhinja/vlaznost", "40", DateTime.Now),
+                Msg("kuca/kuhinja/temperatura", "24", DateTime.Now),
                 Msg("garaza/vrata", "1", DateTime.Now));
             await db.SaveChangesAsync();
         });
@@ -426,8 +423,7 @@ public class MqttServiceTests
     public async Task ForceReconnect_ConnectFails_ThrowsBadRequest()
     {
         var f = CreateService();
-        f.Client.Setup(c => c.ConnectAsync(It.IsAny<MqttClientOptions>(), It.IsAny<CancellationToken>()))
-                .ThrowsAsync(new Exception("nema brokera"));
+        f.Client.Setup(c => c.ConnectAsync(It.IsAny<MqttClientOptions>(), It.IsAny<CancellationToken>())).ThrowsAsync(new Exception("nema brokera"));
 
         await Assert.ThrowsAsync<BadRequestException>(() => f.Service.ForceReconnect());
     }
