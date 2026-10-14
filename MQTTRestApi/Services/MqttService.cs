@@ -524,7 +524,7 @@ public class MqttService : IMqttService
                 .WithTopic(topic + "/updateValue")
                 .WithPayload(payload.ToString())
                 .Build();
-
+            
             await mqttClient.PublishAsync(message);
         }
         catch (Exception e)

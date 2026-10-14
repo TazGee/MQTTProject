@@ -1,25 +1,22 @@
 ﻿using System.Text.RegularExpressions;
 using MQTTDevice.Domain.Services;
 using MQTTDevice.Services;
-using MQTTGitProject.Config;
+using MQTTDevice.Config;
 
 namespace MQTTDevice;
 
 class Program
 {
-    static Random random = new Random();
-    
     private static int refreshTime = -1;
     private static string topic;
     private static int izbor = -1;
-    private static float vrednostZaSlanje;
 
     private static IMqttService service = new MqttService();
     
     static async Task Main(string[] args)
     {
-        Config config = Config.Load();
-        Console.WriteLine(config.ServerIP +  ":" + config.ServerPort);
+        Config.Config config = Config.Config.Load();
+        Console.WriteLine(config.ServerIp +  ":" + config.ServerPort);
         
         Console.WriteLine($"00========--------------=======00");
         Console.WriteLine("- = == MQTT DEVICE SELECTOR == = -\n");
@@ -35,7 +32,7 @@ class Program
         await RunLoop(config);
     }
 
-    static void ProcessInput(Config config)
+    static void ProcessInput(Config.Config config)
     {
         do
         {
@@ -56,7 +53,6 @@ class Program
         Console.WriteLine("Topic na koji ce vam admin slati azuriranja vrednosti:");
         Console.WriteLine(topic);
         
-        
         do
         {
             try
@@ -68,16 +64,14 @@ class Program
         } while (refreshTime < 2 || refreshTime > 60);
     }
     
-    static async Task RunLoop(Config config)
+    static async Task RunLoop(Config.Config config)
     {
         while (true)
         {
             Console.WriteLine($"Refresh - Nova vrednost - {DateTime.Now:HH:mm:ss}");
+            Console.WriteLine($"{topic}: {service.VrednostSimulatora}");
 
-            vrednostZaSlanje = service.VrednostSimulatora;
-            Console.WriteLine($"{topic}: {vrednostZaSlanje}");
-
-            await service.PublishMessageAsync(topic, vrednostZaSlanje.ToString());
+            await service.PublishMessageAsync(topic);
             await Task.Delay(TimeSpan.FromSeconds(refreshTime));
         }
     }

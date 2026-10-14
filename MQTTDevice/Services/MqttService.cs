@@ -8,9 +8,9 @@ public class MqttService : IMqttService
     private bool connected = false;
     private bool reconnecting = false;
     private IMqttClient client;
-    
-    public float VrednostSimulatora { get; set; }
-    public string DeviceValueTopic { get; set; }
+
+    public float VrednostSimulatora { get; set; } = 0f;
+    public string DeviceValueTopic { get; set; } = String.Empty;
 
     public async Task InitializeService(Config.Config config)
     {
@@ -96,7 +96,7 @@ public class MqttService : IMqttService
         Console.WriteLine("\nPovezivanje uspesno!");
     }
     
-    public async Task PublishMessageAsync(string topic, string payload)
+    public async Task PublishMessageAsync(string topic)
     {
         if(!connected)
         {
@@ -108,7 +108,7 @@ public class MqttService : IMqttService
         {
             var message = new MqttApplicationMessageBuilder()
                 .WithTopic(topic)
-                .WithPayload(payload)
+                .WithPayload(VrednostSimulatora.ToString())
                 .Build();
 
             await client.PublishAsync(message);

@@ -7,6 +7,7 @@ namespace MQTTDevice.Config;
 /// </summary>
 public class Config
 {
+    public string PublishRegex { get; set; }
     public string ServerIp { get; set; } = "127.0.0.1";
     public int ServerPort { get; set; } = 1883;
     public uint ReconnectTimer { get; set; } = 3;

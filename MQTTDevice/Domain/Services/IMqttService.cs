@@ -5,7 +5,8 @@ namespace MQTTDevice.Domain.Services;
 public interface IMqttService
 {
     float VrednostSimulatora { get; set; }
-    Task PublishMessageAsync(string topic, string message);
+    string DeviceValueTopic { get; set; }
+    Task PublishMessageAsync(string topic);
     Task InitializeService(Config.Config config);
-    Task SubscribeAsync(string topic);
+    Task SubscribeAsync();
 }
