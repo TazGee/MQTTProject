@@ -1,0 +1,159 @@
+body 
+{ 
+    font-family: system-ui, sans-serif; 
+    margin: 2rem; background: #e7e6e6; 
+    color: #222; 
+}
+
+h1 
+{ 
+    margin-bottom: .25rem; 
+}
+
+#status 
+{ 
+    display: inline-block; 
+    padding: .2rem .6rem; 
+    border-radius: 999px; 
+    font-size: .85rem; 
+    background: #ccc; 
+}
+
+#status.on 
+{ 
+    background: #c8f0cf; 
+}
+
+#status.off 
+{ 
+    background: #f5c6c6; 
+}
+
+header 
+{
+    width: auto; 
+    border-collapse: collapse; 
+    margin-top: 1rem; 
+    background: #fff; 
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.33);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 15px;
+    font-weight: bolder;
+    border-radius: 30px;
+}
+
+.headerButton
+{
+    border: solid 0px;
+    height: auto;
+    width: auto;
+    font-size: 14px;
+    padding: 7px 20px;
+    box-shadow: 0 3px 7px rgba(0,0,0,.1);
+    margin: 0 7px;
+    transition: 0.2s;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.bigSection
+{
+    display: flex;
+    flex-direction: column;
+    margin: 30px auto;
+    width: 50%;
+    padding: 30px 70px 70px 70px;
+    border: #535353 solid 1px;
+    border-radius: 50px;
+    box-shadow: 0 20px 20px rgba(0, 0, 0, 0.436);
+    background-color: white;
+}
+
+.centriranVelikiNaslov
+{
+    text-align: center;
+    margin: 15px 0 50px 0;
+    font-size: 30px;
+}
+
+.headerButton:hover
+{
+    background-color: rgb(214, 214, 214);
+    cursor: pointer;
+}
+
+.row
+{
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+}
+
+.logo
+{
+    width: 70px;
+    height: 70px;
+    margin: 0 15px 0 5px;
+}
+
+h1
+{
+    font-size: 26px;
+    margin: 0;
+    text-shadow: #22222270 1.5px 1.5px;
+}
+
+table
+{ 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 1rem; 
+    background: #fff; 
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+}
+
+th, td 
+{ 
+    padding: .5rem .75rem; 
+    text-align: left; 
+    border-bottom: 1px solid #eee; 
+}
+
+th 
+{ background: #fafafa; 
+    position: sticky; 
+    top: 0; 
+}
+
+tr.ALARM_HIGH td 
+{ 
+    background: #fde2e2; 
+    font-weight: 600; 
+}
+
+tr.ALARM_LOW td 
+{ 
+    background: #fff1d6; 
+    font-weight: 600; 
+}
+
+.tag 
+{ 
+    padding: .1rem .5rem; 
+    border-radius: 4px; 
+    font-size: .8rem; 
+    background: #e8eaed; 
+}
+.ALARM_HIGH .tag 
+{ 
+    background: #e53935; 
+    color: #fff; 
+}
+
+.ALARM_LOW .tag 
+{ 
+    background: #fb8c00; 
+    color: #fff; 
+}

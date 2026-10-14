@@ -2,33 +2,500 @@
 <html lang="sr">
 <head>
     <meta charset="UTF-8">
-    <title>MQTT poruke uživo</title>
-    <style>
-        body { font-family: system-ui, sans-serif; margin: 2rem; background: #f5f6f8; color: #222; }
-        h1 { margin-bottom: .25rem; }
-        #status { display: inline-block; padding: .2rem .6rem; border-radius: 999px; font-size: .85rem; background: #ccc; }
-        #status.on { background: #c8f0cf; }
-        #status.off { background: #f5c6c6; }
-        table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
-        th, td { padding: .5rem .75rem; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #fafafa; position: sticky; top: 0; }
-        tr.ALARM_HIGH td { background: #fde2e2; font-weight: 600; }
-        tr.ALARM_LOW td { background: #fff1d6; font-weight: 600; }
-        .tag { padding: .1rem .5rem; border-radius: 4px; font-size: .8rem; background: #e8eaed; }
-        .ALARM_HIGH .tag { background: #e53935; color: #fff; }
-        .ALARM_LOW .tag { background: #fb8c00; color: #fff; }
-    </style>
+    <title>RestAPI Test Site</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>MQTT poruke uživo</h1>
-<span id="status">povezivanje...</span>
+    <header>
+        <div class="row">
+            <img class="logo" src="assets/logo.png"/>
+            <h1>RestAPI</h1>
+        </div>
+        <div class="row">
+            <button class="headerButton">Pocetna</button>
+            <button class="headerButton">Pretplate</button>
+            <button class="headerButton">Poruke</button>
+            <button class="headerButton">Admin</button>
+            <button class="headerButton">Login</button>
+        </div>
+    </header>
 
-<table>
-    <thead>
-    <tr><th>Vreme</th><th>Topic</th><th>Vrednost</th><th>Tip</th></tr>
-    </thead>
-    <tbody id="messages"></tbody>
-</table>
+    <div id="pocetna" class="bigSection">
+        <div id="readme">
+            <h1 class="centriranVelikiNaslov">👨‍💻🌐 -= <strong>RestAPI Backend Projekat</strong> =- 🌐👨‍💻</h1>
+            <h3>RestAPI Backend za komunikaciju putem MQTT protokola</h3>
+            <h4><strong>● Verzija:</strong> 0.26.10.14.1 by <strong>Nikola Tasić</strong></h4>
+            <ul>
+            <li><strong>Programski jezik:</strong> C#</li>
+            <li><strong>Tehnologije:</strong> .NET, Docker, MariaDB, Entity Framework</li>
+            <li><strong>Okruzenja:</strong> Rider, MySQL Workbench</li>
+            <li><strong>Solution sadrzi projekte:</strong><ul>
+            <li><strong>MQTTDevice:</strong> simulator slanja poruka na broker</li>
+            <li><strong>MQTTRestApi:</strong> RestAPI Backend aplikacija (dokerizovana)</li>
+            <li><strong>MQTTRestApi.Tests:</strong> Unit testovi za <strong>&#39;MQTTRestApi&#39;</strong> projekat</li>
+            <li><strong>MQTTGitProject:</strong> prva probna verzija rada sa MQTT (ne koristi se)</li>
+            </ul>
+            </li>
+            </ul>
+            <hr>
+            <h2>📜 - <strong>Najnovije izmene</strong> - 📜️</h2>
+            <h3><strong>-= Verzija 0.26.10.14.1 =-</strong></h3>
+            <ul>
+            <li><strong>SignalIR:</strong><ul>
+            <li>Implementiran <strong>SignalIR</strong> za dalju upotrebu sa frontend-om</li>
+            </ul>
+            </li>
+            <li><strong>Unit tests:</strong><ul>
+            <li>Napravljeno <strong>109 unit testova</strong> za ispitivanje ispravnosti svih <strong>kontrolera i servisa</strong></li>
+            </ul>
+            </li>
+            <li><strong>Frontend:</strong><ul>
+            <li>Implementiran osnovni <strong>test frontend</strong> koji se koristi <strong>iskljucivo za testiranje</strong></li>
+            <li><strong>Frontend</strong> sadrzi samo <strong>najosnovnije opcije i mogucnosti</strong></li>
+            <li>Nije namenjen i projektovan za upotrebu van <strong>testiranja backend-a</strong></li>
+            <li>Koristi <strong>SignalIR</strong> za primanje/azuriranje podataka bez polling-a</li>
+            </ul>
+            </li>
+            <li><strong>Backend Publishing:</strong><ul>
+            <li>Od sada admini unose samo topic uredjaja za promenu vrednosti, program sam dodaje sufiks</li>
+            <li>Ispravljeni sitne greske u logici</li>
+            </ul>
+            </li>
+            <li><strong>Alarm bug fixing:</strong><ul>
+            <li>Ispravljena greska obrnute logike gde false za proveru postojanja alarma vraca true i obrnuto</li>
+            <li>izmenjen redosled u enum-u i definisane vrednosti rucno zbog unit testova</li>
+            </ul>
+            </li>
+            <li><strong>Refactoring:</strong><ul>
+            <li>Totalno refaktorisanje projekta</li>
+            <li>Razlaganje velikih na manje servise</li>
+            <li>Brisanje promeljivih, klasa i metoda koje se ne koriste</li>
+            <li>Poboljsano imenovanje promenljivih</li>
+            </ul>
+            </li>
+            <li><strong>Testing:</strong><ul>
+            <li>Rucno istestirane sve opcije i mogucnosti</li>
+            <li>Korisceni neocekivani slucajevi i vrednosti da bi se osigurala sigurnost i stabilnost rada</li>
+            </ul>
+            </li>
+            </ul>
+            <hr>
+            <h2>🖥️ - <strong>Features</strong> - 🖥️</h2>
+            <ul>
+            <li>Pretplata backend-a na topic po zelji</li>
+            <li>Korisnicka autentifikacija putem korisnickog imena i lozinke</li>
+            <li>Vise korisnickih uloga</li>
+            <li>Prikazivanje svih dostupnih topic-a</li>
+            <li>Korisnicko pretplacivanje na topic po zelji</li>
+            <li>Uklanjanje pretplate sa topic-a</li>
+            <li>Pracenje poruka koje stizu na topic</li>
+            <li>Preuzimanje svih poruka koje su poslate na odredjeni topic</li>
+            <li>Automatski resubscribe na sve topic-e koji su bili praceni pre disconnect-a</li>
+            <li>Pregled statistike svih (i pojedinacnih) topic-a</li>
+            <li>Podesivo simuliranje uredjaja koji salje poruke</li>
+            <li>Sistem za automatski reconnect prilikom pucanja veze</li>
+            <li>Mogucnost za force reconnect-om ukoliko je upkla veza</li>
+            <li>Globalni exception/error handling</li>
+            <li>Podesiv sistem alarmiranja koji se edituje realtime</li>
+            <li>Istorija poruka filtrirana po vremenu</li>
+            <li>Password hashing za bolju bezbednost</li>
+            <li>Mogucnost promene lozinke</li>
+            <li>Mogucnost promene uloge korisnika</li>
+            <li>SignalIR koji se koristi umesto polling-a</li>
+            <li>Unit testovi za testiranje kontrolera i servisa</li>
+            <li>Mogucnost da admin govori simulatoru koje vrednosti da salje</li>
+            <li>Test frontend za testiranje</li>
+            </ul>
+            <hr>
+            <h2>📀 - <strong>Prerequisites</strong> - 📀</h2>
+            <ul>
+            <li>.NET SDK 8</li>
+            <li>Visual Studio (Code) / Rider</li>
+            <li>Docker</li>
+            <li>MQTT Broker</li>
+            <li>Swagger (za testiranje)</li>
+            <li>MariaDB i Redis</li>
+            </ul>
+            <hr>
+            <h2>🧑‍💻 - <strong>Setup Instrukcije</strong> - 🧑‍💻</h2>
+            <ul>
+            <li>Neophodno je prethodno kloniranje git repozitorijuma</li>
+            <li>U folderu <strong>&#39;MQTTRestApi&#39;</strong> neophodno je popuniti .env fajl (primer u .env.example)</li>
+            <li>Unutar foldera <strong>&#39;MQTTRestApi&#39;</strong> pritisnuti desni klik &gt; <strong>Open in Terminal</strong></li>
+            <li>Ukucati <strong>docker compose up -d --build</strong></li>
+            <li>Ukoliko nema gresaka, API je spreman za upotrebu</li>
+            </ul>
+            <hr>
+            <h2>🌐 - <strong>API Endpoints</strong> - 🌐</h2>
+            <h3>Alarm ENDPOINTS:</h3>
+            <ul>
+            <li><strong>(POST)api/alarms/create-alarm</strong><ul>
+            <li>Input parametri:<ul>
+            <li>topicId (int32)</li>
+            <li>alarmType (0, 1, 2)</li>
+            <li>lowerLimit (int32)</li>
+            <li>upperLimit (int32)</li>
+            </ul>
+            </li>
+            <li>Kreira alarm</li>
+            </ul>
+            </li>
+            <li><strong>(POST)api/alarms/delete-alarm</strong><ul>
+            <li>Input parametri:<ul>
+            <li>alarmId (int32)</li>
+            </ul>
+            </li>
+            <li>Brise alarm iz baze podataka</li>
+            </ul>
+            </li>
+            <li><strong>(GET)api/alarms/all-alarms</strong><ul>
+            <li>Input parametri:<ul>
+            <li>Nema input parametre</li>
+            </ul>
+            </li>
+            <li>Vraca listu svih kreiranih alarma</li>
+            </ul>
+            </li>
+            <li><strong>(GET)api/alarms/alarmed-messages</strong><ul>
+            <li>Input parametri:<ul>
+            <li>Nema input parametre</li>
+            </ul>
+            </li>
+            <li>Vraca listu svih alarmiranih poruka<h3 id="log-endpoints-">Log ENDPOINTS:</h3>
+            </li>
+            </ul>
+            </li>
+            <li><strong>(GET)api/logs/all-logs</strong><ul>
+            <li>Input parametri:<ul>
+            <li>Nema input parametre</li>
+            </ul>
+            </li>
+            <li>Vraca listu svih logova<h3 id="user-endpoints-">User ENDPOINTS:</h3>
+            </li>
+            </ul>
+            </li>
+            <li><strong>(POST)api/users/login</strong><ul>
+            <li>Input parametri:<ul>
+            <li>LoginDto (username, password)</li>
+            </ul>
+            </li>
+            <li>Vrsi prijavu korisnika na nalog</li>
+            </ul>
+            </li>
+            <li><strong>(POST)api/users/register</strong><ul>
+            <li>Input parametri:<ul>
+            <li>RegisterDto (username, password, userType)</li>
+            </ul>
+            </li>
+            <li>Vrsi registraciju korisnika u sistem</li>
+            </ul>
+            </li>
+            <li><strong>(POST)api/users/change-password</strong><ul>
+            <li>Input parametri:<ul>
+            <li>ChangePasswordDto (oldPassword, newPassword)</li>
+            </ul>
+            </li>
+            <li>Vrsi promenu sifre korisnika</li>
+            </ul>
+            </li>
+            <li><strong>(POST)api/users/change-role</strong><ul>
+            <li>Input parametri:<ul>
+            <li>userId (int32)</li>
+            <li>role (0, 1)</li>
+            </ul>
+            </li>
+            <li>Vrsi promenu role-a korisnika</li>
+            </ul>
+            </li>
+            <li><strong>(GET)api/users/list</strong><ul>
+            <li>Input parametri:<ul>
+            <li>Nema input parametre</li>
+            </ul>
+            </li>
+            <li>Vraca listu korisnika registrovanih u sistem<h3 id="mqtt-admin-endpoints-">MQTT Admin ENDPOINTS:</h3>
+            </li>
+            </ul>
+            </li>
+            <li><strong>(POST)api/mqtt/subscribe</strong><ul>
+            <li>Input parametri:<ul>
+            <li>Topic (string)</li>
+            </ul>
+            </li>
+            <li>Vrsi pretplatu backend-a na neki topic</li>
+            <li>Podrzava single i multi level wildcards</li>
+            </ul>
+            </li>
+            <li><strong>(GET)api/mqtt/failed-subscriptions</strong><ul>
+            <li>Input parametri:<ul>
+            <li>Nema input parametre</li>
+            </ul>
+            </li>
+            <li>Vraca listu svih subscriptiona na koje broker nije uspeo da se prijavi</li>
+            </ul>
+            </li>
+            <li><strong>(POST)api/mqtt/resubscribe-to-failed</strong><ul>
+            <li>Input parametri:<ul>
+            <li>Nema input parametre</li>
+            </ul>
+            </li>
+            <li>Sluzi za pokusaj ponovne prijave na subscribere na koje broker nije uspeo da se prijavi</li>
+            </ul>
+            </li>
+            <li><strong>(GET)api/mqtt/stats</strong><ul>
+            <li>Input parametri:<ul>
+            <li>Nema input parametre</li>
+            </ul>
+            </li>
+            <li>Vraca broj koliko puta je bila poslata poruka na svaki od topic-a</li>
+            </ul>
+            </li>
+            <li><strong>(GET)api/mqtt/stats/{topic}</strong><ul>
+            <li>Input parametri:<ul>
+            <li>Topic (string)</li>
+            </ul>
+            </li>
+            <li>Vraca broj koliko puta je bila poslata poruka na odredjen topic</li>
+            </ul>
+            </li>
+            <li><strong>(POST)api/mqtt/force-reconnect-to-server</strong><ul>
+            <li>Input parametri:<ul>
+            <li>Nema input parametre</li>
+            </ul>
+            </li>
+            <li>Vraca broj koliko puta je bila poslata poruka na svaki od topic-a<h3 id="user-mqtt-endpoints-">User MQTT ENDPOINTS:</h3>
+            </li>
+            </ul>
+            </li>
+            <li><strong>(GET)api/mqtt/available-topics</strong><ul>
+            <li>Input parametri:<ul>
+            <li>Nema input parametre</li>
+            </ul>
+            </li>
+            <li>Vraca listu topics-a na koje je broker pretplacen</li>
+            </ul>
+            </li>
+            <li><strong>(POST)api/mqtt/user-subscribe</strong><ul>
+            <li>Input parametri:<ul>
+            <li>SubscribeRequestDto (topicId, topic)</li>
+            </ul>
+            </li>
+            <li>Vrsi pretplatu korisnika na topic</li>
+            </ul>
+            </li>
+            <li><strong>(POST)api/mqtt/user-unsubscribe/{topicId}</strong><ul>
+            <li>Input parametri:<ul>
+            <li>topicId (int32)</li>
+            </ul>
+            </li>
+            <li>Uklanja korisnicku pretplatu sa topic-a</li>
+            </ul>
+            </li>
+            <li><strong>(GET)api/mqtt/my-subscriptions</strong><ul>
+            <li>Input parametri:<ul>
+            <li>Nema input parametre</li>
+            </ul>
+            </li>
+            <li>Vraca listu svih topica na koje je korisnik pretplacen</li>
+            </ul>
+            </li>
+            <li><strong>(GET)api/mqtt/messages</strong><ul>
+            <li>Input parametri:<ul>
+            <li>Nema input parametre</li>
+            </ul>
+            </li>
+            <li>Vraca listu svih poruka za topic-e na koje je korisnik pretplacen</li>
+            </ul>
+            </li>
+            <li><strong>(GET)api/mqtt/all-messages</strong><ul>
+            <li>Input parametri:<ul>
+            <li>Nema input parametre</li>
+            </ul>
+            </li>
+            <li>Vraca listu svih poruka koje su ikada stigle</li>
+            </ul>
+            </li>
+            <li><strong>(GET)api/mqtt/messages-filtered</strong><ul>
+            <li>Input parametri:<ul>
+            <li>topic (string)</li>
+            <li>minutes (int)</li>
+            </ul>
+            </li>
+            <li>Vraca listu svih poruka za topic u poslednjih n minuta</li>
+            </ul>
+            </li>
+            </ul>
+            <hr>
+            <h2 id="-primeri-curl-komandi-">⌨️ - <strong>Primeri curl komandi</strong> - ⌨️</h2>
+            <ul>
+            <li>Subscribe<pre><code class="lang-bash">curl -X <span class="hljs-string">'POST'</span> <span class="hljs-string">\</span>
+            <span class="hljs-string">'http://localhost:5000/api/mqtt/subscribe'</span> <span class="hljs-string">\</span>
+            -H <span class="hljs-string">'accept: */*'</span> <span class="hljs-string">\</span>
+            -H <span class="hljs-string">'Content-Type: application/json'</span> <span class="hljs-string">\</span>
+            -d <span class="hljs-string">'{
+            "topic": "kuca/kupatilo/temperatura"
+            }'</span>
+            </code></pre>
+            </li>
+            <li>Publish<pre><code class="lang-bash">curl -X <span class="hljs-symbol">'POST</span>' \
+            <span class="hljs-symbol">'http</span>://localhost:<span class="hljs-number">5000</span>/api/mqtt/publish' \
+            -H <span class="hljs-symbol">'accept</span>: */*' \
+            -H <span class="hljs-symbol">'Content</span>-<span class="hljs-keyword">Type</span>: application/json' \
+            -d '{
+            <span class="hljs-string">"topic"</span>: <span class="hljs-string">"kuca/kupatilo/temperatura"</span>,
+            <span class="hljs-string">"payload"</span>: <span class="hljs-string">"22"</span>,
+            <span class="hljs-string">"qoS"</span>: <span class="hljs-number">0</span>
+            }'
+            </code></pre>
+            </li>
+            <li>Lista poruka<pre><code class="lang-bash">curl -X <span class="hljs-string">'GET'</span> <span class="hljs-string">\</span>
+            <span class="hljs-string">'http://localhost:5000/api/mqtt/messages'</span> <span class="hljs-string">\</span>
+            -H <span class="hljs-string">'accept: */*'</span>
+            </code></pre>
+            </li>
+            <li>Stats za sve topice<pre><code class="lang-bash">curl -X <span class="hljs-string">'GET'</span> <span class="hljs-string">\</span>
+            <span class="hljs-string">'http://localhost:5000/api/mqtt/stats'</span> <span class="hljs-string">\</span>
+            -H <span class="hljs-string">'accept: */*'</span>
+            </code></pre>
+            </li>
+            <li>Stats za jedan topic<pre><code class="lang-bash">curl -X <span class="hljs-string">'GET'</span> <span class="hljs-string">\</span>
+            <span class="hljs-string">'http://localhost:5000/api/mqtt/stats/kuca%2Fsoba%2Ftemperatura'</span> <span class="hljs-string">\</span>
+            -H <span class="hljs-string">'accept: */*'</span>
+            </code></pre>
+            </li>
+            </ul>
+            <hr>
+            <h2 id="-testing-instrukcije-">🎛️ - <strong>Testing instrukcije</strong> - 🎛️</h2>
+            <ul>
+            <li>Za pokretanje Unit testova neophodno je:</li>
+            <li>Otvoriti folder <strong>&#39;MqttRestApi.Tests&#39;</strong></li>
+            <li>Pritisnuti desni klik &gt; <strong>Open in Terminal</strong></li>
+            <li>ukucati:<pre><code class="lang-bash">  dotnet <span class="hljs-built_in">test</span>
+            </code></pre>
+            </li>
+            </ul>
+            <hr>
+            <h2 id="-licenca-">📃 - <strong>Licenca</strong> - 📃</h2>
+            <ul>
+            <li>Trenutno ne postoji definisana licenca za ovaj proizvod</li>
+            </ul>
+            <hr>
+            <h2 id="-ranije-izmene-i-azuriranja-">📜 - <strong>Ranije izmene i azuriranja</strong> - 📜️</h2>
+            <h3 id="-verzija-0-26-10-13-1-"><strong>-= Verzija 0.26.10.13.1 =-</strong></h3>
+            <ul>
+            <li><strong>User authentication:</strong><ul>
+            <li>Dodato <strong>hesiranje (hashing) lozinke</strong> za vecu bezbednost</li>
+            <li>Dodata opcija <strong>promene lozinke</strong></li>
+            <li>Dodata <strong>administrator</strong> opcija za <strong>promenu role-a korisnika</strong></li>
+            </ul>
+            </li>
+            <li><strong>Nove Admin opcije:</strong><ul>
+            <li><strong>Log list</strong> - prikaz kompletnog log-a (svih log-ova iz baze)</li>
+            <li><strong>All messages</strong> - prikaz svih log-ova sa svih topic-a</li>
+            </ul>
+            </li>
+            <li><strong>Poruke:</strong><ul>
+            <li>Dodata opcija za filtrirani pregled poruka (filter po vremenu unazad u minutima)</li>
+            </ul>
+            </li>
+            <li><strong>Sistem alarmiranja:</strong><ul>
+            <li>Dodat <strong>sistem alarmiranja</strong> koji prati vrednosti na odredjenim topics-ima</li>
+            <li><strong>Alarme</strong> kreira <strong>admin</strong> i oni se za svaki topic cuvaju u bazi</li>
+            <li>Postoje 3 vrste alarma:<ul>
+            <li><strong>Alarm</strong> koji prati samo odstupanje vrednosti <strong>ispod minimalne granice</strong></li>
+            <li><strong>Alarm</strong> koji prati samo odstupanje vrednosti <strong>iznad maksimalne granice</strong></li>
+            <li><strong>Alarm</strong> koji prati odstupanje vrednosti <strong>izvan obe granice</strong></li>
+            </ul>
+            </li>
+            <li>Kada se <strong>alarm aktivira</strong> zapisuje se u <strong>logu</strong> i u samom <strong>entitetu poruke</strong></li>
+            <li>Dodata nova kolona za <strong>MqttMessage</strong> - <strong>AlarmType</strong></li>
+            <li>Dodata nova tabela - <strong>Alarm</strong></li>
+            </ul>
+            </li>
+            </ul>
+            <h3 id="-verzija-0-26-10-12-1-"><strong>-= Verzija 0.26.10.12.1 =-</strong></h3>
+            <ul>
+            <li><strong>User authentication:</strong><ul>
+            <li>Dodata <strong>autentifikacija korisnika</strong> putem korisnickog <strong>imena</strong> i <strong>lozinke</strong></li>
+            <li>Uspesan login/register generise <strong>JWT token</strong> za korisnika</li>
+            </ul>
+            </li>
+            <li><strong>Subscriptions:</strong><ul>
+            <li>Dodata opcija da se korisnik <strong>licno pretplati</strong> na neki topic iz <strong>liste dostupnih topica</strong></li>
+            <li><strong>Lista dostupnih topica</strong> predstavlja <strong>listu topica</strong> na koje je backend prijavljen</li>
+            <li>Korisnik takodje moze da se <strong>odjavi sa topic-a</strong></li>
+            <li>Dodato da korisnik vidi poruke samo za topic-e na koje je <strong>prijavljen</strong></li>
+            <li>Sve <strong>MQTT rute</strong> su zakljucane za <strong>neprijavljene korisnike (goste)</strong></li>
+            <li>Neuspesne pretplate se cuvaju u <strong>listi</strong> i admin moze <strong>ponovo da pokusa da pretplati backend</strong> na njih</li>
+            <li>Dodat inkrementalni tajmer za ponovno povezivanje prilikom pucanja veze sa brokerom, vreme se podesava u <strong>appsettings.json</strong> fajlu</li>
+            <li>Dodato da <strong>admin</strong> moze <strong>rucno da pokusa reconnect</strong> u slucaju pucanja konekcije (nezavisno od tajmera)</li>
+            </ul>
+            </li>
+            <li><strong>Error Handling:</strong><ul>
+            <li>Dodat <strong>global exception/error handling</strong> unutar servisa</li>
+            </ul>
+            </li>
+            <li><strong>Controllers:</strong><ul>
+            <li><strong>api/mqtt/resubscribe-to-failed</strong> promenjen sa <strong>Get</strong> na <strong>Post</strong></li>
+            <li><strong>api/mqtt/force-reconnect-to-server</strong> promenjen sa <strong>Get</strong> na <strong>Post</strong></li>
+            <li><strong>api/users/login</strong> promenjen sa <strong>Get</strong> na <strong>Post</strong></li>
+            <li><strong>api/users/register</strong> promenjen sa <strong>Get</strong> na <strong>Post</strong></li>
+            <li><strong>api/users/list</strong> promenjen sa <strong>Post</strong> na <strong>Get</strong></li>
+            </ul>
+            </li>
+            <li><strong>Services:</strong><ul>
+            <li>Funkcija koju poziva <strong>ReconnectToAll()</strong> izmestena u privatnu funkciju <strong>ConnectOnBrokerAsync()</strong></li>
+            <li>Izmenjeno da <strong>SubscribeAsync()</strong> sluzi samo za prijavu backenda na topic preko rute</li>
+            <li>Popravljen <strong>bug</strong> pogresnog redosleda prilikom <strong>subscribe-a</strong></li>
+            </ul>
+            </li>
+            <li><strong>Database:</strong><ul>
+            <li>Tabela <strong>&#39;Subscriptions&#39;</strong> zamenjena tabelom <strong>&#39;Topics&#39;</strong></li>
+            <li>Nova vezna tabela <strong>&#39;UserSubscriptions&#39;</strong> koja povezuje Korisnika (<strong>UserId</strong>) i Topic (<strong>TopicID</strong>)</li>
+            <li>Dodat <strong>unique index</strong> za tabele kako bi se izbegao race condition u <strong>AnyAsync</strong></li>
+            </ul>
+            </li>
+            <li><strong>Tests:</strong><ul>
+            <li>Unit testovi <strong>privremeno obrisani</strong> zbog konstantnog azuriranja servisa</li>
+            </ul>
+            </li>
+            <li><strong>README.md</strong><ul>
+            <li>Azurirana <strong>features lista</strong></li>
+            <li>Azurirana <strong>lista ruta</strong></li>
+            <li>Dodat <strong>change log</strong> za verzije</li>
+            <li>Sredjeno <strong>formatiranje teksta</strong></li>
+            </ul>
+            </li>
+            </ul>
+            <hr>
+            <h3 id="-verzija-0-26-10-9-1-"><strong>-= Verzija 0.26.10.9.1 =-</strong></h3>
+            <ul>
+            <li><strong>Simulator:</strong><ul>
+            <li>Dodat novi <strong>projekat</strong> unutar <strong>solution-a</strong> koji sluzi za <strong>simuliranje uredjaja</strong></li>
+            <li>Dodate <strong>opcije za simuliranje</strong> u vidu:<ul>
+            <li>Minimalne vrednosti</li>
+            <li>Maksimalne vrednosti</li>
+            <li>Intervala slanja poruka</li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            <li><strong>RestApi:</strong><ul>
+            <li>Iz <strong>RestApi</strong> projekta izbacena mogucnost <strong>slanja poruke (publish)</strong></li>
+            </ul>
+            </li>
+            </ul>
+
+        </div>
+    </div>
+
+    <h2>MQTT poruke</h2>
+    <span id="status">povezivanje...</span>
+    <table>
+        <thead>
+        <tr><th>Vreme</th><th>Topic</th><th>Vrednost</th><th>Tip</th></tr>
+        </thead>
+        <tbody id="messages"></tbody>
+    </table>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
 <script>
@@ -78,7 +545,7 @@
 
     conn.start()
         .then(() => setStatus("povezan", "on"))
-        .catch(err => { console.error(err); setStatus("greška", "off"); });
+        .catch(err => { console.error(err); setStatus("greska", "off"); });
 </script>
 </body>
 </html>
