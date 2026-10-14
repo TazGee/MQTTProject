@@ -220,9 +220,9 @@ public class MqttControllerTests
     {
         var (controller, mqtt, _) = Create();
 
-        var result = await controller.SuggestDeviceValueChange("kuca/test/updateValue", 22.5f);
+        var result = await controller.SuggestDeviceValueChange("kuca/test", 22.5f);
 
-        mqtt.Verify(m => m.DeviceSuggestValueChange("kuca/test/updateValue", 22.5f), Times.Once);
+        mqtt.Verify(m => m.DeviceSuggestValueChange("kuca/test", 22.5f), Times.Once);
         Assert.IsType<OkObjectResult>(result);
     }
 }
