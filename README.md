@@ -29,6 +29,13 @@
   - Kada se **alarm aktivira** zapisuje se u **logu** i u samom **entitetu poruke**
   - Dodata nova kolona za **MqttMessage** - **AlarmType**
   - Dodata nova tabela - **Alarm**
+- **Simulator:**
+  - Dodata opcija da simulator cita iz konfiguracije zadatu vrednost koju treba da salje
+  - Dodata opcija da se simulator automatski pretplati na "topic + /updateValue"
+  - Preko gore navedenog topic-a admin moze simulatoru da menja vrednost preko brokera
+  - Najduzi interval slanja produzen sa 10 na 60 sekundi
+  - Dodato da admin moze da publishuje poruke na topic (endpoint)
+  - Publishovanje poruka preko enpointa menja vrednost koju simulator daje
 ***
 ## 🖥️ - **Features** - 🖥️
 - Pretplata backend-a na topic po zelji
@@ -49,6 +56,8 @@
 - Istorija poruka filtrirana po vremenu
 - Password hashing za bolju bezbednost
 - Mogucnost promene lozinke
+- Opcija da simulator cita izlaznu vrednost iz konfiguracije
+- Opcija da admin menja izlaznu vrednost uredjaja (simulatora)
 ***
 ## 📀 - **Prerequisites** - 📀
 - .NET SDK 8
@@ -67,18 +76,18 @@
 ***
 ## 🌐 - **API Endpoints** - 🌐
 ### Alarm ENDPOINTS:
-- **(POST)api/alarms/create-alarm**
+- **(POST)api/alarms/create**
   - Input parametri:
     - topicId (int32)
     - alarmType (0, 1, 2)
     - lowerLimit (int32)
     - upperLimit (int32)
   - Kreira alarm
-- **(POST)api/alarms/delete-alarm**
+- **(POST)api/alarms/delete**
   - Input parametri:
     - alarmId (int32)
   - Brise alarm iz baze podataka
-- **(GET)api/alarms/all-alarms**
+- **(GET)api/alarms/all**
   - Input parametri:
     - Nema input parametre
   - Vraca listu svih kreiranih alarma
@@ -169,6 +178,11 @@
     - topic (string)
     - minutes (int)
   - Vraca listu svih poruka za topic u poslednjih n minuta
+- **(GET)api/mqtt/suggest-device-value-change**
+  - Input parametri:
+    - topic (string)
+    - value (float)
+  - Govori uredjaju da azurira vrednost na tom topicu
 ***
 ## ⌨️ - **Primeri curl komandi** - ⌨️
 - Subscribe
