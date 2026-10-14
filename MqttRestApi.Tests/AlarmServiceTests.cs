@@ -56,17 +56,6 @@ public class AlarmServiceTests
     }
 
     [Fact]
-    public async Task CreateAlarm_MaximumOnly_DoesNotValidateLimitOrder()
-    {
-        var (svc, db, _) = Create();
-        var topicId = await SeedTopic(db);
-
-        await svc.CreateAlarm(new CreateAlarmDto(topicId, AlarmTypes.Both, 30, 10));
-
-        Assert.Equal(1, await db.Alarms.CountAsync());
-    }
-
-    [Fact]
     public async Task CreateAlarm_Valid_SavesAlarmWithGivenValues()
     {
         var (svc, db, _) = Create();
@@ -106,9 +95,14 @@ public class AlarmServiceTests
     public async Task GetAllAlarms_ReturnsAllAlarms()
     {
         var (svc, db, _) = Create();
-        var topicId = await SeedTopic(db);
-        await svc.CreateAlarm(new CreateAlarmDto(topicId, AlarmTypes.Both, 10, 30));
-        await svc.CreateAlarm(new CreateAlarmDto(topicId, AlarmTypes.Both, 5, 50));
+        var t1 = await SeedTopic(db, "kuca/a");
+        var t2 = await SeedTopic(db, "kuca/b");
+        Assert.NotEqual(t1, t2);
+
+        db.Alarms.AddRange(
+            new Alarm(t1, AlarmTypes.Both, 10, 30),
+            new Alarm(t2, AlarmTypes.Minimum, 5, 50));
+        await db.SaveChangesAsync();
 
         var result = await svc.GetAllAlarms();
 

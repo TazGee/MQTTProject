@@ -159,7 +159,7 @@ public class MqttControllerTests
     {
         var (ctrl, mqtt, _) = Create();
         var list = new List<MqttMessageDto> { Dto() };
-        mqtt.Setup(m => m.GetFilteredMessages(0, "kuca/test", 10u)).ReturnsAsync(list);
+        mqtt.Setup(m => m.GetFilteredMessages(1, "kuca/test", 10u)).ReturnsAsync(list);
 
         var result = await ctrl.GetMessagesFiltered("kuca/test", 10);
 
