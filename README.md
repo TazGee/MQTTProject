@@ -80,18 +80,18 @@
 ***
 ## 🌐 - **API Endpoints** - 🌐
 ### Alarm ENDPOINTS:
-- **(POST)api/alarms/create-alarm**
+- **(POST)api/alarms/create**
   - Input parametri:
     - topicId (int32)
     - alarmType (0, 1, 2)
     - lowerLimit (int32)
     - upperLimit (int32)
   - Kreira alarm
-- **(POST)api/alarms/delete-alarm**
+- **(POST)api/alarms/delete**
   - Input parametri:
     - alarmId (int32)
   - Brise alarm iz baze podataka
-- **(GET)api/alarms/all-alarms**
+- **(GET)api/alarms/all**
   - Input parametri:
     - Nema input parametre
   - Vraca listu svih kreiranih alarma
@@ -152,6 +152,11 @@
     - Input parametri:
         - Nema input parametre
     - Vraca broj koliko puta je bila poslata poruka na svaki od topic-a
+- **(POST)api/mqtt/suggest-device-value-change**
+  - Input parametri:
+    - Topic (string)
+    - Value (float)
+  - Predlaze simuliranom uredjaju koju vrednost da koristi
 ### User MQTT ENDPOINTS:
 - **(GET)api/mqtt/available-topics**
   - Input parametri:

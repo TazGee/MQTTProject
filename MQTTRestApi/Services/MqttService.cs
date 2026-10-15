@@ -213,7 +213,7 @@ public class MqttService : IMqttService
     { 
         try
         {
-            if (!Regex.IsMatch(topic, config["SubscribeRegex"] ?? "^(?:#|(?:[^/#+\\s]+|\\+)(?:/(?:[^/#+\\s]+|\\+))*(?:/#)?)$"))
+            if (!Regex.IsMatch(topic, config["SubscribeRegex"]))
             {
                 Console.WriteLine($"Vrednost topica nije validna!");
                 return false;
