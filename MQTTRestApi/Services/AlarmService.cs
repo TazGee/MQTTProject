@@ -27,13 +27,8 @@ public class AlarmService : IAlarmService
         
         if(!Enum.IsDefined(typeof(AlarmTypes), createAlarmDto.AlarmType)) throw new BadRequestException("Neispravan tip alarma!");
         
-        if(double.IsNaN(createAlarmDto.LowerLimit) && (createAlarmDto.AlarmType == AlarmTypes.Both || createAlarmDto.AlarmType == AlarmTypes.Minimum)) 
-            throw new BadRequestException("Lower limit nije definisan!");
-        if(double.IsNaN(createAlarmDto.UpperLimit) && (createAlarmDto.AlarmType == AlarmTypes.Both || createAlarmDto.AlarmType == AlarmTypes.Maximum)) 
-            throw new BadRequestException("Upper limit nije definisan!");
-        
-        if(createAlarmDto.LowerLimit < double.MinValue) throw new BadRequestException("Lower limit nije ispravna vrednost!");
-        if(createAlarmDto.UpperLimit > double.MaxValue) throw new BadRequestException("Upper limit nije ispravna vrednost!");
+        if (!double.IsFinite(createAlarmDto.LowerLimit) || !double.IsFinite(createAlarmDto.UpperLimit))
+            throw new BadRequestException("Granice alarma moraju biti ispravni brojevi!");
         
         Alarm alarm = new Alarm(createAlarmDto.TopicId, createAlarmDto.AlarmType, createAlarmDto.LowerLimit, createAlarmDto.UpperLimit);
 
