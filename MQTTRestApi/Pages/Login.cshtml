@@ -1,6 +1,8 @@
 @page
 @model MQTTRestApi.wwwroot.Pages.Login
-
+@{
+    var returnUrl = Request.Query["returnUrl"].ToString();
+}
 @{
     Layout = "_Layout";
 }
@@ -17,36 +19,36 @@
 <div class = "logRegRow">
     <div class="authFormDiv">
         <h2 class="authFormText">LOGIN</h2>
-        <form class="authForm" method="post">
+        <form class="authForm" method="post" asp-page-handler="Login">
             <h3 class="authFormNamesText">Username</h3>
-            <input asp-for="Username" required type="text" placeholder="Username" name="Username" class="authTextInput"/>
+            <input asp-for="LoginForm.Username" required type="text" placeholder="Username" name="Username" class="authTextInput"/>
             <br>
             <h3 class="authFormNamesText">Password</h3>
-            <input asp-for="Password" required type="password" placeholder="Username" name="Password" class="authTextInput"/>
+            <input asp-for="LoginForm.Password" required type="password" placeholder="Username" name="Password" class="authTextInput"/>
             <br>
-            <p>@Model.Error</p>
+            <p class="errorMessage">@Model.LoginError</p>
             <br>
             <br>
             <div class="pusher">
-                <input type="submit" name="Login" value="Login"/>
+                <input type="submit" name="Login" class="authButton" value="Login"/>
             </div>
             <br>
         </form>
     </div>
     <div class="authFormDiv">
         <h2 class="authFormText">REGISTER</h2>
-        <form class="authForm" method="post">
+        <form class="authForm" method="post" asp-page-handler="Register">
             <h3 class="authFormNamesText">Username</h3>
-            <input asp-for="Username" required type="text" placeholder="Username" name="Username" class="authTextInput"/>
+            <input asp-for="RegisterForm.Username" required type="text" placeholder="Username" name="Username" class="authTextInput"/>
             <br>
             <h3 class="authFormNamesText">Password</h3>
-            <input asp-for="Password" required type="password" placeholder="Username" name="Password" class="authTextInput"/>
+            <input asp-for="RegisterForm.Password" required type="password" placeholder="Username" name="Password" class="authTextInput"/>
             <br>
-            <p>@Model.Error</p>
+            <p class="errorMessage">@Model.RegisterError</p>
             <br>
             <br>
             <div class="pusher">
-                <input type="submit" name="Login" value="Login"/>
+                <input type="submit" name="Register" class="authButton" value="Login"/>
             </div>
             <br>
         </form>

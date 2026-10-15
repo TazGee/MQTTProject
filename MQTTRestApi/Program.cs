@@ -15,8 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages(o =>
 {
     o.Conventions.AuthorizeFolder("/");
-    o.Conventions.AllowAnonymousToPage("/Login");
     o.Conventions.AllowAnonymousToPage("/Index");
+    o.Conventions.AllowAnonymousToPage("/Login");
     o.Conventions.AuthorizeFolder("/Admin", "AdminOnly");
 });
 

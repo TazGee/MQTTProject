@@ -49,6 +49,15 @@
     padding: 0 30%;
 }
 
+.errorMessage
+{
+    color: #9e0000;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    margin: 15px auto 0 auto;
+}
+
 body
 {
     font-family: system-ui, sans-serif;
@@ -209,79 +218,6 @@ tr.ALARM_LOW td
     color: #fff;
 }
 
-.authOverlay
-{
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.authOverlay.active
-{
-    display: flex;
-}
-
-.authPanel
-{
-    position: relative;
-    width: 100%;
-    max-width: 400px;
-    padding: 40px;
-    box-sizing: border-box;
-    background: white;
-    border: 1px solid #535353;
-    border-radius: 30px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
-    animation: authAppear 0.2s ease-out;
-}
-
-@keyframes authAppear
-{
-    from
-    {
-        opacity: 0;
-        transform: translateY(15px) scale(0.97);
-    }
-
-    to
-    {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-.authPanel h2
-{
-    text-align: center;
-    font-size: 28px;
-    margin: 0 0 30px 0;
-}
-
-.closeAuth
-{
-    position: absolute;
-    top: 12px;
-    right: 18px;
-    border: none;
-    background: transparent;
-    font-size: 30px;
-    color: #555;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.closeAuth:hover
-{
-    color: #000;
-    transform: scale(1.1);
-}
-
 .authForm form
 {
     display: flex;
@@ -318,7 +254,7 @@ tr.ALARM_LOW td
 .authButton
 {
     margin-top: 15px;
-    padding: 12px;
+    padding: 12px 25px;
     border: none;
     border-radius: 10px;
     background: #222;
@@ -327,40 +263,13 @@ tr.ALARM_LOW td
     font-weight: bold;
     cursor: pointer;
     transition: 0.2s;
+    width: auto;
 }
 
 .authButton:hover
 {
     background: #444;
-    transform: translateY(-1px);
 }
-
-.authSwitch
-{
-    margin: 25px 0 0 0;
-    text-align: center;
-    font-size: 14px;
-    color: #555;
-}
-
-.authSwitch a
-{
-    color: #222;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.authSwitch a:hover
-{
-    text-decoration: underline;
-}
-
-
-.authForm[hidden]
-{
-    display: none;
-}
-
 
 @media (max-width: 480px)
 {

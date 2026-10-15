@@ -12,11 +12,18 @@
         <h1>RestAPI</h1>
     </div>
     <div class="row">
-        <button class="headerButton">Pocetna</button>
-        <button class="headerButton">Pretplate</button>
-        <button class="headerButton">Poruke</button>
-        <button class="headerButton">Admin</button>
-        <a asp-page="./Login"><button class="headerButton">Login</button></a>
+        <a asp-page="./Index"><button class="headerButton">Pocetna</button></a>
+        @if (User.Identity?.IsAuthenticated == true) { <a asp-page="./Index"><button class="headerButton">Pretplate</button></a> }
+        @if (User.Identity?.IsAuthenticated == true) { <a asp-page="./Index"><button class="headerButton">Poruke</button></a> }
+        @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin")) { <a asp-page="./Index"><button class="headerButton">Admin</button></a> }
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a asp-page="./Logout"><button class="headerButton">Logout</button></a>
+        }
+        else
+        {
+            <a asp-page="./Login"><button class="headerButton">Login</button></a>
+        }
     </div>
 </header>
 <main>@RenderBody()</main>

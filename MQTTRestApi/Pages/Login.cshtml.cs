@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MQTTRestApi.Domain.DTO;
 using MQTTRestApi.Domain.Enums;
 using MQTTRestApi.Domain.Exceptions;
 using MQTTRestApi.Domain.Services;
@@ -20,24 +21,54 @@ public class Login : PageModel
         this.config = config;
     }
 
-    [BindProperty] public string Username { get; set; } = "";
-    [BindProperty] public string Password { get; set; } = "";
-    public string? Error { get; set; }
+    [BindProperty] public LoginInput LoginForm { get; set; } = new();
+    [BindProperty] public RegisterInput RegisterForm { get; set; } = new();
+    public string? LoginError { get; set; }
+    public string? RegisterError { get; set; }
+    public class LoginInput
+    {
+        public string Username { get; set; } = "";
+        public string Password { get; set; } = "";
+    }
 
-    public async Task<IActionResult> OnPostAsync(string? returnUrl)
+    public class RegisterInput
+    {
+        public string Username { get; set; } = "";
+        public string Password { get; set; } = "";
+    }
+
+    public async Task<IActionResult> OnPostLoginAsync(string? returnUrl)
     {
         try
         {
-            var user = await authService.Login(Username, Password);
-            var token = tokenService.CreateToken(user.Id.ToString(), user.Username, user.Role.ToString());
-
-            AuthCookieService.Set(Response, token, config);
-            return LocalRedirect(Url.IsLocalUrl(returnUrl) ? returnUrl! : "/");
+            var user = await authService.Login(LoginForm.Username, LoginForm.Password);
+            return SignInAndRedirect(user, returnUrl);
         }
         catch (BadRequestException e)
         {
-            Error = e.Message;
+            LoginError = e.Message;
             return Page();
         }
+    }
+
+    public async Task<IActionResult> OnPostRegisterAsync(string? returnUrl)
+    {
+        try
+        {
+            var user = await authService.Register(RegisterForm.Username, RegisterForm.Password, UserTypes.User);
+            return SignInAndRedirect(user, returnUrl);
+        }
+        catch (BadRequestException e)
+        {
+            RegisterError = e.Message;
+            return Page();
+        }
+    }
+    
+    private IActionResult SignInAndRedirect(UserInfoDto user, string? returnUrl)
+    {
+        var token = tokenService.CreateToken(user.Id.ToString(), user.Username, user.Role.ToString());
+        AuthCookieService.Set(Response, token, config);
+        return LocalRedirect(Url.IsLocalUrl(returnUrl) ? returnUrl! : "/");
     }
 }
