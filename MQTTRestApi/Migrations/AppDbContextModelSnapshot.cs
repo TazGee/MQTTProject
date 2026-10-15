@@ -36,14 +36,14 @@ namespace MQTTRestApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("LowerLimit")
-                        .HasColumnType("int");
+                    b.Property<double>("LowerLimit")
+                        .HasColumnType("double");
 
                     b.Property<int>("TopicId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UpperLimit")
-                        .HasColumnType("int");
+                    b.Property<double>("UpperLimit")
+                        .HasColumnType("double");
 
                     b.HasKey("Id");
 

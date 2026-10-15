@@ -69,6 +69,7 @@ public class AlarmService : IAlarmService
     public async Task<List<AlarmDto>> GetAllAlarms()
     {
         var lista =  await dbContext.Alarms
+            .OrderByDescending(m => m.Id)
             .Select(a => new AlarmDto(a.Id, a.TopicId, a.AlarmType, a.LowerLimit, a.UpperLimit, a.CreatedAt))
             .ToListAsync();
         return lista;
@@ -77,6 +78,7 @@ public class AlarmService : IAlarmService
     public async Task<List<MqttMessageDto>> GetAllAlarmedMessages()
     {
         var lista = await dbContext.Messages
+            .OrderByDescending(m => m.Id)
             .Where(m => m.AlarmType != ValueAlarmTypes.NONE)
             .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt, m.AlarmType))
             .ToListAsync();

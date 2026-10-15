@@ -18,7 +18,7 @@ public class LoggerService : ILoggerService
 
     public async Task<List<Log>> GetLogs()
     {
-        return await dbContext.Logs.ToListAsync();
+        return await dbContext.Logs.OrderByDescending(m => m.Id).ToListAsync();
     }
     
     public async Task LogMessage(string msg, LogTypes type)

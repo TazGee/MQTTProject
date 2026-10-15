@@ -47,7 +47,8 @@ public class UsersService : IUsersService
     {
         var users = dbContext.Users.ToList();
 
-        var userDtos = users.Select(u => new UserInfoDto
+        var userDtos = users.OrderByDescending(u => u.Id)
+                           .Select(u => new UserInfoDto
         {
             Id = u.Id,
             Username = u.Username,
