@@ -1,6 +1,6 @@
 # 👨‍💻🌐 -= **RestAPI Backend Projekat** =- 🌐👨‍💻
 ### RestAPI Backend za komunikaciju putem MQTT protokola
-#### **● Verzija:** 0.26.10.14.1 by **Nikola Tasić**
+#### **● Verzija:** 0.26.10.15.1 by **Nikola Tasić**
 - **Programski jezik:** C#
 - **Tehnologije:** .NET, Docker, MariaDB, Entity Framework
 - **Okruzenja:** Rider, MySQL Workbench
