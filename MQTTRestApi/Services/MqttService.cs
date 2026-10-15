@@ -513,7 +513,7 @@ public class MqttService : IMqttService
     {
         if(!connected) throw new BadRequestException("Backend nije povezan na broker!");
      
-        if (!Regex.IsMatch(topic, config["PublishRegex"] ?? "^[^/#+\\s]+(?:/[^/#+\\s]+)*$"))
+        if (!Regex.IsMatch(topic, config["PublishRegex"]))
         {
             Console.WriteLine($"Vrednost topica nije validna!");
             throw new BadRequestException("Vrednost topica nije validna! Primer: kuca/soba/temperatura");

@@ -1,0 +1,7 @@
+{
+  "PublishRegex" : "^[^/#+\\s]+(?:/[^/#+\\s]+)*$",
+  "ServerIp" : "localhost",
+  "ServerPort" : 1883,
+  "ReconnectTimer" : 3,
+  "VrednostSimulatora" : 20
+}
