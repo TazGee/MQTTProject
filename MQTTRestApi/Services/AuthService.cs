@@ -42,9 +42,11 @@ public class AuthService : IAuthService
         
         if(username.Length < 4) throw new BadRequestException("Username mora sadrzati makar 4 karaktera!");
         if(username.Length > 35) throw new BadRequestException("Username mora biti kraci od 35 karaktera!");
+        if(username.Any(ch => ch == '\\')) throw new BadRequestException("Ne smete koristiti '\\' u username!");
         
         if(password.Length < 8) throw new BadRequestException("Sifra mora sadrzati makar 8 karaktera! (razmaci se brisu sa pocetka i kraja)");
         if(password.Length > 24) throw new BadRequestException("Sifra mora biti kraca od 24 karaktera!");
+        if(username.Any(ch => ch == '\\')) throw new BadRequestException("Ne smete koristiti '\\' u sifri!");
         
         if(!Enum.IsDefined(typeof(UserTypes), TipKorisnika)) throw new BadRequestException("Neispravan tip korisnika!");
         
