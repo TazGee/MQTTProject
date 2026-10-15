@@ -25,6 +25,16 @@ public class AlarmService : IAlarmService
         if (await dbContext.Alarms.AnyAsync(a => a.TopicId == createAlarmDto.TopicId)) throw new BadRequestException($"Vec postoji alarm na topicu: {createAlarmDto.TopicId}!");
         if (createAlarmDto.AlarmType == AlarmTypes.Both && createAlarmDto.LowerLimit >= createAlarmDto.UpperLimit) throw new BadRequestException("Donja granica mora biti manja od gornje granice!");
         
+        if(!Enum.IsDefined(typeof(AlarmTypes), createAlarmDto.AlarmType)) throw new BadRequestException("Neispravan tip alarma!");
+        
+        if(double.IsNaN(createAlarmDto.LowerLimit) && (createAlarmDto.AlarmType == AlarmTypes.Both || createAlarmDto.AlarmType == AlarmTypes.Minimum)) 
+            throw new BadRequestException("Lower limit nije definisan!");
+        if(double.IsNaN(createAlarmDto.UpperLimit) && (createAlarmDto.AlarmType == AlarmTypes.Both || createAlarmDto.AlarmType == AlarmTypes.Maximum)) 
+            throw new BadRequestException("Upper limit nije definisan!");
+        
+        if(createAlarmDto.LowerLimit < double.MinValue) throw new BadRequestException("Lower limit nije ispravna vrednost!");
+        if(createAlarmDto.UpperLimit > double.MaxValue) throw new BadRequestException("Upper limit nije ispravna vrednost!");
+        
         Alarm alarm = new Alarm(createAlarmDto.TopicId, createAlarmDto.AlarmType, createAlarmDto.LowerLimit, createAlarmDto.UpperLimit);
 
         try

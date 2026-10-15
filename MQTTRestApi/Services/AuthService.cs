@@ -21,6 +21,8 @@ public class AuthService : IAuthService
     
     public async Task<UserInfoDto> Login(string username, string password)
     {
+        password = password.Trim();
+        
         var user = await dbContext.Users
             .FirstOrDefaultAsync(u => u.Username == username);
 
@@ -36,9 +38,19 @@ public class AuthService : IAuthService
 
     public async Task<UserInfoDto> Register(string username, string password, UserTypes TipKorisnika)
     {
+        password = password.Trim();
+        
+        if(username.Length < 4) throw new BadRequestException("Username mora sadrzati makar 4 karaktera!");
+        if(username.Length > 35) throw new BadRequestException("Username mora biti kraci od 35 karaktera!");
+        
+        if(password.Length < 8) throw new BadRequestException("Sifra mora sadrzati makar 8 karaktera! (razmaci se brisu sa pocetka i kraja)");
+        if(password.Length > 24) throw new BadRequestException("Sifra mora biti kraca od 24 karaktera!");
+        
+        if(!Enum.IsDefined(typeof(UserTypes), TipKorisnika)) throw new BadRequestException("Neispravan tip korisnika!");
+        
         if (await dbContext.Users.AnyAsync(u => u.Username == username))
             throw new BadRequestException("Neko vec koristi ovaj username!");
-
+        
         var hash = BCrypt.Net.BCrypt.HashPassword(password);
         var novi = new User(username, hash, TipKorisnika);
 

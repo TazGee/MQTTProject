@@ -1,0 +1,725 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Domain/Models/Topic.cs(9,12): warning CS8618: Non-nullable property 'Name' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable. [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/MQTTRestApi.csproj]
+/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Domain/Models/Topic.cs(9,12): warning CS8618: Non-nullable property 'Description' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable. [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/MQTTRestApi.csproj]
+/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Domain/Models/Log.cs(12,12): warning CS8618: Non-nullable property 'Message' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable. [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/MQTTRestApi.csproj]
+/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Handlers/GlobalExceptionHandler.cs(26,28): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call. [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/MQTTRestApi.csproj]
+/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Handlers/GlobalExceptionHandler.cs(27,28): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call. [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/MQTTRestApi.csproj]
+/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Services/RedisService.cs(72,39): warning CS8604: Possible null reference argument for parameter 'pattern' in 'bool Regex.IsMatch(string input, string pattern)'. [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/MQTTRestApi.csproj]
+/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Services/RedisService.cs(84,26): warning CS0168: The variable 'e' is declared but never used [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/MQTTRestApi.csproj]
+/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Services/RedisService.cs(116,39): warning CS8604: Possible null reference argument for parameter 'pattern' in 'bool Regex.IsMatch(string input, string pattern)'. [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/MQTTRestApi.csproj]
+/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Services/MqttService.cs(216,39): warning CS8604: Possible null reference argument for parameter 'pattern' in 'bool Regex.IsMatch(string input, string pattern)'. [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/MQTTRestApi.csproj]
+/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Services/MqttService.cs(259,39): warning CS8604: Possible null reference argument for parameter 'pattern' in 'bool Regex.IsMatch(string input, string pattern)'. [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/MQTTRestApi.csproj]
+/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Services/MqttService.cs(467,26): warning CS0168: The variable 'e' is declared but never used [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/MQTTRestApi.csproj]
+  MQTTRestApi -> /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/bin/Release/net8.0/MQTTRestApi.dll
+/usr/share/dotnet/sdk/8.0.425/Microsoft.Common.CurrentVersion.targets(2412,5): warning MSB3277: Found conflicts between different versions of "Microsoft.EntityFrameworkCore.Relational" that could not be resolved. [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/MqttRestApi.Tests.csproj]
+/usr/share/dotnet/sdk/8.0.425/Microsoft.Common.CurrentVersion.targets(2412,5): warning MSB3277: There was a conflict between "Microsoft.EntityFrameworkCore.Relational, Version=8.0.13.0, Culture=neutral, PublicKeyToken=adb9793829ddae60" and "Microsoft.EntityFrameworkCore.Relational, Version=8.0.20.0, Culture=neutral, PublicKeyToken=adb9793829ddae60". [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/MqttRestApi.Tests.csproj]
+/usr/share/dotnet/sdk/8.0.425/Microsoft.Common.CurrentVersion.targets(2412,5): warning MSB3277:     "Microsoft.EntityFrameworkCore.Relational, Version=8.0.13.0, Culture=neutral, PublicKeyToken=adb9793829ddae60" was chosen because it was primary and "Microsoft.EntityFrameworkCore.Relational, Version=8.0.20.0, Culture=neutral, PublicKeyToken=adb9793829ddae60" was not. [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/MqttRestApi.Tests.csproj]
+/usr/share/dotnet/sdk/8.0.425/Microsoft.Common.CurrentVersion.targets(2412,5): warning MSB3277:     References which depend on "Microsoft.EntityFrameworkCore.Relational, Version=8.0.13.0, Culture=neutral, PublicKeyToken=adb9793829ddae60" [/home/studentinit2/.nuget/packages/microsoft.entityframeworkcore.relational/8.0.13/lib/net8.0/Microsoft.EntityFrameworkCore.Relational.dll]. [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/MqttRestApi.Tests.csproj]
+/usr/share/dotnet/sdk/8.0.425/Microsoft.Common.CurrentVersion.targets(2412,5): warning MSB3277:         /home/studentinit2/.nuget/packages/microsoft.entityframeworkcore.relational/8.0.13/lib/net8.0/Microsoft.EntityFrameworkCore.Relational.dll [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/MqttRestApi.Tests.csproj]
+/usr/share/dotnet/sdk/8.0.425/Microsoft.Common.CurrentVersion.targets(2412,5): warning MSB3277:           Project file item includes which caused reference "/home/studentinit2/.nuget/packages/microsoft.entityframeworkcore.relational/8.0.13/lib/net8.0/Microsoft.EntityFrameworkCore.Relational.dll". [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/MqttRestApi.Tests.csproj]
+/usr/share/dotnet/sdk/8.0.425/Microsoft.Common.CurrentVersion.targets(2412,5): warning MSB3277:             /home/studentinit2/.nuget/packages/microsoft.entityframeworkcore.relational/8.0.13/lib/net8.0/Microsoft.EntityFrameworkCore.Relational.dll [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/MqttRestApi.Tests.csproj]
+/usr/share/dotnet/sdk/8.0.425/Microsoft.Common.CurrentVersion.targets(2412,5): warning MSB3277:     References which depend on or have been unified to "Microsoft.EntityFrameworkCore.Relational, Version=8.0.20.0, Culture=neutral, PublicKeyToken=adb9793829ddae60" []. [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/MqttRestApi.Tests.csproj]
+/usr/share/dotnet/sdk/8.0.425/Microsoft.Common.CurrentVersion.targets(2412,5): warning MSB3277:         /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/bin/Release/net8.0/MQTTRestApi.dll [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/MqttRestApi.Tests.csproj]
+/usr/share/dotnet/sdk/8.0.425/Microsoft.Common.CurrentVersion.targets(2412,5): warning MSB3277:           Project file item includes which caused reference "/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/bin/Release/net8.0/MQTTRestApi.dll". [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/MqttRestApi.Tests.csproj]
+/usr/share/dotnet/sdk/8.0.425/Microsoft.Common.CurrentVersion.targets(2412,5): warning MSB3277:             /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/bin/Release/net8.0/MQTTRestApi.dll [/home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/MqttRestApi.Tests.csproj]
+  MqttRestApi.Tests -> /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/bin/Release/net8.0/MqttRestApi.Tests.dll
+Test run for /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/bin/Release/net8.0/MqttRestApi.Tests.dll (.NETCoreApp,Version=v8.0)
+VSTest version 17.11.1 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.31)
+[xUnit.net 00:00:00.04]   Discovering: MqttRestApi.Tests
+[xUnit.net 00:00:00.12]   Discovered:  MqttRestApi.Tests
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID '6710921e5da763a3a2392cd808b69f3f29f7e4a1' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 0, expectReject: False)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 0, expectReject: False)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID '8c2710eb827ab345540487bbd11dc5a2409a4fb5' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 1, expectReject: False)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 1, expectReject: False)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID '6710921e5da763a3a2392cd808b69f3f29f7e4a1' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 0, expectReject: False)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 0, expectReject: False)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID '8c2710eb827ab345540487bbd11dc5a2409a4fb5' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 1, expectReject: False)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 1, expectReject: False)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID '6710921e5da763a3a2392cd808b69f3f29f7e4a1' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 0, expectReject: False)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 0, expectReject: False)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID '8c2710eb827ab345540487bbd11dc5a2409a4fb5' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 1, expectReject: False)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 1, expectReject: False)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID '6710921e5da763a3a2392cd808b69f3f29f7e4a1' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 0, expectReject: False)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 0, expectReject: False)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID '8c2710eb827ab345540487bbd11dc5a2409a4fb5' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 1, expectReject: False)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 1, expectReject: False)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID '6710921e5da763a3a2392cd808b69f3f29f7e4a1' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 0, expectReject: False)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 0, expectReject: False)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID '8c2710eb827ab345540487bbd11dc5a2409a4fb5' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 1, expectReject: False)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 1, expectReject: False)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID 'd236bb85b98634943e227957e10c5450c81445af' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "self", roleValue: 0, expectReject: True)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "self", roleValue: 0, expectReject: True)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID '83ffc0d568878a69e7ec528bc2b94daaa86f541b' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "self", roleValue: 1, expectReject: True)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "self", roleValue: 1, expectReject: True)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID 'd236bb85b98634943e227957e10c5450c81445af' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "self", roleValue: 0, expectReject: True)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "self", roleValue: 0, expectReject: True)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID '83ffc0d568878a69e7ec528bc2b94daaa86f541b' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "self", roleValue: 1, expectReject: True)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "self", roleValue: 1, expectReject: True)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID 'd236bb85b98634943e227957e10c5450c81445af' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "self", roleValue: 0, expectReject: True)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "self", roleValue: 0, expectReject: True)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID '83ffc0d568878a69e7ec528bc2b94daaa86f541b' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "self", roleValue: 1, expectReject: True)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "self", roleValue: 1, expectReject: True)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID '0eb4a8f7ce6cbacf0259120e61cc7686e9971f17' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "missing", roleValue: 0, expectReject: True)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "missing", roleValue: 0, expectReject: True)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID 'bd789668b47a59acd95d4190dc8475a614a5b2c3' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "missing", roleValue: 1, expectReject: True)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "missing", roleValue: 1, expectReject: True)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID '0eb4a8f7ce6cbacf0259120e61cc7686e9971f17' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "missing", roleValue: 0, expectReject: True)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "missing", roleValue: 0, expectReject: True)')
+[xUnit.net 00:00:00.12] MqttRestApi.Tests: Skipping test case with duplicate ID 'bd789668b47a59acd95d4190dc8475a614a5b2c3' ('MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "missing", roleValue: 1, expectReject: True)' and 'MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "missing", roleValue: 1, expectReject: True)')
+[xUnit.net 00:00:00.12]   Starting:    MqttRestApi.Tests
+  Passed MqttRestApi.Tests.UserControllerTests.AdminEndpoints_RequireAdminRole(method: "ChangeRole") [4 ms]
+  Passed MqttRestApi.Tests.AlarmControllerTests.Controller_RequiresAdminRole [3 ms]
+  Passed MqttRestApi.Tests.UserControllerTests.AdminEndpoints_RequireAdminRole(method: "ListUsers") [< 1 ms]
+  Passed MqttRestApi.Tests.AlarmControllerTests.GetAllAlarmedMessages_Empty_ReturnsMessage [33 ms]
+  Passed MqttRestApi.Tests.AlarmControllerTests.DeleteAlarm_CallsServiceAndReturnsOk [7 ms]
+  Passed MqttRestApi.Tests.AlarmControllerTests.GetAllAlarms_Empty_ReturnsMessage [1 ms]
+  Passed MqttRestApi.Tests.AlarmControllerTests.GetAllAlarmedMessages_NotEmpty_ReturnsList [< 1 ms]
+[12:28:29 - ALARM_LOW] : decimal 1.2345
+[12:28:29 - INFO] : Test
+  Passed MqttRestApi.Tests.AlarmControllerTests.CreateAlarm_CallsServiceAndReturnsOk [3 ms]
+  Passed MqttRestApi.Tests.AlarmControllerTests.GetAllAlarms_NotEmpty_ReturnsList [< 1 ms]
+  Passed MqttRestApi.Tests.LogControllerTests.GetAllLogs_ReturnsOkWithLogsFromService [121 ms]
+  Passed MqttRestApi.Tests.LogControllerTests.Controller_RequiresAdminRole [< 1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.GetAvailableTopics_Empty_ReturnsMessage [129 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.GetMessages_NotEmpty_ReturnsMessagesForCurrentUser [1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.MyTopics_Empty_ReturnsMessage [1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.GetStats_ReturnsCountsFromRedis [< 1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.SuggestDeviceValueChange_CallsServiceWithTopicAndValue [< 1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.AdminEndpoints_RequireAdminRole(method: "Subscribe") [< 1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.AdminEndpoints_RequireAdminRole(method: "GetAllMessages") [< 1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.AdminEndpoints_RequireAdminRole(method: "SuggestDeviceValueChange") [< 1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.AdminEndpoints_RequireAdminRole(method: "FailedSubscriptions") [< 1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.AdminEndpoints_RequireAdminRole(method: "ResubscribeToFailed") [< 1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.AdminEndpoints_RequireAdminRole(method: "ReconnectToServer") [< 1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.GetAllMessages_Empty_ReturnsMessage [1 ms]
+  Passed MqttRestApi.Tests.UserControllerTests.Login_ValidCredentials_ReturnsToken [131 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.GetTopicStats_DecodesTopicAndReturnsCount [1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.UserUnsubscribe_UsesUserIdFromClaims [< 1 ms]
+  Passed MqttRestApi.Tests.UserControllerTests.Login_ServiceThrows_PropagatesException [2 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.Subscribe_CallsServiceWithTopic [< 1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.GetMessages_Empty_ReturnsMessage [< 1 ms]
+  Passed MqttRestApi.Tests.RedisServiceTests.IsSubscribedAsync_ReturnsRedisAnswer(contains: False) [140 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.FailedSubscriptions_ReturnsListFromService [< 1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.GetMessagesFiltered_PassesTopicAndMinutes [< 1 ms]
+  Passed MqttRestApi.Tests.RedisServiceTests.IsSubscribedAsync_ReturnsRedisAnswer(contains: True) [1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.MyTopics_NotEmpty_ReturnsList [< 1 ms]
+  Passed MqttRestApi.Tests.UserControllerTests.ChangePassword_UsesUserIdFromClaims [3 ms]
+  Passed MqttRestApi.Tests.UserControllerTests.ChangeRole_CallsService [1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.UserSubscribe_UsesUserIdFromClaims [1 ms]
+  Passed MqttRestApi.Tests.RedisServiceTests.RemoveAsync_FirstRemovalFails_ThrowsBadRequest [2 ms]
+Redis key: 0:kuca soba
+Redis JSON: {"Id":0,"Topic":"kuca soba","Payload":"22","QoS":0,"Retain":false,"RecievedAt":"2026-10-15T12:28:30.0350412+02:00","AlarmType":0}
+Poruka sacuvana u Redis!
+Redis key: 0:kuca/+/temp
+Redis JSON: {"Id":0,"Topic":"kuca/\u002B/temp","Payload":"22","QoS":0,"Retain":false,"RecievedAt":"2026-10-15T12:28:30.063661+02:00","AlarmType":0}
+Poruka sacuvana u Redis!
+Redis key: 0:kuca/#
+Redis JSON: {"Id":0,"Topic":"kuca/#","Payload":"22","QoS":0,"Retain":false,"RecievedAt":"2026-10-15T12:28:30.0644433+02:00","AlarmType":0}
+Poruka sacuvana u Redis!
+Redis key: 0:kuca/test
+Redis JSON: {"Id":0,"Topic":"kuca/test","Payload":"22","QoS":0,"Retain":false,"RecievedAt":"2026-10-15T12:28:30.0711013+02:00","AlarmType":0}
+Poruka sacuvana u Redis!
+  Passed MqttRestApi.Tests.UserControllerTests.ListUsers_ReturnsUsersFromService [< 1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.ResubscribeToFailed_ReturnsResultsFromService [< 1 ms]
+  Passed MqttRestApi.Tests.MqttControllerTests.ReconnectToServer_CallsForceReconnect [< 1 ms]
+  Passed MqttRestApi.Tests.UserControllerTests.Register_ValidData_ReturnsToken [2 ms]
+  Passed MqttRestApi.Tests.RedisServiceTests.SaveMessageAsync_InvalidTopic_SavesMessageButDoesNotIncrementCounter(topic: "kuca soba") [28 ms]
+  Passed MqttRestApi.Tests.RedisServiceTests.SaveMessageAsync_InvalidTopic_SavesMessageButDoesNotIncrementCounter(topic: "kuca/+/temp") [< 1 ms]
+  Passed MqttRestApi.Tests.RedisServiceTests.SaveMessageAsync_InvalidTopic_SavesMessageButDoesNotIncrementCounter(topic: "kuca/#") [< 1 ms]
+  Passed MqttRestApi.Tests.RedisServiceTests.RemoveAsync_BothRemovalsSucceed_DoesNotThrow [< 1 ms]
+  Passed MqttRestApi.Tests.RedisServiceTests.GetUserTopicsAsync_ReturnsTopicNames [5 ms]
+Greska pri dobijanju topic count-a: down
+Greska prilikom cuvanja u redis: StackExchange.Redis.RedisConnectionException: down
+   at Moq.Behaviors.ThrowException.Execute(Invocation invocation) in /_/src/Moq/Behaviors/ThrowException.cs:line 22
+   at Moq.SequenceSetup.ExecuteCore(Invocation invocation) in /_/src/Moq/SequenceSetup.cs:line 35
+   at Moq.Setup.Execute(Invocation invocation) in /_/src/Moq/Setup.cs:line 84
+   at Moq.FindAndExecuteMatchingSetup.Handle(Invocation invocation, Mock mock) in /_/src/Moq/Interception/InterceptionAspects.cs:line 95
+   at Moq.Mock.Moq.IInterceptor.Intercept(Invocation invocation) in /_/src/Moq/Interception/Mock.cs:line 17
+   at Moq.CastleProxyFactory.Interceptor.Intercept(IInvocation underlying) in /_/src/Moq/Interception/CastleProxyFactory.cs:line 115
+   at Castle.DynamicProxy.AbstractInvocation.Proceed()
+   at Castle.Proxies.IConnectionMultiplexerProxy.GetDatabase(Int32 db, Object asyncState)
+   at MQTTRestApi.Services.RedisService.SaveMessageAsync(MqttMessage message) in /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Services/RedisService.cs:line 42
+Redis key: 0:kuca/test
+Redis JSON: {"Id":0,"Topic":"kuca/test","Payload":"22","QoS":0,"Retain":false,"RecievedAt":"2026-10-15T12:28:30.1074466+02:00","AlarmType":0}
+Poruka sacuvana u Redis!
+Log uspesno sacuvan u bazi podataka!
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - ALARM_HIGH] : xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Log uspesno sacuvan u bazi podataka!
+  Passed MqttRestApi.Tests.RedisServiceTests.SaveMessageAsync_ValidTopic_IncrementsTopicCounter [1 ms]
+  Passed MqttRestApi.Tests.RedisServiceTests.GetTopicCountAsync_KeyMissing_ReturnsZero [2 ms]
+  Passed MqttRestApi.Tests.RedisServiceTests.GetTopicCountAsync_RedisThrows_ReturnsZero [1 ms]
+  Passed MqttRestApi.Tests.RedisServiceTests.AddAsync_AddsUserToTopicSetAndTopicToUserSet [3 ms]
+  Passed MqttRestApi.Tests.RedisServiceTests.GetTopicCountAsync_KeyExists_ReturnsCount [1 ms]
+  Passed MqttRestApi.Tests.RedisServiceTests.SaveMessageAsync_RedisThrows_DoesNotThrowAndSkipsCounter [25 ms]
+  Passed MqttRestApi.Tests.RedisServiceTests.SaveMessageAsync_StoresSerializedMessageWithOneHourTtl [3 ms]
+  Passed MqttRestApi.Tests.AlarmServiceTests.DeleteAlarm_Unknown_ThrowsBadRequest [376 ms]
+  Passed MqttRestApi.Tests.LoggerServiceTests.LogMessage_SavesLogWithMessageAndType [377 ms]
+[12:28:30 - MESSAGE] : emoji 😀🚀
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - INFO] : quotes "double" 'single'
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - REDIS] : SQL ' OR 1=1 --
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - REDIS] : negative value -999
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - ERROR] :  
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - INFO] : normal log
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - ALARM_HIGH] : emoji 🔥
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - WARNING] : tab	value
+Log uspesno sacuvan u bazi podataka!
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "decimal 1.2345", type: ALARM_LOW) [378 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"···, type: ALARM_HIGH) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "emoji 😀🚀", type: MESSAGE) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "quotes \"double\" 'single'", type: INFO) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "SQL ' OR 1=1 --", type: REDIS) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "negative value -999", type: REDIS) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: " ", type: ERROR) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "normal log", type: INFO) [< 1 ms]
+[12:28:30 - INFO] : line1
+line2
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - WARNING] : end
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - WARNING] : 
+[12:28:30 - INFO] : test1
+Log uspesno sacuvan u bazi podataka!
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - ERROR] : test2
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - MESSAGE] : topic: a/b/#
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - AUTH] : Unicode žđčćš
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - AUTH] : json {"x":true}
+Log uspesno sacuvan u bazi podataka!
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "emoji 🔥", type: ALARM_HIGH) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "tab\tvalue", type: WARNING) [< 1 ms]
+  Passed MqttRestApi.Tests.LoggerServiceTests.GetLogs_NoLogs_ReturnsEmptyList [3 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "line1\nline2", type: INFO) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "end", type: WARNING) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "", type: WARNING) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "topic: a/b/#", type: MESSAGE) [< 1 ms]
+  Passed MqttRestApi.Tests.LoggerServiceTests.GetLogs_ReturnsAllSavedLogs [1 ms]
+[12:28:30 - ERROR] : nul char
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - ALARM_LOW] : <script>alert(1)</script>
+Log uspesno sacuvan u bazi podataka!
+[12:28:30 - INFO] : x
+Greska prilikom logging-a poruke: Cannot access a disposed context instance. A common cause of this error is disposing a context instance that was resolved from dependency injection and then later trying to use the same context instance elsewhere in your application. This may occur if you are calling 'Dispose' on the context instance, or wrapping it in a using statement. If you are using dependency injection, you should let the dependency injection container take care of disposing context instances.
+Object name: 'AppDbContext'.
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "Unicode žđčćš", type: AUTH) [< 1 ms]
+  Passed MqttRestApi.Tests.AlarmServiceTests.GetAllAlarms_Empty_ReturnsEmptyList [6 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "json {\"x\":true}", type: AUTH) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "nul\0char", type: ERROR) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Logger_PersistsBoundaryMessages(message: "<script>alert(1)</script>", type: ALARM_LOW) [< 1 ms]
+  Passed MqttRestApi.Tests.LoggerServiceTests.LogMessage_DisposedContext_RethrowsException [2 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 2, value: "' OR 1=1 --", lower: -4, upper: 16) [1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 1, value: "+", lower: -1, upper: 19) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 1, value: "semi;colon", lower: 7, upper: 27) [< 1 ms]
+  Passed MqttRestApi.Tests.AlarmServiceTests.CreateAlarm_UnknownTopic_ThrowsBadRequest [8 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 3, value: "brackets[]{}", lower: 9, upper: 29) [7 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 3, value: "-1", lower: 13, upper: 33) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 2, value: "underscore_name", lower: 4, upper: 24) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 1, value: "<script>", lower: -5, upper: 15) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 0, value: "", lower: -10, upper: 10) [1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 0, value: "dots.name", lower: 6, upper: 26) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 0, value: "emoji 😀", lower: -6, upper: 14) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 0, value: "quote'\"", lower: 2, upper: 22) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 2, value: "colon:value", lower: 8, upper: 28) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 1, value: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"···, lower: 3, upper: 23) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 0, value: "0", lower: 14, upper: 34) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 2, value: "éøß", lower: 12, upper: 32) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 1, value: " ", lower: -9, upper: 11) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 1, value: "漢字", lower: 11, upper: 31) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 0, value: "slash\\backslash", lower: 10, upper: 30) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 3, value: "dash-name", lower: 5, upper: 25) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 3, value: "a/b", lower: -3, upper: 17) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 0, value: "#", lower: -2, upper: 18) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 3, value: "Unicode žđčćš", lower: -7, upper: 13) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 2, value: "line\nvalue", lower: 0, upper: 20) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 2, value: "normal", lower: -8, upper: 12) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.DomainModels_ConstructorAndStringMatrix(modelKind: 3, value: "tab\tvalue", lower: 1, upper: 21) [< 1 ms]
+  Passed MqttRestApi.Tests.AlarmServiceTests.CreateAlarm_Both_LowerNotLessThanUpper_ThrowsBadRequest(lower: 10, upper: 10) [3 ms]
+[12:28:30] | qa/edge/value | 29.99 | AtMostOnce | False
+  Passed MqttRestApi.Tests.AlarmServiceTests.CreateAlarm_Both_LowerNotLessThanUpper_ThrowsBadRequest(lower: 30, upper: 10) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: NaN, upper: 10, expectReject: True) [1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 1, lower: 20, upper: -28, expectReject: False) [8 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -12, upper: 9, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -6, upper: 15, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -14, upper: 7, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 1, lower: 40, upper: -26, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -19, upper: 2, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 1, lower: 50, upper: -25, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -11, upper: 10, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 1, lower: 30, upper: -27, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -8, upper: 13, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -16, upper: 5, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -9, upper: 12, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -1.7976931348623157E+308, upper: 1.7976931348623157E+308, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 0, lower: 0, upper: -30, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 1, lower: 10, upper: -29, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: 30, upper: 10, expectReject: True) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 0, lower: 30, upper: -27, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -15, upper: 6, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -18, upper: 3, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 0, lower: 50, upper: -25, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 999, lower: 10, upper: 30, expectReject: True) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -20, upper: 1, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -∞, upper: 10, expectReject: True) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: ∞, upper: ∞, expectReject: True) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 0, lower: 10, upper: -29, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: -1, lower: 10, upper: 30, expectReject: True) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 0, lower: 40, upper: -26, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -7, upper: 14, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.AlarmServiceTests.GetAllAlarmedMessages_ReturnsOnlyMessagesWithAlarm [20 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: 10, upper: 10, expectReject: True) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: 0, upper: 0, expectReject: True) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: 1.7976931348623157E+308, upper: -1.7976931348623157E+308, expectReject: True) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 0, lower: 20, upper: -28, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -1, upper: -1, expectReject: True) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 1, lower: 0, upper: -30, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -10, upper: 11, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -13, upper: 8, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: 10, upper: NaN, expectReject: True) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateAlarm_LimitsAndEnumMatrix(typeValue: 2, lower: -17, upper: 4, expectReject: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "29.99", expected: NONE) [419 ms]
+[12:28:30] | qa/edge/value | 999 | AtMostOnce | False
+[12:28:30] | qa/edge/value | 29.99 | AtMostOnce | False
+[12:28:30] | qa/edge/value | not numeric | AtMostOnce | False
+[12:28:30] | qa/edge/value | 0 | AtMostOnce | False
+[12:28:30] | qa/edge/value | 0 | AtMostOnce | False
+[12:28:30] | qa/edge/value | 10.01 | AtMostOnce | False
+  Passed MqttRestApi.Tests.AlarmServiceTests.DeleteAlarm_Existing_RemovesIt [7 ms]
+  Passed MqttRestApi.Tests.AlarmServiceTests.GetAllAlarms_ReturnsAllAlarms [1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "999", expected: ALARM_HIGH) [5 ms]
+  Passed MqttRestApi.Tests.AlarmServiceTests.CreateAlarm_Valid_SavesAlarmWithGivenValues [2 ms]
+  Passed MqttRestApi.Tests.AlarmServiceTests.CreateTwoAlarms_SameTopic_ThrowsBadRequest [1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 1, lower: 10, upper: 30, payload: "29.99", expected: NONE) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 0, lower: 10, upper: 30, payload: "not numeric", expected: NONE) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 0, lower: 10, upper: 30, payload: "0", expected: ALARM_LOW) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "0", expected: ALARM_LOW) [2 ms]
+[12:28:30] | qa/edge/value | -Infinity | AtMostOnce | False
+[12:28:30] | qa/edge/value | 9.99 | AtMostOnce | False
+[12:28:30] | qa/edge/value | -100 | AtMostOnce | False
+[12:28:30] | qa/edge/value | 30.01 | AtMostOnce | False
+[12:28:30] | qa/edge/value | 10 | AtMostOnce | False
+[12:28:30] | qa/edge/value | garbage | AtMostOnce | False
+[12:28:30] | qa/edge/value | 10 | AtMostOnce | False
+[12:28:30] | qa/edge/value | 100 | AtMostOnce | False
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 0, lower: 10, upper: 30, payload: "10.01", expected: NONE) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 0, lower: 10, upper: 30, payload: "-Infinity", expected: ALARM_LOW) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "9.99", expected: ALARM_LOW) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "-100", expected: ALARM_LOW) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 1, lower: 10, upper: 30, payload: "30.01", expected: ALARM_HIGH) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 0, lower: 10, upper: 30, payload: "10", expected: NONE) [7 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 1, lower: 10, upper: 30, payload: "garbage", expected: NONE) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 1, lower: 10, upper: 30, payload: "10", expected: NONE) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "100", expected: ALARM_HIGH) [1 ms]
+[12:28:30] | qa/edge/value | 15 | AtMostOnce | False
+[12:28:30] | qa/edge/value | 20 | AtMostOnce | False
+[12:28:30] | qa/edge/value | NaN | AtMostOnce | False
+[12:28:30] | qa/edge/value | -Infinity | AtMostOnce | False
+[12:28:30] | qa/edge/value | 100 | AtMostOnce | False
+[12:28:30] | qa/edge/value | Infinity | AtMostOnce | False
+[12:28:30] | qa/edge/value | NaN | AtMostOnce | False
+[12:28:30] | qa/edge/value | 9.99 | AtMostOnce | False
+[12:28:30] | qa/edge/value | -1 | AtMostOnce | False
+[12:28:30] | qa/edge/value | 30 | AtMostOnce | False
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "15", expected: NONE) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "20", expected: NONE) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 0, lower: 10, upper: 30, payload: "NaN", expected: NONE) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "-Infinity", expected: ALARM_LOW) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 1, lower: 10, upper: 30, payload: "100", expected: ALARM_HIGH) [1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "Infinity", expected: ALARM_HIGH) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "NaN", expected: NONE) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 0, lower: 10, upper: 30, payload: "9.99", expected: ALARM_LOW) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 1, lower: 10, upper: 30, payload: "-1", expected: NONE) [1 ms]
+[12:28:30] | qa/edge/value | NaN | AtMostOnce | False
+[12:28:30] | qa/edge/value | not-a-number | AtMostOnce | False
+[12:28:30] | qa/edge/value | 1 | AtMostOnce | False
+[12:28:30] | qa/edge/value | -1 | AtMostOnce | False
+[12:28:30] | qa/edge/value | 100 | AtMostOnce | False
+[12:28:30] | qa/edge/value | 10.01 | AtMostOnce | False
+[12:28:30] | qa/edge/value | 0 | AtMostOnce | False
+[12:28:30] | qa/edge/value | -100 | AtMostOnce | False
+[12:28:30] | qa/edge/value | Infinity | AtMostOnce | False
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 1, lower: 10, upper: 30, payload: "30", expected: NONE) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 1, lower: 10, upper: 30, payload: "NaN", expected: NONE) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "not-a-number", expected: NONE) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "1", expected: ALARM_LOW) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "-1", expected: ALARM_LOW) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 0, lower: 10, upper: 30, payload: "100", expected: NONE) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "10.01", expected: NONE) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 1, lower: 10, upper: 30, payload: "0", expected: NONE) [1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 0, lower: 10, upper: 30, payload: "-100", expected: ALARM_LOW) [1 ms]
+[12:28:30] | qa/edge/value | 30.01 | AtMostOnce | False
+[12:28:30] | qa/edge/value | 10 | AtMostOnce | False
+[12:28:30] | qa/edge/value | 30 | AtMostOnce | False
+[12:28:30] | qa/edge/value | 31 | AtMostOnce | False
+[12:28:30] | qa/edge/value | 30 | AtMostOnce | False
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 1, lower: 10, upper: 30, payload: "Infinity", expected: ALARM_HIGH) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "30.01", expected: ALARM_HIGH) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "10", expected: NONE) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 0, lower: 10, upper: 30, payload: "30", expected: NONE) [1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "31", expected: ALARM_HIGH) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.IncomingMqttPayload_AlarmClassificationMatrix(typeValue: 2, lower: 10, upper: 30, payload: "30", expected: NONE) [1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "device-1/state", expectedValid: True) [8 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/##", expectedValid: False) [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/+/+/#/b", expectedValid: False) [< 1 ms]
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "one/two/three/four", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: " ", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/#/c", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/#suffix", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/++", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "+", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/+/b/#/c", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/+suffix", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "x.y/z.w", expectedValid: True) [< 1 ms]
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/b/#", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a1/b2/c3", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a#", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a+b", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "#", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/+/c", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "+/+/+", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a\nb", expectedValid: False) [< 1 ms]
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "root/+/value", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a//b", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/suffix+", expectedValid: False) [7 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/#/", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "root/room/#", expectedValid: True) [1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "///", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "dashes-are-ok/here", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "many/levels/are/allowed/too", expectedValid: True) [< 1 ms]
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "+/b", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/+", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "underscore_name/ok", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/c d", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a b/c", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a\tb", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "home/kitchen/humidity", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "sensor_01/value", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a b", expectedValid: False) [< 1 ms]
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/b", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/#/b", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "0/1/2", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "house/room/temperature", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/#", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "//", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "a/+/b/#/c/d", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "telemetry/device-7/temperature", expectedValid: True) [< 1 ms]
+Naziv topic-a nije validan!
+Pokusavam povezivanje sa serverom...
+Konekcija uspesno uspostavljena!
+Greska pri slanju poruke: greska
+[xUnit.net 00:00:00.75]     MqttRestApi.Tests.AuthServiceTests.Register_NewUser_SavesUserWithHashedPassword [FAIL]
+[xUnit.net 00:00:00.75]       MQTTRestApi.Domain.Exceptions.BadRequestException : Sifra mora sadrzati makar 8 karaktera! (razmaci se brisu sa pocetka i kraja)
+[xUnit.net 00:00:00.75]       Stack Trace:
+[xUnit.net 00:00:00.75]         /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Services/AuthService.cs(46,0): at MQTTRestApi.Services.AuthService.Register(String username, String password, UserTypes TipKorisnika)
+[xUnit.net 00:00:00.75]         /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/AuthServiceTests.cs(32,0): at MqttRestApi.Tests.AuthServiceTests.Register_NewUser_SavesUserWithHashedPassword()
+[xUnit.net 00:00:00.75]         --- End of stack trace from previous location ---
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "A/B/C", expectedValid: True) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeTopic_ExtremeTopicSyntaxMatrix(topic: "/a", expectedValid: False) [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.DeviceSuggestValueChange_PublishFails_ThrowsBadRequest [6 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeAsync_ValidTopic_SubscribesAndSavesTopic [3 ms]
+  Passed MqttRestApi.Tests.UsersServiceTests.GetUsers_ReturnsAllUsersWithoutPasswords [577 ms]
+  Passed MqttRestApi.Tests.AuthServiceTests.Login_WrongPassword_ThrowsBadRequestAndLogs [586 ms]
+  Failed MqttRestApi.Tests.AuthServiceTests.Register_NewUser_SavesUserWithHashedPassword [1 ms]
+  Error Message:
+   MQTTRestApi.Domain.Exceptions.BadRequestException : Sifra mora sadrzati makar 8 karaktera! (razmaci se brisu sa pocetka i kraja)
+  Stack Trace:
+     at MQTTRestApi.Services.AuthService.Register(String username, String password, UserTypes TipKorisnika) in /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Services/AuthService.cs:line 46
+   at MqttRestApi.Tests.AuthServiceTests.Register_NewUser_SavesUserWithHashedPassword() in /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/AuthServiceTests.cs:line 32
+--- End of stack trace from previous location ---
+[12:28:30] | kuca/kuhinja/temperatura | 99 | AtMostOnce | False
+  Passed MqttRestApi.Tests.MqttServiceTests.GetMessages_ReturnsOnlyMessagesMatchingUserSubscriptions(value: "kuca/#") [32 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.GetMessages_ReturnsOnlyMessagesMatchingUserSubscriptions(value: "kuca/+/temperatura") [3 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeUserAsync_UnknownTopic_ThrowsNotFound [1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeAsync_BrokerRejects_ThrowsAndDoesNotSaveTopic [1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.GetAvailableTopics_ReturnsAllTopics [5 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.MessageHandler_AlarmOnOtherTopic_DoesNotAffectMessage [3 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "duplicate", password: "GoodPass!1x", roleValue: 0, expectReject: True, duplicate: True) [206 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "invalid-role", password: "GoodPass!1x", roleValue: 999, expectReject: True, duplicate: False) [< 1 ms]
+Subscribe nije uspeo!
+[12:28:30] | kuca/soba/temperatura | 35 | AtMostOnce | False
+Pokusavam povezivanje sa serverom...
+Konekcija uspesno uspostavljena!
+Naziv topic-a nije validan!
+  Passed MqttRestApi.Tests.MqttServiceTests.UnsubscribeUserAsync_NotSubscribed_ThrowsNotFound [12 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.DeviceSuggestValueChange_NotConnected_DoesNotPublish [1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.ResubscribeToAll_BrokerRejects_TopicIsAddedToFailedList [3 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.ResubscribeToFailed_NoFailedTopics_ThrowsBadRequest [1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.MessageHandler_MinimumOnlyAlarm_IgnoresHighValues [3 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.GetFilteredMessages_ReturnsOnlyRecentMessagesOfThatTopic [24 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.ForceReconnect_WhenAlreadyConnected_ThrowsBadRequest [1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.UnsubscribeUserAsync_RedisFails_RestoresSubscriptionAndThrows [8 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeAsync_DuplicateTopic_ThrowsBadRequest [2 ms]
+Naziv topic-a nije validan!
+Naziv topic-a nije validan!
+Pokusavam povezivanje sa serverom...
+Povezivanje nije uspelo: nema brokera
+Subscribe nije uspeo!
+Uspesan resubscribe na topic kuca/test!
+[12:28:30] | kuca/soba/temperatura | 5 | AtMostOnce | False
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeAsync_InvalidTopic_ThrowsBadRequest(topic: "") [1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeAsync_InvalidTopic_ThrowsBadRequest(topic: "kuca soba") [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeAsync_InvalidTopic_ThrowsBadRequest(topic: "kuca/#/soba") [< 1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.GetFilteredMessages_OtherUserSubscribed_StillThrowsUnauthorized [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.ForceReconnect_ConnectFails_ThrowsBadRequest [4 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.ResubscribeToFailed_BrokerAcceptsLater_ReturnsSuccessAndClearsFailedList [3 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.MyTopics_ReturnsOnlyTopicsOfThatUser [7 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeUserAsync_AlreadySubscribed_ThrowsConflict [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.MessageHandler_MaximumOnlyAlarm_IgnoresLowValues [3 ms]
+Pokusavam povezivanje sa serverom...
+Konekcija uspesno uspostavljena!
+[12:28:30] | kuca/soba/temperatura | 30.5 | AtMostOnce | False
+[12:28:30] | kuca/soba/temperatura | nije broj | AtMostOnce | False
+[12:28:30] | kuca/test | nije broj | AtMostOnce | False
+[12:28:30] | kuca/soba/temperatura | 20 | AtMostOnce | False
+Pokusavam povezivanje sa serverom...
+Konekcija uspesno uspostavljena!
+Uspesan resubscribe na topic kuca/test!
+  Passed MqttRestApi.Tests.MqttServiceTests.GetAllMessages_ReturnsEverythingNewestFirst [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.DeviceSuggestValueChange_Connected_PublishesToTopic [1 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.MessageHandler_DecimalPayload_IsComparedAsNumber [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.GetFilteredMessages_UserNotSubscribed_ThrowsUnauthorized [2 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.MessageHandler_AlarmOnTopic_NonNumericPayload_SavesWithoutAlarmAndNotifiesHub [4 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.MessageHandler_NoAlarmForTopic_SavesEvenWithNonNumericPayload [3 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.UnsubscribeUserAsync_Valid_RemovesSubscriptionAndUpdatesRedis [3 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.MessageHandler_ValueInRange_SavesWithoutAlarm [3 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.ForceReconnect_WhenNotConnected_ConnectsAndResubscribes [3 ms]
+[12:28:30] | kuca/soba/temperatura | 35 | AtMostOnce | False
+[12:28:30] | kuca/soba/temperatura | 5 | AtMostOnce | False
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeUserAsync_Valid_SavesSubscriptionAndUpdatesRedis [5 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.MessageHandler_ValueAboveUpperLimit_SavesAsAlarmHighAndNotifiesHub [4 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.SubscribeUserAsync_RedisFails_RollsBackAndThrowsBadRequest [3 ms]
+  Passed MqttRestApi.Tests.MqttServiceTests.MessageHandler_ValueBelowLowerLimit_SavesAsAlarmLow [2 ms]
+  Passed MqttRestApi.Tests.UsersServiceTests.ChangeRole_Valid_UpdatesRole [197 ms]
+  Passed MqttRestApi.Tests.UsersServiceTests.ChangeRole_AdminChangesHisRole_ThrowsBadRequest [< 1 ms]
+  Passed MqttRestApi.Tests.AuthServiceTests.Login_CorrectCredentials_ReturnsUserInfo [392 ms]
+  Passed MqttRestApi.Tests.AuthServiceTests.Login_UnknownUser_ThrowsBadRequest [< 1 ms]
+[xUnit.net 00:00:01.27]     MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "admin-escalation", password: "GoodPass!1x", roleValue: 1, expectReject: True, duplicate: False) [FAIL]
+[xUnit.net 00:00:01.27]       Assert.Throws() Failure: No exception was thrown
+[xUnit.net 00:00:01.27]       Expected: typeof(MQTTRestApi.Domain.Exceptions.BadRequestException)
+[xUnit.net 00:00:01.27]       Stack Trace:
+[xUnit.net 00:00:01.27]         /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/TestPlan313UnitTests.cs(90,0): at MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(String username, String password, Int32 roleValue, Boolean expectReject, Boolean duplicate)
+[xUnit.net 00:00:01.27]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.61]     MqttRestApi.Tests.UsersServiceTests.ChangePassword_Valid_StoresNewHash [FAIL]
+[xUnit.net 00:00:01.61]       MQTTRestApi.Domain.Exceptions.BadRequestException : Sifra mora sadrzati makar 8 karaktera! (razmaci se brisu sa pocetka i kraja)
+[xUnit.net 00:00:01.61]       Stack Trace:
+[xUnit.net 00:00:01.61]         /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Services/UsersService.cs(29,0): at MQTTRestApi.Services.UsersService.ChangePassword(Int32 userId, ChangePasswordDto changePasswordDto)
+[xUnit.net 00:00:01.61]         /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/UsersServiceTests.cs(56,0): at MqttRestApi.Tests.UsersServiceTests.ChangePassword_Valid_StoresNewHash()
+[xUnit.net 00:00:01.61]         --- End of stack trace from previous location ---
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "qa_valid_6", password: "GoodPass!6x", roleValue: 0, expectReject: False, duplicate: False) [362 ms]
+  Passed MqttRestApi.Tests.UsersServiceTests.ChangePassword_WrongOldPassword_ThrowsAndKeepsOldHash [308 ms]
+  Passed MqttRestApi.Tests.UsersServiceTests.ChangePassword_UnknownUser_ThrowsBadRequest [4 ms]
+  Passed MqttRestApi.Tests.UsersServiceTests.GetUsers_NoUsers_ReturnsEmptyList [< 1 ms]
+  Passed MqttRestApi.Tests.AuthServiceTests.Register_DuplicateUsername_ThrowsBadRequest [123 ms]
+  Failed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "admin-escalation", password: "GoodPass!1x", roleValue: 1, expectReject: True, duplicate: False) [122 ms]
+  Error Message:
+   Assert.Throws() Failure: No exception was thrown
+Expected: typeof(MQTTRestApi.Domain.Exceptions.BadRequestException)
+  Stack Trace:
+     at MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(String username, String password, Int32 roleValue, Boolean expectReject, Boolean duplicate) in /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/TestPlan313UnitTests.cs:line 90
+--- End of stack trace from previous location ---
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "qa_valid_7", password: "GoodPass!7x", roleValue: 0, expectReject: False, duplicate: False) [240 ms]
+  Failed MqttRestApi.Tests.UsersServiceTests.ChangePassword_Valid_StoresNewHash [360 ms]
+  Error Message:
+   MQTTRestApi.Domain.Exceptions.BadRequestException : Sifra mora sadrzati makar 8 karaktera! (razmaci se brisu sa pocetka i kraja)
+  Stack Trace:
+     at MQTTRestApi.Services.UsersService.ChangePassword(Int32 userId, ChangePasswordDto changePasswordDto) in /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Services/UsersService.cs:line 29
+   at MqttRestApi.Tests.UsersServiceTests.ChangePassword_Valid_StoresNewHash() in /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/UsersServiceTests.cs:line 56
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:02.10]     MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "tab\tname", password: "GoodPass!1x", roleValue: 0, expectReject: True, duplicate: False) [FAIL]
+[xUnit.net 00:00:02.10]       Assert.Throws() Failure: No exception was thrown
+[xUnit.net 00:00:02.10]       Expected: typeof(MQTTRestApi.Domain.Exceptions.BadRequestException)
+[xUnit.net 00:00:02.10]       Stack Trace:
+[xUnit.net 00:00:02.10]         /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/TestPlan313UnitTests.cs(90,0): at MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(String username, String password, Int32 roleValue, Boolean expectReject, Boolean duplicate)
+[xUnit.net 00:00:02.10]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:02.10]     MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "a", password: "GoodPass!1x", roleValue: 0, expectReject: False, duplicate: False) [FAIL]
+[xUnit.net 00:00:02.10]       MQTTRestApi.Domain.Exceptions.BadRequestException : Username mora sadrzati makar 4 karaktera!
+[xUnit.net 00:00:02.10]       Stack Trace:
+[xUnit.net 00:00:02.10]         /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Services/AuthService.cs(43,0): at MQTTRestApi.Services.AuthService.Register(String username, String password, UserTypes TipKorisnika)
+[xUnit.net 00:00:02.10]         /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/TestPlan313UnitTests.cs(94,0): at MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(String username, String password, Int32 roleValue, Boolean expectReject, Boolean duplicate)
+[xUnit.net 00:00:02.10]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:02.45]     MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "line\nname", password: "GoodPass!1x", roleValue: 0, expectReject: True, duplicate: False) [FAIL]
+[xUnit.net 00:00:02.45]       Assert.Throws() Failure: No exception was thrown
+[xUnit.net 00:00:02.45]       Expected: typeof(MQTTRestApi.Domain.Exceptions.BadRequestException)
+[xUnit.net 00:00:02.45]       Stack Trace:
+[xUnit.net 00:00:02.45]         /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/TestPlan313UnitTests.cs(90,0): at MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(String username, String password, Int32 roleValue, Boolean expectReject, Boolean duplicate)
+[xUnit.net 00:00:02.45]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:02.68]     MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "nul-char-\0", password: "GoodPass!1x", roleValue: 0, expectReject: True, duplicate: False) [FAIL]
+[xUnit.net 00:00:02.68]       Assert.Throws() Failure: No exception was thrown
+[xUnit.net 00:00:02.68]       Expected: typeof(MQTTRestApi.Domain.Exceptions.BadRequestException)
+[xUnit.net 00:00:02.68]       Stack Trace:
+[xUnit.net 00:00:02.68]         /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/TestPlan313UnitTests.cs(90,0): at MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(String username, String password, Int32 roleValue, Boolean expectReject, Boolean duplicate)
+[xUnit.net 00:00:02.68]         --- End of stack trace from previous location ---
+  Passed MqttRestApi.Tests.UsersServiceTests.ChangeRole_UnknownUser_ThrowsBadRequest [1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "sql-' OR 1=1 --", password: "GoodPass!1x", roleValue: 0, expectReject: False, duplicate: False) [235 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "<script>alert(1)</script>", password: "GoodPass!1x", roleValue: 0, expectReject: False, duplicate: False) [235 ms]
+  Failed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "tab\tname", password: "GoodPass!1x", roleValue: 0, expectReject: True, duplicate: False) [116 ms]
+  Error Message:
+   Assert.Throws() Failure: No exception was thrown
+Expected: typeof(MQTTRestApi.Domain.Exceptions.BadRequestException)
+  Stack Trace:
+     at MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(String username, String password, Int32 roleValue, Boolean expectReject, Boolean duplicate) in /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/TestPlan313UnitTests.cs:line 90
+--- End of stack trace from previous location ---
+  Failed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "a", password: "GoodPass!1x", roleValue: 0, expectReject: False, duplicate: False) [< 1 ms]
+  Error Message:
+   MQTTRestApi.Domain.Exceptions.BadRequestException : Username mora sadrzati makar 4 karaktera!
+  Stack Trace:
+     at MQTTRestApi.Services.AuthService.Register(String username, String password, UserTypes TipKorisnika) in /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MQTTRestApi/Services/AuthService.cs:line 43
+   at MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(String username, String password, Int32 roleValue, Boolean expectReject, Boolean duplicate) in /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/TestPlan313UnitTests.cs:line 94
+--- End of stack trace from previous location ---
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "qa_valid_5", password: "GoodPass!5x", roleValue: 0, expectReject: False, duplicate: False) [229 ms]
+  Failed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "line\nname", password: "GoodPass!1x", roleValue: 0, expectReject: True, duplicate: False) [116 ms]
+  Error Message:
+   Assert.Throws() Failure: No exception was thrown
+Expected: typeof(MQTTRestApi.Domain.Exceptions.BadRequestException)
+  Stack Trace:
+     at MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(String username, String password, Int32 roleValue, Boolean expectReject, Boolean duplicate) in /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/TestPlan313UnitTests.cs:line 90
+--- End of stack trace from previous location ---
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "qa-user", password: "Correct!123", roleValue: 0, expectReject: True, duplicate: True) [116 ms]
+  Failed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "nul-char-\0", password: "GoodPass!1x", roleValue: 0, expectReject: True, duplicate: False) [117 ms]
+  Error Message:
+   Assert.Throws() Failure: No exception was thrown
+Expected: typeof(MQTTRestApi.Domain.Exceptions.BadRequestException)
+  Stack Trace:
+     at MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(String username, String password, Int32 roleValue, Boolean expectReject, Boolean duplicate) in /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/TestPlan313UnitTests.cs:line 90
+--- End of stack trace from previous location ---
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "quotes-\"'`", password: "GoodPass!1x", roleValue: 0, expectReject: False, duplicate: False) [237 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "qa_valid_3", password: "GoodPass!3x", roleValue: 0, expectReject: False, duplicate: False) [233 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "colon:semi;pipe|", password: "GoodPass!1x", roleValue: 0, expectReject: False, duplicate: False) [237 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"···, password: "GoodPass!1x", roleValue: 0, expectReject: True, duplicate: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "slash\\backslash", password: "GoodPass!1x", roleValue: 0, expectReject: False, duplicate: False) [235 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "mixed_CASE_123", password: "Aa1!Aa1!Aa1!", roleValue: 0, expectReject: False, duplicate: False) [227 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "qa_valid_2", password: "GoodPass!2x", roleValue: 0, expectReject: False, duplicate: False) [236 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "accent-é-ø-漢字", password: "GoodPass!1x", roleValue: 0, expectReject: False, duplicate: False) [228 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "qa_valid_4", password: "GoodPass!4x", roleValue: 0, expectReject: False, duplicate: False) [231 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "name.with+symbols@example.test", password: "GoodPass!1x", roleValue: 0, expectReject: False, duplicate: False) [231 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "qa_valid_0", password: "GoodPass!0x", roleValue: 0, expectReject: False, duplicate: False) [232 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "duplicate-case", password: "GoodPass!1x", roleValue: 0, expectReject: True, duplicate: True) [115 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "null-role", password: "GoodPass!1x", roleValue: -1, expectReject: True, duplicate: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "space-pass", password: "     ", roleValue: 0, expectReject: True, duplicate: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "null-pass", password: "", roleValue: 0, expectReject: True, duplicate: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "unicode-pass", password: "žaba🔐!Pass9", roleValue: 0, expectReject: False, duplicate: False) [234 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "very-long-pass", password: "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"···, roleValue: 0, expectReject: True, duplicate: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "qa_valid_1", password: "GoodPass!1x", roleValue: 0, expectReject: False, duplicate: False) [234 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "short-pass", password: "x", roleValue: 0, expectReject: True, duplicate: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "", password: "GoodPass!1x", roleValue: 0, expectReject: True, duplicate: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "emoji-😀", password: "Pass😀!123", roleValue: 0, expectReject: False, duplicate: False) [227 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Register_InputBoundaryMatrix(username: "   ", password: "GoodPass!1x", roleValue: 0, expectReject: True, duplicate: False) [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "missing", roleValue: 0, expectReject: True) [237 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 0, expectReject: False) [230 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "self", roleValue: 1, expectReject: True) [234 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 1, expectReject: False) [230 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "missing", roleValue: 1, expectReject: True) [233 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 2, expectReject: True) [234 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "self", roleValue: 0, expectReject: True) [240 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: -1, expectReject: True) [245 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangeRole_TargetAndRoleMatrix(targetMode: "target", roleValue: 999, expectReject: True) [245 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "5", username: "emoji-😀", role: "User") [20 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "17", username: "A", role: "User") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "16", username: " ", role: "Admin") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "10", username: "dot.name", role: "Admin") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "9", username: "under_score", role: "User") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "13", username: "slash/name", role: "User") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "11", username: "plus+name", role: "User") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "20", username: "name-é-ø-ß", role: "Admin") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "6", username: "quote'\"", role: "Admin") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "18", username: "MixedCase", role: "Admin") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "15", username: "", role: "User") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "1", username: "qa-user", role: "User") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "2", username: "user with spaces", role: "Admin") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "8", username: "sql-' OR 1=1 --", role: "Admin") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "4", username: "漢字", role: "Admin") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "12", username: "semi;colon", role: "Admin") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "19", username: "uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"···, role: "User") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "14", username: "back\\slash", role: "Admin") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "3", username: "žaba", role: "User") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.CreateToken_ClaimsAndSignatureMatrix(userId: "7", username: "<script>alert(1)</script>", role: "User") [< 1 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "tab\tuser", password: "password", expectSuccess: False) [123 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "", password: "", expectSuccess: False) [125 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: " ", password: " ", expectSuccess: False) [123 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "known-user ", password: "Correct!123", expectSuccess: False) [120 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "known-user", password: " ", expectSuccess: False) [243 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "known-user", password: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"···, expectSuccess: False) [242 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "admin", password: "admin", expectSuccess: False) [117 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "missing", password: "Correct!123", expectSuccess: False) [113 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "KNOWN-USER", password: "Correct!123", expectSuccess: False) [122 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "known-user", password: "Correct!123", expectSuccess: True) [231 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "known-user", password: "CORRECT!123", expectSuccess: False) [228 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "line\nuser", password: "password", expectSuccess: False) [114 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "nul\0user", password: "password", expectSuccess: False) [118 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "known-user", password: "Correct!124", expectSuccess: False) [233 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "unknown' OR 1=1 --", password: "anything", expectSuccess: False) [119 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "known-user", password: "", expectSuccess: False) [239 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "žaba", password: "šifra", expectSuccess: False) [115 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "😀", password: "😀", expectSuccess: False) [115 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: " known-user", password: "Correct!123", expectSuccess: False) [115 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "known-user", password: "correct!123", expectSuccess: False) [227 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "<script>", password: "anything", expectSuccess: False) [118 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "root", password: "toor", expectSuccess: False) [113 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "null", password: "null", expectSuccess: False) [113 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "known-user", password: "wrong", expectSuccess: False) [229 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.Login_CredentialMatrix(username: "uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"···, password: "anything", expectSuccess: False) [114 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "", expectSuccess: False) [342 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "spaces are allowed?1", expectSuccess: True) [565 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "line\npass123!", expectSuccess: True) [578 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "NewPass!123", expectSuccess: True) [573 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!124", newPassword: "NewPass!123", expectSuccess: False) [231 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "xYz!987654", expectSuccess: True) [563 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "  00000      ", expectSuccess: False) [344 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "password", newPassword: "NewPass!123", expectSuccess: False) [230 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "correct!123", newPassword: "NewPass!123", expectSuccess: False) [230 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "MixedCase123!", expectSuccess: True) [564 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "null", newPassword: "NewPass!123", expectSuccess: False) [226 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "admin", newPassword: "NewPass!123", expectSuccess: False) [227 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "short", expectSuccess: False) [337 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "punctuation!@#$%^&*()", expectSuccess: True) [567 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "1234567890Aa!", expectSuccess: True) [568 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: " ", newPassword: "NewPass!123", expectSuccess: False) [238 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "456345", expectSuccess: False) [363 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "pasword", expectSuccess: False) [361 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123 ", newPassword: "NewPass!123", expectSuccess: False) [224 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "abbbbbbbbbbbbbbbbbbb", expectSuccess: True) [587 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "zero\0charPass!", expectSuccess: True) [572 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "tab\tpass123!", expectSuccess: True) [570 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "another_1234", expectSuccess: True) [571 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "😀", newPassword: "NewPass!123", expectSuccess: False) [224 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: " ", expectSuccess: False) [339 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "123", expectSuccess: False) [337 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "final-pass-99!", expectSuccess: True) [569 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "ééééPass!9", expectSuccess: True) [604 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "with.dots-123!", expectSuccess: True) [570 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "wrong", newPassword: "NewPass!123", expectSuccess: False) [223 ms]
+[xUnit.net 00:00:25.84]   Finished:    MqttRestApi.Tests
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "🔐SafePass9!", expectSuccess: True) [563 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "aaaaa      ", expectSuccess: False) [339 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "", newPassword: "NewPass!123", expectSuccess: False) [229 ms]
+  Passed MqttRestApi.Tests.TestPlan313UnitTests.ChangePassword_BoundaryMatrix(oldPassword: "Correct!123", newPassword: "x", expectSuccess: False) [335 ms]
+
+Test Run Failed.
+Total tests: 414
+     Passed: 407
+     Failed: 7
+ Total time: 26.1151 Seconds
+WARNING: Overwriting results file: /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/TestResults/test-results.trx
+Results File: /home/studentinit2/Desktop/Backend Praksa/Projects/MQTTGitProject/MqttRestApi.Tests/TestResults/test-results.trx

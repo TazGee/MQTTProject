@@ -23,6 +23,11 @@ public class UsersService : IUsersService
         
         if (user == null) throw new BadRequestException($"Korisnik sa ovim ID-em ne postoji! [id: {userId}]");
         if (!BCrypt.Net.BCrypt.Verify(changePasswordDto.OldPassword, user.Password)) throw new BadRequestException("Stara sifra se ne poklapa!");
+        if (BCrypt.Net.BCrypt.Verify(changePasswordDto.NewPassword, user.Password)) throw new BadRequestException("Nova sifra ne moze biti ista kao stara!");
+        
+        changePasswordDto.NewPassword = changePasswordDto.NewPassword.Trim();
+        if(changePasswordDto.NewPassword.Length < 8) throw new BadRequestException("Sifra mora sadrzati makar 8 karaktera! (razmaci se brisu sa pocetka i kraja)");
+        if(changePasswordDto.NewPassword.Length > 24) throw new BadRequestException("Sifra mora biti kraca od 24 karaktera!");
 
         string oldPass = user.Password;
         user.Password = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
@@ -61,6 +66,8 @@ public class UsersService : IUsersService
         var user = await dbContext.Users.FindAsync(userId);
         
         if (user == null) throw new NotFoundException($"Korisnik sa ovim ID-em ne postoji! [id: {userId}]");
+        
+        if(!Enum.IsDefined(typeof(UserTypes), role)) throw new BadRequestException("Vrednost role-a nije validna!");
         
         UserTypes oldRole = user.Role;
         user.Role = role;
