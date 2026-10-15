@@ -29,4 +29,9 @@
     <_ContentIncludedByDefault Remove="wwwroot\test.html" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\assets\logo.png" />
+    <None Include="wwwroot\style.css" />
+  </ItemGroup>
+
 </Project>

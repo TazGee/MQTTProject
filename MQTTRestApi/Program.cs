@@ -12,6 +12,17 @@ using MQTTRestApi.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddRazorPages(o =>
+{
+    o.Conventions.AuthorizeFolder("/");
+    o.Conventions.AllowAnonymousToPage("/Login");
+    o.Conventions.AllowAnonymousToPage("/Index");
+    o.Conventions.AuthorizeFolder("/Admin", "AdminOnly");
+});
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("AdminOnly", p => p.RequireRole("Admin"));
+
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -27,6 +38,27 @@ builder.Services
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
             ClockSkew = TimeSpan.FromSeconds(30)
+        };
+        
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = ctx =>
+            {
+                if (string.IsNullOrEmpty(ctx.Token) &&
+                    ctx.Request.Cookies.TryGetValue(AuthCookieService.Name, out var token))
+                    ctx.Token = token;
+                return Task.CompletedTask;
+            },
+            OnChallenge = ctx =>
+            {
+                if (!ctx.Request.Path.StartsWithSegments("/api"))
+                {
+                    ctx.HandleResponse();
+                    var returnUrl = Uri.EscapeDataString(ctx.Request.Path + ctx.Request.QueryString);
+                    ctx.Response.Redirect($"/Login?returnUrl={returnUrl}");
+                }
+                return Task.CompletedTask;
+            }
         };
     });
 
@@ -45,12 +77,6 @@ builder.Services.AddScoped<IAlarmService, AlarmService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ILoggerService, LoggerService>();
-
-builder.Services.AddCors(o => o.AddDefaultPolicy(p =>
-    p.WithOrigins("http://localhost:63342")
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials()));
 
 builder.Services.AddControllers();
 
@@ -88,13 +114,6 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 
-app.UseExceptionHandler();
-app.UseStatusCodePages();
-app.UseCors();
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapControllers();
-
 app.MapHub<MessagesHub>("/hubs/messages");
 
 using (var scope = app.Services.CreateScope())
@@ -113,8 +132,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.MapControllers();
 app.UseStaticFiles();
+app.UseRouting();
+app.UseExceptionHandler();
+app.UseStatusCodePages();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
+app.MapRazorPages();
 
 app.Run();

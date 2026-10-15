@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="utf-8" />
+    <title>RestAPI Backend Test</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header>
+    <div class="row">
+        <img class="logo" src="assets/logo.png" alt="logoSajta"/>
+        <h1>RestAPI</h1>
+    </div>
+    <div class="row">
+        <button class="headerButton">Pocetna</button>
+        <button class="headerButton">Pretplate</button>
+        <button class="headerButton">Poruke</button>
+        <button class="headerButton">Admin</button>
+        <a asp-page="./Login"><button class="headerButton">Login</button></a>
+    </div>
+</header>
+<main>@RenderBody()</main>
+<script src="~/js/site.js"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,56 @@
+@page
+@model MQTTRestApi.wwwroot.Pages.Login
+
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>RestAPI Test Site</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class = "logRegRow">
+    <div class="authFormDiv">
+        <h2 class="authFormText">LOGIN</h2>
+        <form class="authForm" method="post">
+            <h3 class="authFormNamesText">Username</h3>
+            <input asp-for="Username" required type="text" placeholder="Username" name="Username" class="authTextInput"/>
+            <br>
+            <h3 class="authFormNamesText">Password</h3>
+            <input asp-for="Password" required type="password" placeholder="Username" name="Password" class="authTextInput"/>
+            <br>
+            <p>@Model.Error</p>
+            <br>
+            <br>
+            <div class="pusher">
+                <input type="submit" name="Login" value="Login"/>
+            </div>
+            <br>
+        </form>
+    </div>
+    <div class="authFormDiv">
+        <h2 class="authFormText">REGISTER</h2>
+        <form class="authForm" method="post">
+            <h3 class="authFormNamesText">Username</h3>
+            <input asp-for="Username" required type="text" placeholder="Username" name="Username" class="authTextInput"/>
+            <br>
+            <h3 class="authFormNamesText">Password</h3>
+            <input asp-for="Password" required type="password" placeholder="Username" name="Password" class="authTextInput"/>
+            <br>
+            <p>@Model.Error</p>
+            <br>
+            <br>
+            <div class="pusher">
+                <input type="submit" name="Login" value="Login"/>
+            </div>
+            <br>
+        </form>
+    </div>
+</div>
+</body>
+</html>
