@@ -1,5 +1,5 @@
 # 👨‍💻🌐 -= **RestAPI Backend Projekat** =- 🌐👨‍💻
-### RestAPI Backend (+ test Frontend) za komunikaciju putem MQTT protokola
+### RestAPI Backend za komunikaciju putem MQTT protokola
 #### **● Verzija:** 0.26.10.14.1 by **Nikola Tasić**
 - **Programski jezik:** C#
 - **Tehnologije:** .NET, Docker, MariaDB, Entity Framework
@@ -9,34 +9,20 @@
   - **MQTTRestApi:** RestAPI Backend aplikacija (dokerizovana)
   - **MQTTRestApi.Tests:** Unit testovi za **'MQTTRestApi'** projekat
   - **MQTTGitProject:** prva probna verzija rada sa MQTT (ne koristi se)
-- **Frontend** unutar projekta je namenjen samo i iskljucivo za testiranje backend-a!
 ****
 ## 📜 - **Najnovije izmene** - 📜️
-### **-= Verzija 0.26.10.14.1 =-**
+### **-= Verzija 0.26.10.15.1 =-**
 
-- **SignalIR:**
-  - Implementiran **SignalIR** za dalju upotrebu sa frontend-om
-- **Unit tests:**
-  - Napravljeno **109 unit testova** za ispitivanje ispravnosti svih **kontrolera i servisa**
-- **Frontend:**
-  - Implementiran osnovni **test frontend** koji se koristi **iskljucivo za testiranje**
-  - **Frontend** sadrzi samo **najosnovnije opcije i mogucnosti**
-  - Nije namenjen i projektovan za upotrebu van **testiranja backend-a**
-  - Koristi **SignalIR** za primanje/azuriranje podataka bez polling-a
-- **Backend Publishing:**
-  - Od sada admini unose samo topic uredjaja za promenu vrednosti, program sam dodaje sufiks
-  - Ispravljeni sitne greske u logici
-- **Alarm bug fixing:**
-  - Ispravljena greska obrnute logike gde false za proveru postojanja alarma vraca true i obrnuto
-  - izmenjen redosled u enum-u i definisane vrednosti rucno zbog unit testova
-- **Refactoring:**
-  - Totalno refaktorisanje projekta
-  - Razlaganje velikih na manje servise
-  - Brisanje promeljivih, klasa i metoda koje se ne koriste
-  - Poboljsano imenovanje promenljivih
 - **Testing:**
-  - Rucno istestirane sve opcije i mogucnosti
-  - Korisceni neocekivani slucajevi i vrednosti da bi se osigurala sigurnost i stabilnost rada
+  - Dodatno istestiran backend
+  - Provucen kroz AI testiranje (~400 unit testova)
+- **Bugs and fixes:**
+  - Zabranjen neispravan unos double-a (NaN, Infinity)
+  - Zabranjen neispravan unos enum-a (van opsega enum-a)
+  - Zabranjen neispravan unos string ('\\' character)
+  - Sifra ogranicena na duzine od 8 do 24 charactera
+  - Dodato secenje pocetka i/ili kraja sifre ukoliko je pocetak i/ili kraj razmak ili razmaci
+  - Korisnicko ime ograniceno na duzine od 4 do 35 charactera
 ***
 ## 🖥️ - **Features** - 🖥️
 - Pretplata backend-a na topic po zelji
@@ -61,7 +47,6 @@
 - SignalIR koji se koristi umesto polling-a
 - Unit testovi za testiranje kontrolera i servisa
 - Mogucnost da admin govori simulatoru koje vrednosti da salje
-- Test frontend za testiranje
 ***
 ## 📀 - **Prerequisites** - 📀
 - .NET SDK 8
@@ -243,6 +228,32 @@ curl -X 'GET' \
 - Trenutno ne postoji definisana licenca za ovaj proizvod
 ***
 ## 📜 - **Ranije izmene i azuriranja** - 📜️
+### **-= Verzija 0.26.10.14.1 =-**
+
+- **SignalIR:**
+  - Implementiran **SignalIR** za dalju upotrebu sa frontend-om
+- **Unit tests:**
+  - Napravljeno **109 unit testova** za ispitivanje ispravnosti svih **kontrolera i servisa**
+- **Frontend:**
+  - Implementiran osnovni **test frontend** koji se koristi **iskljucivo za testiranje**
+  - **Frontend** sadrzi samo **najosnovnije opcije i mogucnosti**
+  - Nije namenjen i projektovan za upotrebu van **testiranja backend-a**
+  - Koristi **SignalIR** za primanje/azuriranje podataka bez polling-a
+- **Backend Publishing:**
+  - Od sada admini unose samo topic uredjaja za promenu vrednosti, program sam dodaje sufiks
+  - Ispravljeni sitne greske u logici
+- **Alarm bug fixing:**
+  - Ispravljena greska obrnute logike gde false za proveru postojanja alarma vraca true i obrnuto
+  - izmenjen redosled u enum-u i definisane vrednosti rucno zbog unit testova
+- **Refactoring:**
+  - Totalno refaktorisanje projekta
+  - Razlaganje velikih na manje servise
+  - Brisanje promeljivih, klasa i metoda koje se ne koriste
+  - Poboljsano imenovanje promenljivih
+- **Testing:**
+  - Rucno istestirane sve opcije i mogucnosti
+  - Korisceni neocekivani slucajevi i vrednosti da bi se osigurala sigurnost i stabilnost rada
+
 ### **-= Verzija 0.26.10.13.1 =-**
 
 - **User authentication:**
