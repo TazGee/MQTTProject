@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MQTTRestApi.Data;
 using MQTTRestApi.Domain.Enums;
+using MQTTRestApi.Domain.Exceptions;
 using MQTTRestApi.Domain.Models;
 using MQTTRestApi.Domain.Services;
 
@@ -17,7 +18,7 @@ public class LoggerService : ILoggerService
 
     public async Task<List<Log>> GetLogs()
     {
-        return await dbContext.Logs.ToListAsync();
+        return await dbContext.Logs.OrderByDescending(m => m.Id).ToListAsync();
     }
     
     public async Task LogMessage(string msg, LogTypes type)

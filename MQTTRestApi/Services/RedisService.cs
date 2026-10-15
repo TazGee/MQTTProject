@@ -64,7 +64,6 @@ public class RedisService : IRedisService
             Console.WriteLine($"Greska prilikom cuvanja u redis: {e}");
         }
     }
-
     
     private async Task IncrementTopicCountAsync(string topic)
     {

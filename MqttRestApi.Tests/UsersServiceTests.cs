@@ -38,7 +38,7 @@ public class UsersServiceTests
     public async Task ChangePassword_WrongOldPassword_ThrowsAndKeepsOldHash()
     {
         var (svc, db) = Create();
-        var user = await SeedUser(db, "test", "test123");
+        var user = await SeedUser(db, "test", "test1234");
         var oldHash = user.Password;
 
         await Assert.ThrowsAsync<BadRequestException>(() =>
@@ -51,21 +51,21 @@ public class UsersServiceTests
     public async Task ChangePassword_Valid_StoresNewHash()
     {
         var (svc, db) = Create();
-        var user = await SeedUser(db, "test", "test123");
+        var user = await SeedUser(db, "test", "test1234");
 
-        await svc.ChangePassword(user.Id, new ChangePasswordDto { OldPassword = "test123", NewPassword = "nova123" });
+        await svc.ChangePassword(user.Id, new ChangePasswordDto { OldPassword = "test1234", NewPassword = "nova1234" });
 
         var saved = await db.Users.FindAsync(user.Id);
-        Assert.True(BCrypt.Net.BCrypt.Verify("nova123", saved!.Password));
-        Assert.False(BCrypt.Net.BCrypt.Verify("test123", saved.Password));
+        Assert.True(BCrypt.Net.BCrypt.Verify("nova1234", saved!.Password));
+        Assert.False(BCrypt.Net.BCrypt.Verify("test1234", saved.Password));
     }
 
     [Fact]
     public async Task GetUsers_ReturnsAllUsersWithoutPasswords()
     {
         var (svc, db) = Create();
-        await SeedUser(db, "test1", "t12345");
-        await SeedUser(db, "test2", "t2345678");
+        await SeedUser(db, "test1", "t12345678");
+        await SeedUser(db, "test2", "t2345678901");
 
         var result = svc.GetUsers();
 
@@ -102,7 +102,7 @@ public class UsersServiceTests
     public async Task ChangeRole_Valid_UpdatesRole()
     {
         var (svc, db) = Create();
-        var user = await SeedUser(db, "test1", "t12345", UserTypes.Admin);
+        var user = await SeedUser(db, "test1", "t12345678", UserTypes.Admin);
         var otherRole = Enum.GetValues<UserTypes>().First(r => r != UserTypes.Admin);
 
         await svc.ChangeRole(500, user.Id, otherRole);

@@ -20,7 +20,7 @@ namespace MqttRestApi.Tests;
 /// <summary>
 /// Testovi za MqttService
 /// </summary>
-public class MqttServiceTests
+public partial class MqttServiceTests
 {
     private static IConfiguration BuildConfig() =>
         new ConfigurationBuilder()

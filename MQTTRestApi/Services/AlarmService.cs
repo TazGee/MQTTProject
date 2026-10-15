@@ -25,6 +25,11 @@ public class AlarmService : IAlarmService
         if (await dbContext.Alarms.AnyAsync(a => a.TopicId == createAlarmDto.TopicId)) throw new BadRequestException($"Vec postoji alarm na topicu: {createAlarmDto.TopicId}!");
         if (createAlarmDto.AlarmType == AlarmTypes.Both && createAlarmDto.LowerLimit >= createAlarmDto.UpperLimit) throw new BadRequestException("Donja granica mora biti manja od gornje granice!");
         
+        if(!Enum.IsDefined(typeof(AlarmTypes), createAlarmDto.AlarmType)) throw new BadRequestException("Neispravan tip alarma!");
+        
+        if (!double.IsFinite(createAlarmDto.LowerLimit) || !double.IsFinite(createAlarmDto.UpperLimit))
+            throw new BadRequestException("Granice alarma moraju biti ispravni brojevi!");
+        
         Alarm alarm = new Alarm(createAlarmDto.TopicId, createAlarmDto.AlarmType, createAlarmDto.LowerLimit, createAlarmDto.UpperLimit);
 
         try
@@ -59,6 +64,7 @@ public class AlarmService : IAlarmService
     public async Task<List<AlarmDto>> GetAllAlarms()
     {
         var lista =  await dbContext.Alarms
+            .OrderByDescending(m => m.Id)
             .Select(a => new AlarmDto(a.Id, a.TopicId, a.AlarmType, a.LowerLimit, a.UpperLimit, a.CreatedAt))
             .ToListAsync();
         return lista;
@@ -67,6 +73,7 @@ public class AlarmService : IAlarmService
     public async Task<List<MqttMessageDto>> GetAllAlarmedMessages()
     {
         var lista = await dbContext.Messages
+            .OrderByDescending(m => m.Id)
             .Where(m => m.AlarmType != ValueAlarmTypes.NONE)
             .Select(m => new MqttMessageDto(m.Id, m.Topic, m.Payload, m.QoS, m.Retain, m.RecievedAt, m.AlarmType))
             .ToListAsync();
