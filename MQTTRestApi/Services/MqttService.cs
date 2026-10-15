@@ -210,7 +210,7 @@ public class MqttService : IMqttService
     }
     
     private async Task<bool> SubscribeOnBrokerAsync(string topic)
-    {
+    { 
         try
         {
             if (!Regex.IsMatch(topic, config["SubscribeRegex"] ?? "^(?:#|(?:[^/#+\\s]+|\\+)(?:/(?:[^/#+\\s]+|\\+))*(?:/#)?)$"))
