@@ -30,7 +30,7 @@ public class LoggerService : ILoggerService
             dbContext.Logs.Add(log);
             await dbContext.SaveChangesAsync();
             
-            Console.WriteLine("Log uspesno sacuvan u bazi podataka");
+            Console.WriteLine("Log uspesno sacuvan u bazi podataka!");
         }
         catch (Exception e)
         {

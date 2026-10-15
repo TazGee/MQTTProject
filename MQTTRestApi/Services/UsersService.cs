@@ -23,7 +23,8 @@ public class UsersService : IUsersService
         
         if (user == null) throw new BadRequestException($"Korisnik sa ovim ID-em ne postoji! [id: {userId}]");
         if (!BCrypt.Net.BCrypt.Verify(changePasswordDto.OldPassword, user.Password)) throw new BadRequestException("Stara sifra se ne poklapa!");
-        
+
+        string oldPass = user.Password;
         user.Password = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
         
         try
@@ -32,6 +33,7 @@ public class UsersService : IUsersService
         }
         catch (Exception e)
         {
+            user.Password = oldPass;
             throw new BadRequestException($"Neuspesno cuvanje u bazu podataka, probajte kasnije! {e.Message}");
         }
     }

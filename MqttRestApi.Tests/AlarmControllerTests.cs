@@ -35,8 +35,8 @@ public class AlarmControllerTests
         var result = await controller.CreateAlarm(new CreateAlarmDto(3, AlarmTypes.Both, 10, 30));
 
         service.Verify(s => s.CreateAlarm(It.Is<CreateAlarmDto>(d =>
-            d.topicID == 3 && d.AlarmType == AlarmTypes.Both &&
-            d.lowerLimit == 10 && d.upperLimit == 30)), Times.Once);
+            d.TopicId == 3 && d.AlarmType == AlarmTypes.Both &&
+            d.LowerLimit == 10 && d.UpperLimit == 30)), Times.Once);
     }
 
     [Fact]

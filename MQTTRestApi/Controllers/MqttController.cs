@@ -24,7 +24,6 @@ public class MqttController : ControllerBase
     {
         this.mqttService = mqttService;
         this.redisService = redisService;
-        
     }
 
     private int UserId()
@@ -33,7 +32,7 @@ public class MqttController : ControllerBase
     }
 
     [HttpPost("subscribe"), Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Subscribe([FromBody] SubscribeRequestDto request)
+    public async Task<IActionResult> Subscribe([FromBody]SubscribeBrokerDto request)
     {
         await mqttService.SubscribeAsync(request.Topic);
         

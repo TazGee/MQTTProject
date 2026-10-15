@@ -1,8 +1,5 @@
-using System.Text.RegularExpressions;
 using MQTTDevice.Domain.Services;
-using MQTTGitProject.Config;
 using MQTTnet;
-using MQTTnet.Protocol;
 
 namespace MQTTDevice.Services;
 
@@ -11,11 +8,11 @@ public class MqttService : IMqttService
     private bool connected = false;
     private bool reconnecting = false;
     private IMqttClient client;
-    
-    public float VrednostSimulatora { get; set; }
-    public string DeviceValueTopic { get; set; }
 
-    public async Task InitializeService(Config config)
+    public float VrednostSimulatora { get; set; } = 0f;
+    public string DeviceValueTopic { get; set; } = String.Empty;
+
+    public async Task InitializeService(Config.Config config)
     {
         try
         {
@@ -23,16 +20,17 @@ public class MqttService : IMqttService
             client = factory.CreateMqttClient();
             
             var options = new MqttClientOptionsBuilder()
-                .WithTcpServer(config.ServerIP, config.ServerPort)
+                .WithTcpServer(config.ServerIp, config.ServerPort)
                 .Build();
             
             await TryToConnect(options, config);
             
-            client.ApplicationMessageReceivedAsync += async e =>
+            client.ApplicationMessageReceivedAsync += e =>
             {
                 try
                 {
                     VrednostSimulatora = float.Parse(e.ApplicationMessage.ConvertPayloadToString());
+                    return Task.CompletedTask;
                 }
                 catch (Exception ex)
                 {
@@ -63,7 +61,7 @@ public class MqttService : IMqttService
         }
     }
     
-    async Task TryToConnect(MqttClientOptions options, Config config)
+    async Task TryToConnect(MqttClientOptions options, Config.Config config)
     {
         reconnecting = true;
         do
@@ -98,15 +96,19 @@ public class MqttService : IMqttService
         Console.WriteLine("\nPovezivanje uspesno!");
     }
     
-    public async Task PublishMessageAsync(string topic, string payload)
+    public async Task PublishMessageAsync(string topic)
     {
-        if(!connected) return;
+        if(!connected)
+        {
+            Console.WriteLine($"Simulator nije povezan na broker!");
+            return;
+        }
         
         try
         {
             var message = new MqttApplicationMessageBuilder()
                 .WithTopic(topic)
-                .WithPayload(payload)
+                .WithPayload(VrednostSimulatora.ToString())
                 .Build();
 
             await client.PublishAsync(message);

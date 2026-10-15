@@ -44,7 +44,7 @@ public class MqttControllerTests
     {
         var (controller, mqtt, _) = Create();
 
-        var result = await controller.Subscribe(new SubscribeRequestDto { Topic = "kuca/test" });
+        var result = await controller.Subscribe(new SubscribeBrokerDto { Topic = "kuca/test" });
 
         mqtt.Verify(m => m.SubscribeAsync("kuca/test"), Times.Once);
         Assert.Equal("Subscribe uspesan!", Assert.IsType<OkObjectResult>(result).Value);

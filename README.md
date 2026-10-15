@@ -1,41 +1,42 @@
-# 👨‍💻 **RestAPI Backend Projekat** 👨‍💻
-### RestAPI Backend za komunikaciju putem MQTT protokola
-**Verzija:** 0.26.10.12.1 by **Nikola Tasić**
-\
-**Programski jezik:** C#
-\
-**Tehnologije:** .NET, Docker, MariaDB, Entity Framework
-\
-**Okruzenja:** Rider, MySQL Workbench
+# 👨‍💻🌐 -= **RestAPI Backend Projekat** =- 🌐👨‍💻
+### RestAPI Backend (+ test Frontend) za komunikaciju putem MQTT protokola
+#### **● Verzija:** 0.26.10.14.1 by **Nikola Tasić**
+- **Programski jezik:** C#
+- **Tehnologije:** .NET, Docker, MariaDB, Entity Framework
+- **Okruzenja:** Rider, MySQL Workbench
+- **Solution sadrzi projekte:**
+  - **MQTTDevice:** simulator slanja poruka na broker
+  - **MQTTRestApi:** RestAPI Backend aplikacija (dokerizovana)
+  - **MQTTRestApi.Tests:** Unit testovi za **'MQTTRestApi'** projekat
+  - **MQTTGitProject:** prva probna verzija rada sa MQTT (ne koristi se)
+- **Frontend** unutar projekta je namenjen samo i iskljucivo za testiranje backend-a!
+****
 ## 📜 - **Najnovije izmene** - 📜️
-### **-= Verzija 0.26.10.13.1 =-** 
+### **-= Verzija 0.26.10.14.1 =-**
 
-- **User authentication:**
-  - Dodato **hesiranje (hashing) lozinke** za vecu bezbednost
-  - Dodata opcija **promene lozinke**
-  - Dodata **administrator** opcija za **promenu role-a korisnika**
-- **Nove Admin opcije:**
-  - **Log list** - prikaz kompletnog log-a (svih log-ova iz baze)
-  - **All messages** - prikaz svih log-ova sa svih topic-a
-- **Poruke:**
-  - Dodata opcija za filtrirani pregled poruka (filter po vremenu unazad u minutima)
-- **Sistem alarmiranja:**
-  - Dodat **sistem alarmiranja** koji prati vrednosti na odredjenim topics-ima
-  - **Alarme** kreira **admin** i oni se za svaki topic cuvaju u bazi
-  - Postoje 3 vrste alarma:
-    - **Alarm** koji prati samo odstupanje vrednosti **ispod minimalne granice**
-    - **Alarm** koji prati samo odstupanje vrednosti **iznad maksimalne granice**
-    - **Alarm** koji prati odstupanje vrednosti **izvan obe granice**
-  - Kada se **alarm aktivira** zapisuje se u **logu** i u samom **entitetu poruke**
-  - Dodata nova kolona za **MqttMessage** - **AlarmType**
-  - Dodata nova tabela - **Alarm**
-- **Simulator:**
-  - Dodata opcija da simulator cita iz konfiguracije zadatu vrednost koju treba da salje
-  - Dodata opcija da se simulator automatski pretplati na "topic + /updateValue"
-  - Preko gore navedenog topic-a admin moze simulatoru da menja vrednost preko brokera
-  - Najduzi interval slanja produzen sa 10 na 60 sekundi
-  - Dodato da admin moze da publishuje poruke na topic (endpoint)
-  - Publishovanje poruka preko enpointa menja vrednost koju simulator daje
+- **SignalIR:**
+  - Implementiran **SignalIR** za dalju upotrebu sa frontend-om
+- **Unit tests:**
+  - Napravljeno **109 unit testova** za ispitivanje ispravnosti svih **kontrolera i servisa**
+- **Frontend:**
+  - Implementiran osnovni **test frontend** koji se koristi **iskljucivo za testiranje**
+  - **Frontend** sadrzi samo **najosnovnije opcije i mogucnosti**
+  - Nije namenjen i projektovan za upotrebu van **testiranja backend-a**
+  - Koristi **SignalIR** za primanje/azuriranje podataka bez polling-a
+- **Backend Publishing:**
+  - Od sada admini unose samo topic uredjaja za promenu vrednosti, program sam dodaje sufiks
+  - Ispravljeni sitne greske u logici
+- **Alarm bug fixing:**
+  - Ispravljena greska obrnute logike gde false za proveru postojanja alarma vraca true i obrnuto
+  - izmenjen redosled u enum-u i definisane vrednosti rucno zbog unit testova
+- **Refactoring:**
+  - Totalno refaktorisanje projekta
+  - Razlaganje velikih na manje servise
+  - Brisanje promeljivih, klasa i metoda koje se ne koriste
+  - Poboljsano imenovanje promenljivih
+- **Testing:**
+  - Rucno istestirane sve opcije i mogucnosti
+  - Korisceni neocekivani slucajevi i vrednosti da bi se osigurala sigurnost i stabilnost rada
 ***
 ## 🖥️ - **Features** - 🖥️
 - Pretplata backend-a na topic po zelji
@@ -56,8 +57,11 @@
 - Istorija poruka filtrirana po vremenu
 - Password hashing za bolju bezbednost
 - Mogucnost promene lozinke
-- Opcija da simulator cita izlaznu vrednost iz konfiguracije
-- Opcija da admin menja izlaznu vrednost uredjaja (simulatora)
+- Mogucnost promene uloge korisnika
+- SignalIR koji se koristi umesto polling-a
+- Unit testovi za testiranje kontrolera i servisa
+- Mogucnost da admin govori simulatoru koje vrednosti da salje
+- Test frontend za testiranje
 ***
 ## 📀 - **Prerequisites** - 📀
 - .NET SDK 8
@@ -148,6 +152,11 @@
     - Input parametri:
         - Nema input parametre
     - Vraca broj koliko puta je bila poslata poruka na svaki od topic-a
+- **(POST)api/mqtt/suggest-device-value-change**
+  - Input parametri:
+    - Topic (string)
+    - Value (float)
+  - Predlaze simuliranom uredjaju koju vrednost da koristi
 ### User MQTT ENDPOINTS:
 - **(GET)api/mqtt/available-topics**
   - Input parametri:
@@ -178,11 +187,6 @@
     - topic (string)
     - minutes (int)
   - Vraca listu svih poruka za topic u poslednjih n minuta
-- **(GET)api/mqtt/suggest-device-value-change**
-  - Input parametri:
-    - topic (string)
-    - value (float)
-  - Govori uredjaju da azurira vrednost na tom topicu
 ***
 ## ⌨️ - **Primeri curl komandi** - ⌨️
 - Subscribe
@@ -239,6 +243,28 @@ curl -X 'GET' \
 - Trenutno ne postoji definisana licenca za ovaj proizvod
 ***
 ## 📜 - **Ranije izmene i azuriranja** - 📜️
+### **-= Verzija 0.26.10.13.1 =-**
+
+- **User authentication:**
+  - Dodato **hesiranje (hashing) lozinke** za vecu bezbednost
+  - Dodata opcija **promene lozinke**
+  - Dodata **administrator** opcija za **promenu role-a korisnika**
+- **Nove Admin opcije:**
+  - **Log list** - prikaz kompletnog log-a (svih log-ova iz baze)
+  - **All messages** - prikaz svih log-ova sa svih topic-a
+- **Poruke:**
+  - Dodata opcija za filtrirani pregled poruka (filter po vremenu unazad u minutima)
+- **Sistem alarmiranja:**
+  - Dodat **sistem alarmiranja** koji prati vrednosti na odredjenim topics-ima
+  - **Alarme** kreira **admin** i oni se za svaki topic cuvaju u bazi
+  - Postoje 3 vrste alarma:
+    - **Alarm** koji prati samo odstupanje vrednosti **ispod minimalne granice**
+    - **Alarm** koji prati samo odstupanje vrednosti **iznad maksimalne granice**
+    - **Alarm** koji prati odstupanje vrednosti **izvan obe granice**
+  - Kada se **alarm aktivira** zapisuje se u **logu** i u samom **entitetu poruke**
+  - Dodata nova kolona za **MqttMessage** - **AlarmType**
+  - Dodata nova tabela - **Alarm**
+
 ### **-= Verzija 0.26.10.12.1 =-**
 
 - **User authentication:**

@@ -12,7 +12,6 @@ public class LogController : ControllerBase
     public LogController(ILoggerService loggerService)
     {
         this.loggerService = loggerService;
-        
     }
     
     [HttpGet("all-logs")]
