@@ -19,15 +19,13 @@ public class UsersService : IUsersService
 
     public async Task ChangePassword(int userId, ChangePasswordDto changePasswordDto)
     {
-        var user = await dbContext.Users.FindAsync(userId);
-        
-        if (user == null) throw new BadRequestException($"Korisnik sa ovim ID-em ne postoji! [id: {userId}]");
-        if (!BCrypt.Net.BCrypt.Verify(changePasswordDto.OldPassword, user.Password)) throw new BadRequestException("Stara sifra se ne poklapa!");
-        if (BCrypt.Net.BCrypt.Verify(changePasswordDto.NewPassword, user.Password)) throw new BadRequestException("Nova sifra ne moze biti ista kao stara!");
-        
+        changePasswordDto.OldPassword = changePasswordDto.OldPassword.Trim();
         changePasswordDto.NewPassword = changePasswordDto.NewPassword.Trim();
-        if(changePasswordDto.NewPassword.Length < 8) throw new BadRequestException("Sifra mora sadrzati makar 8 karaktera! (razmaci se brisu sa pocetka i kraja)");
-        if(changePasswordDto.NewPassword.Length > 24) throw new BadRequestException("Sifra mora biti kraca od 24 karaktera!");
+        
+        var user = await dbContext.Users.FindAsync(userId);
+        if (user == null) throw new BadRequestException($"Korisnik sa ovim ID-em ne postoji! [id: {userId}]");
+        
+        ValidatePasswods(changePasswordDto.OldPassword,  changePasswordDto.NewPassword, user.Password);
 
         string oldPass = user.Password;
         user.Password = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
@@ -82,5 +80,15 @@ public class UsersService : IUsersService
             user.Role = oldRole;
             throw new BadRequestException($"Neuspesno cuvanje u bazu podataka, probajte kasnije! {e.Message}");
         }
+    }
+
+    void ValidatePasswods(string oldPassword, string newPassword, string passHash)
+    {
+        if(newPassword.Length < 8) throw new BadRequestException("Nova sifra mora sadrzati makar 8 karaktera! (razmaci se brisu sa pocetka i kraja)");
+        if(newPassword.Length > 24) throw new BadRequestException("Nova sifra mora biti kraca od 24 karaktera!");
+        if(newPassword.Any(ch => ch == '\\')) throw new BadRequestException("Ne smete koristiti '\\' u sifri!");
+        
+        if (!BCrypt.Net.BCrypt.Verify(oldPassword, passHash)) throw new BadRequestException("Stara sifra se ne poklapa!");
+        if (BCrypt.Net.BCrypt.Verify(newPassword, passHash)) throw new BadRequestException("Nova sifra ne moze biti ista kao stara!");
     }
 }

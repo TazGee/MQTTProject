@@ -233,7 +233,7 @@ curl -X 'GET' \
 - **SignalIR:**
   - Implementiran **SignalIR** za dalju upotrebu sa frontend-om
 - **Unit tests:**
-  - Napravljeno **109 unit testova** za ispitivanje ispravnosti svih **kontrolera i servisa**
+  - Napravljeno **120 unit testova** za ispitivanje ispravnosti svih **kontrolera i servisa**
 - **Frontend:**
   - Implementiran osnovni **test frontend** koji se koristi **iskljucivo za testiranje**
   - **Frontend** sadrzi samo **najosnovnije opcije i mogucnosti**

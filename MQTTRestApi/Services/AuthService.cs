@@ -23,6 +23,9 @@ public class AuthService : IAuthService
     {
         password = password.Trim();
         
+        ValidateUsername(username);
+        ValidatePasswod(password);
+        
         var user = await dbContext.Users
             .FirstOrDefaultAsync(u => u.Username == username);
 
@@ -39,14 +42,9 @@ public class AuthService : IAuthService
     public async Task<UserInfoDto> Register(string username, string password, UserTypes TipKorisnika)
     {
         password = password.Trim();
-        
-        if(username.Length < 4) throw new BadRequestException("Username mora sadrzati makar 4 karaktera!");
-        if(username.Length > 35) throw new BadRequestException("Username mora biti kraci od 35 karaktera!");
-        if(username.Any(ch => ch == '\\')) throw new BadRequestException("Ne smete koristiti '\\' u username!");
-        
-        if(password.Length < 8) throw new BadRequestException("Sifra mora sadrzati makar 8 karaktera! (razmaci se brisu sa pocetka i kraja)");
-        if(password.Length > 24) throw new BadRequestException("Sifra mora biti kraca od 24 karaktera!");
-        if(username.Any(ch => ch == '\\')) throw new BadRequestException("Ne smete koristiti '\\' u sifri!");
+
+        ValidateUsername(username);
+        ValidatePasswod(password);
         
         if(!Enum.IsDefined(typeof(UserTypes), TipKorisnika)) throw new BadRequestException("Neispravan tip korisnika!");
         
@@ -72,5 +70,19 @@ public class AuthService : IAuthService
         await logger.LogMessage($"Korisnik [{novi.Id}]{username} se uspesno registrovao!", LogTypes.AUTH);
 
         return new UserInfoDto { Id = novi.Id, Username = username, Role = novi.Role, CreatedAt = novi.CreatedAt };
+    }
+
+    void ValidateUsername(string username)
+    {
+        if(username.Length < 4) throw new BadRequestException("Username mora sadrzati makar 4 karaktera!");
+        if(username.Length > 35) throw new BadRequestException("Username mora biti kraci od 35 karaktera!");
+        if(username.Any(ch => ch == '\\')) throw new BadRequestException("Ne smete koristiti '\\' u username!");
+    }
+
+    void ValidatePasswod(string password)
+    {
+        if(password.Length < 8) throw new BadRequestException("Sifra mora sadrzati makar 8 karaktera! (razmaci se brisu sa pocetka i kraja)");
+        if(password.Length > 24) throw new BadRequestException("Sifra mora biti kraca od 24 karaktera!");
+        if(password.Any(ch => ch == '\\')) throw new BadRequestException("Ne smete koristiti '\\' u sifri!");
     }
 }
