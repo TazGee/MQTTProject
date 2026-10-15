@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.SignalR;
@@ -94,17 +95,20 @@ public class MqttService : IMqttService
 
                 ValueAlarmTypes type = ValueAlarmTypes.NONE;
 
-                if (alarm != null)
+                var payloadText = e.ApplicationMessage.ConvertPayloadToString();
+                var parsed = float.TryParse(payloadText, NumberStyles.Float, CultureInfo.InvariantCulture, out var value);
+
+                if (alarm != null && parsed)
                 {
-                    if ((alarm.AlarmType == AlarmTypes.Both || alarm.AlarmType == AlarmTypes.Maximum) && alarm.UpperLimit < float.Parse(e.ApplicationMessage.ConvertPayloadToString()))
+                    if ((alarm.AlarmType == AlarmTypes.Both || alarm.AlarmType == AlarmTypes.Maximum) && alarm.UpperLimit < value)
                     {
                         type = ValueAlarmTypes.ALARM_HIGH;
-                        await LogAsync($"Detektovana odstupajuca (ALARM) vrednost! {e.ApplicationMessage.ConvertPayloadToString()} > {alarm.UpperLimit}", LogTypes.ALARM_HIGH);
+                        await LogAsync($"Detektovana odstupajuca (ALARM) vrednost! {value} > {alarm.UpperLimit}", LogTypes.ALARM_HIGH);
                     }
-                    if ((alarm.AlarmType == AlarmTypes.Both || alarm.AlarmType == AlarmTypes.Minimum) && alarm.LowerLimit > float.Parse(e.ApplicationMessage.ConvertPayloadToString()))
+                    if ((alarm.AlarmType == AlarmTypes.Both || alarm.AlarmType == AlarmTypes.Minimum) && alarm.LowerLimit > value)
                     {
                         type = ValueAlarmTypes.ALARM_LOW;
-                        await LogAsync($"Detektovana odstupajuca (ALARM) vrednost! {e.ApplicationMessage.ConvertPayloadToString()} < {alarm.UpperLimit}", LogTypes.ALARM_LOW);
+                        await LogAsync($"Detektovana odstupajuca (ALARM) vrednost! {value} < {alarm.LowerLimit}", LogTypes.ALARM_LOW);
                     }
                 }
                 

@@ -22,7 +22,7 @@ public class AlarmService : IAlarmService
     public async Task CreateAlarm(CreateAlarmDto createAlarmDto)
     {
         if (!await dbContext.Topics.AnyAsync(s => s.Id == createAlarmDto.topicID)) throw new BadRequestException($"Topic sa id-em {createAlarmDto.topicID} ne postoji!");
-        if (!await dbContext.Alarms.AnyAsync(a => a.TopicId == createAlarmDto.topicID)) throw new BadRequestException($"Vec postoji alarm na topicu: {createAlarmDto.topicID}!");
+        if (await dbContext.Alarms.AnyAsync(a => a.TopicId == createAlarmDto.topicID)) throw new BadRequestException($"Vec postoji alarm na topicu: {createAlarmDto.topicID}!");
         if (createAlarmDto.AlarmType == AlarmTypes.Both && createAlarmDto.lowerLimit >= createAlarmDto.upperLimit) throw new BadRequestException("Donja granica mora biti manja od gornje granice!");
         
         Alarm alarm = new Alarm(createAlarmDto.topicID, createAlarmDto.AlarmType, createAlarmDto.lowerLimit, createAlarmDto.upperLimit);
