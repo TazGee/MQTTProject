@@ -25,7 +25,7 @@ public class MqttService : IMqttService
             
             await TryToConnect(options, config);
             
-            client.ApplicationMessageReceivedAsync += e =>
+            client.ApplicationMessageReceived += e =>
             {
                 try
                 {
