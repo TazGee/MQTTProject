@@ -9,6 +9,7 @@
   - **MQTTRestApi:** RestAPI Backend aplikacija (dokerizovana)
   - **MQTTRestApi.Tests:** Unit testovi za **'MQTTRestApi'** projekat
   - **MQTTGitProject:** prva probna verzija rada sa MQTT (ne koristi se)
+- **Link do prezentacije:** https://unsacrs-my.sharepoint.com/:p:/g/personal/tasic_pr68_2023_uns_ac_rs/IQDpAFwfcSPKQK1tobDRm2TNAaeJG8RV8invnJ9zv2ki2BY?e=rajIGY
 ****
 ## 📜 - **Najnovije izmene** - 📜️
 ### **-= Verzija 0.26.10.15.1 =-**
